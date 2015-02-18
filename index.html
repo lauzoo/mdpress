@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8" />
+        <title>Markdown Editor For Vasquez</title>
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/editormd.css" />
+    </head>
+    <body>
+        <div id="layout">
+			<div>
+				<!--
+				标题:<input type="text" id="title"><br>
+				<input type="button" onclick="save();"value="保存">
+				<input type="button" value="另存为">
+				<input type="button" value="新建">
+				-->
+			</div>
+            <div id="test-editormd">                
+                <textarea style="display:none;">###Hello world!
+
+####开启识别和解析HTML标签
+
+配置项：
+
+    {
+		htmlDecode : true
+	}
+
+####示例
+#####上标和下标
+
+上标：X<sup>2</sup>
+
+下标：O<sub>2</sub>
+
+#####插入Flash
+
+<embed src="http://player.youku.com/player.php/sid/XMzA0MzIwMDgw/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+				
+#####插入视频
+			
+李健《最好不相见》
+				
+<iframe height=498 width=510 src="http://player.youku.com/embed/XMzA0MzIwMDgw" frameborder=0 allowfullscreen></iframe>
+""""""""""""""""""
+
+</textarea>
+        </div>
+        </div>
+
+        <script src="js/jquery.min.js"></script>
+        <script src="js/editormd.js"></script>   
+		<script src="lib/handlerbars.js"></script>
+		<script src="lib/oper.js"></script>
+        <script type="text/javascript">
+			var testEditor;
+
+            $(function() {
+                testEditor = editormd("test-editormd", {
+                    width: "90%",
+                    height: 540,
+                    path : './lib/',
+					htmlDecode: true,
+
+					// 显示的工具栏
+					toolbarIcons : function() {
+			            return [
+						    "undo", "redo", "|", 
+			                "bold", "del", "italic", "quote", "|", 
+			                "h1", "h2", "h3", "h4", "h5", "h6", "|", 
+			                "list-ul", "list-ol", "hr", "|",
+			                "link", "anchor", "image", "code", "code-block-tab", "code-block", "datetime", "|",
+			                "watch", "preview", "fullscreen", "clear", "|",
+						    "info","save"
+						]
+					},
+
+					// 设置工具栏的图标/文本  
+					toolbarIconTexts : {
+					    save : "保存"
+					},
+
+					// 设置工具栏的响应函数
+					toolbarHandlers : {
+						save : function (cm, icon, cursor, selection) {
+							var content = $(".editormd-preview").html();
+							var title = $("#title").val();
+							saveAs(title, content);
+						}
+					}
+                });
+            });
+			
+			function save()
+			{			
+				var content = $(".editormd-preview").html();
+				var title = $("#title").val();
+				saveAs(title, content);
+			}
+        </script>
+    </body>
+</html>
