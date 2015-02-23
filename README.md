@@ -17,6 +17,10 @@
 ###联系我
 欢迎戳邮件：liqianglau@outlook.com
 
+
+###Screen Shoot
+![](./screenshoot.jpg)
+
 ###Updated History
 #####创建项目，并且实现基本功能
 	2015-02-18 14:38:03 星期三 <大年三十>
