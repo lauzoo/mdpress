@@ -19,7 +19,7 @@
 
 
 ###Screen Shoot
-![](./screenshoot.jpg)
+![](https://github.com/luke0922/MarkdownEditor/blob/master/Screenshoot.jpg)
 
 ###Updated History
 #####创建项目，并且实现基本功能
