@@ -1,9 +1,11 @@
-##Markdown Editor By Vasquez
+##Online Markdown Editor By Vasquez
 
 ###项目介绍
 
 这个项目是基于[Editor.md](https://pandao.github.io/editor.md/examples/index.html "Editor.md")创建的，主要在原有的基础上增加了保存功能，这样的话，你就可以直接在编辑完之后保存啦～～
 
+演示地址：[戳我](http://liqianglau.duapp.com/markdown/ "戳我")<br/>
+DEMO URL: [Click Me](http://liqianglau.duapp.com/markdown/ "Click Me")<br/>
 ###依赖
 
 保存查看功能需要：tidy扩展<br/>
