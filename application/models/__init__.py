@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
-# from user import *
-# from todo import *
-# from upload import *
+from user import *
+from upload import *
+from post import *
 
 
 def all():

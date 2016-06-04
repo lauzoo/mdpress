@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from application.extensions import db
+from redisco import models as db
 
 __all__ = ['Role', 'User']
 
@@ -13,9 +13,9 @@ class Permission:
     DEFAULT = READ
 
 
-class Role(db.Document):
-    name = db.StringField()
-    permission = db.IntField()
+class Role(db.Model):
+    name = db.Attribute(required=True)
+    permission = db.IntegerField(required=True)
 
     def __repr__(self):
         return "{}-{}".format(self.name, self.permission)
@@ -27,20 +27,21 @@ class Role(db.Document):
         return self.__repr__()
 
 
-class User(db.Document):
-    name = db.StringField()
-    password = db.StringField()
-    email = db.StringField()
-    role = db.ReferenceField('Role')
+class User(db.Model):
+    name = db.Attribute(required=True)
+    password = db.Attribute(required=True, indexed=False)
+    email = db.Attribute(required=True)
+    role = db.IntegerField(required=True)
 
     @property
     def id(self):
         return str(self._id)
 
     def to_json(self):
+        role = Role.objects(id=self.role).first()
         return {"name": self.name,
                 "email": self.email,
-                "role": self.role.name}
+                "role": role.name}
 
     def is_authenticated(self):
         return True

@@ -1,28 +1,21 @@
 # coding: utf-8
-import os
-
 from .default import Config
 
 
 class DevelopmentConfig(Config):
     """Base config class."""
-    # Flask app config
-    DEBUG = True
     TESTING = False
-    SECRET_KEY = "sample_key"
-
-    # Root path of project
-    PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    SECRET_KEY = "DevelopmentConfig"
+    JWT_AUTH_USERNAME_KEY = "username"
+    JWT_AUTH_PASSWORD_KEY = "password"
 
     # Site domain
-    SITE_TITLE = "twtf"
-    SITE_DOMAIN = "http://localhost:8080"
+    SITE_TITLE = "mdpress"
 
-    # MongoEngine config
-    MONGODB_SETTINGS = {
-        'db': 'image_admin',
-        'host': '192.168.59.103',
-        'port': 27017
+    REDIS_CONFIG = {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 10
     }
 
     UPLOAD_FOLDER = "/tmp/upload"

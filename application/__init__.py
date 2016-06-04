@@ -6,6 +6,7 @@ import logging
 import logging.handlers
 from datetime import datetime
 
+import redisco
 from flask import Flask, current_app
 
 from config import load_config
@@ -39,6 +40,10 @@ def create_app(mode):
 
 
 def register_extensions(app):
+    """init redis connection"""
+    redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
+                             port=app.config['REDIS_CONFIG']['PORT'],
+                             db=app.config['REDIS_CONFIG']['DB'])
     """Register models."""
     login_manager.init_app(app)
 
