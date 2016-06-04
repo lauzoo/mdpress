@@ -17,22 +17,28 @@ function saveAs(title, content)
     var data = {"title": title, "content": content};
     var result = templateFunction(data);
 
-    if (name == null)
+    if (name === null)
     {
         name = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + "-" + dt.getTime() + ".html";
     }
 
-    $.ajax({ url: "save.php",
-        data: {
-            'name': name,
-            'content': result
-        },
-        success: function(){
-            alert("Save Success");
-        }
+    $.ajax({
+      url: "/post",
+      type: "POST",
+      headers: {
+        "Authorization": "JWT",
+      },
+      data: {
+          'name': name,
+          'content': result
+      },
+      success: function(){
+          alert("Save Success");
+      }
     });
 }
+
 function listAll()
 {
-    window.location.href = "list.php";
+    window.location.href = "/post";
 }

@@ -1,53 +1,53 @@
-/** 
+/**
  * @fileOverview Editor.md
  * @author pandao
- * @version 1.1.0 
+ * @version 1.1.0
  */
 
 ;(function(factory) {
     "use strict";
-    
+
 	// CommonJS/Node.js
 	if (typeof require === "function" && typeof exports === "object" && typeof module === "object")
-    { 
+    {
         module.exports = factory();
     }
 	else if (typeof define === "function")  // AMD/CMD/Sea.js
 	{
 		define(["jquery"], factory);
-	} 
+	}
 	else
-	{ 
+	{
         window.editormd = factory();
 	}
-    
+
 }(function() {
-    
+
     /**
      * editormd
-     * 
+     *
      * @param   {String} id           编辑器的ID
      * @param   {Object} options      配置选项 Key/Value
      * @returns {Object} editormd     返回editormd对象
      */
-    
+
     "use strict";
-    
+
     var $ = (typeof (jQuery) !== "undefined") ? jQuery : Zepto;
 
 	if (typeof ($) === "undefined") {
 		return ;
 	}
-    
+
     var editormd         = function (id, options) {
         return new editormd.fn.init(id, options);
     };
-    
+
     editormd.title       = editormd.$name = "Editor.md";
     editormd.version     = "1.1.0";
     editormd.homePage    = "https://pandao.github.io/editor.md/";
-    editormd.classPrefix = "editormd-";  
-    
+    editormd.classPrefix = "editormd-";
+
     editormd.defaults    = {
         mode                 : "gfm",          //gfm or markdown
         markdown             : "",
@@ -86,18 +86,18 @@
         toolbar              : true,
         toolbarIcons         : function() {
             return [
-                "undo", "redo", "|", 
-                "bold", "del", "italic", "quote", "|", 
-                "h1", "h2", "h3", "h4", "h5", "h6", "|", 
+                "undo", "redo", "|",
+                "bold", "del", "italic", "quote", "|",
+                "h1", "h2", "h3", "h4", "h5", "h6", "|",
                 "list-ul", "list-ol", "hr", "|",
                 "link", "anchor", "image", "code", "code-block-tab", "code-block", "datetime", "|",
                 "watch", "preview", "fullscreen", "clear", "|",
                 "info"
             ]
-        },   
+        },
         toolbarTitles        : {},
         toolbarHandlers      : {},  // 工具栏按钮的点击后事件处理
-        
+
         toolbarIconsClass    : {
             undo             : "fa-undo",
             redo             : "fa-repeat",
@@ -128,7 +128,7 @@
             clear            : "fa-eraser",
             info             : "fa-info-circle",
         },
-        
+
         toolbarIconTexts     : {},
         lang : {
             name        : "zh-cn",
@@ -195,11 +195,11 @@
                     formatNotAllowed : "错误：只允许上传图片文件，允许上传的图片文件格式有："
                 },
                 tabCodeBlock : {
-                    title             : "添加预格式文本或代码块", 
+                    title             : "添加预格式文本或代码块",
                     codeEmptyAlert    : "错误：请填写预格式文本或代码的内容。"
                 },
                 codeBlock : {
-                    title             : "添加代码块",                    
+                    title             : "添加代码块",
                     selectLabel       : "代码语言：",
                     selectDefaultText : "请选择代码语言",
                     otherLanguage     : "其他语言",
@@ -209,13 +209,13 @@
             }
         }
     };
-    
+
     editormd.classNames  = {
         tex : editormd.classPrefix + "tex"
     };
-                
+
     editormd.dialogZindex = 99999;
-    
+
     editormd.$katex       = null;
     editormd.$marked      = null;
     editormd.$CodeMirror  = null;
@@ -226,52 +226,52 @@
             preview    : false,
             fullscreen : false
         },
-        
+
         /**
          * 构造函数/实例初始化
          * @param   {String}   id            编辑器的ID
          * @param   {Object}   [options={}]  配置选项 Key/Value
          * @returns {editormd}               返回editormd的实例对象
          */
-        
+
         init : function (id, options) {
-            
+
             options              = options || {};
-            
+
             var _this            = this;
             var classPrefix      = this.classPrefix  = editormd.classPrefix;
-            var editor           = this.editor       = $("#" + id);        
+            var editor           = this.editor       = $("#" + id);
             var settings         = this.settings     = $.extend(true, editormd.defaults, options);
-            
+
             this.id              = id;
             this.lang            = settings.lang;
-            
+
             var classNames       = this.classNames   = {
                 textarea : {
                     html     : this.classPrefix + "html-textarea",
                     markdown : this.classPrefix + "markdown-textarea"
                 }
             };
-            
+
             if (!editor.hasClass("editormd")) {
                 editor.addClass("editormd");
             }
-            
+
             editor.css({
                 width  : (typeof settings.width  === "number") ? settings.width  + "px" : settings.width,
                 height : (typeof settings.height === "number") ? settings.height + "px" : settings.height
             });
-                        
+
             var markdownTextarea = this.markdownTextarea = editor.children("textarea");
-            
+
             if (markdownTextarea.length < 1)
             {
                 editor.append("<textarea></textarea>");
                 markdownTextarea = this.markdownTextarea = editor.children("textarea");
             }
-            
+
             markdownTextarea.addClass(classNames.textarea.markdown).attr("name", id + "-markdown-doc").attr("placeholder", settings.placeholder);
-            
+
             var appendElements = [
                 (!settings.readOnly) ? "<a href=\"javascript:;\" class=\"fa fa-close " + classPrefix + "preview-close-btn\"></a>" : "",
                 ( (settings.saveHTMLToTextarea) ? "<textarea class=\"" + classNames.textarea.html + "\" name=\"" + id + "-html-code\"></textarea>" : "" ),
@@ -279,75 +279,75 @@
                 "<div class=\"" + classPrefix + "container-mask\" style=\"display:block;\"></div>",
                 "<div class=\"" + classPrefix + "mask\"></div>"
             ].join("\n");
-            
+
             editor.append(appendElements).addClass(classPrefix + "vertical");
-            
+
             if (settings.markdown !== "") {
                 markdownTextarea.val(settings.markdown);
             }
-            
+
             this.htmlTextarea = editor.find("." + classNames.textarea.html);
-            
+
             this.preview              = editor.find("." + classPrefix + "preview");
             this.previewContainer     = this.preview.children("." + classPrefix + "preview-container");
             this.toolbarIconHandlers  = {};
-            
-            if (!settings.inRequirejs) 
+
+            if (!settings.inRequirejs)
             {
                 this.loadQueues();
-            } 
-            else 
+            }
+            else
             {
-                _this.setCodeMirror();                 
+                _this.setCodeMirror();
                 _this.setToolbar();
                 _this.setMarked().loadedDisplay();
             }
 
             return this;
         },
-        
+
         /**
          * 所需组件加载队列
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         loadQueues : function() {
             var _this        = this;
             var settings     = this.settings;
             var loadPath     = settings.path;
-                                
+
             var loadFlowChartOrSequenceDiagram = function() {
-                
-                if (editormd.isIE8) 
+
+                if (editormd.isIE8)
                 {
                     _this.setMarked().loadedDisplay();
-                    
+
                     return ;
                 }
 
-                if (settings.flowChart || settings.sequenceDiagram) 
+                if (settings.flowChart || settings.sequenceDiagram)
                 {
                     editormd.loadScript(loadPath + "raphael.min", function() {
 
-                        editormd.loadScript(loadPath + "underscore.min", function() {  
+                        editormd.loadScript(loadPath + "underscore.min", function() {
 
-                            if (!settings.flowChart && settings.sequenceDiagram) 
+                            if (!settings.flowChart && settings.sequenceDiagram)
                             {
                                 editormd.loadScript(loadPath + "sequence-diagram.min", function() {
                                     _this.setMarked().loadedDisplay();
                                 });
                             }
-                            else if (settings.flowChart && !settings.sequenceDiagram) 
-                            {      
-                                editormd.loadScript(loadPath + "flowchart.min", function() {  
+                            else if (settings.flowChart && !settings.sequenceDiagram)
+                            {
+                                editormd.loadScript(loadPath + "flowchart.min", function() {
                                     editormd.loadScript(loadPath + "jquery.flowchart.min", function() {
                                         _this.setMarked().loadedDisplay();
                                     });
                                 });
                             }
-                            else if (settings.flowChart && settings.sequenceDiagram) 
-                            {  
-                                editormd.loadScript(loadPath + "flowchart.min", function() {  
+                            else if (settings.flowChart && settings.sequenceDiagram)
+                            {
+                                editormd.loadScript(loadPath + "flowchart.min", function() {
                                     editormd.loadScript(loadPath + "jquery.flowchart.min", function() {
                                         editormd.loadScript(loadPath + "sequence-diagram.min", function() {
                                             _this.setMarked().loadedDisplay();
@@ -358,57 +358,57 @@
                         });
 
                     });
-                } 
+                }
                 else
                 {
                     _this.setMarked().loadedDisplay();
                 }
-            }; 
+            };
 
-            editormd.loadCSS(loadPath + "codemirror/codemirror.min");            
-            editormd.loadScript(loadPath + "codemirror/codemirror.min", function() {  
-                
+            editormd.loadCSS("static/js/codemirror/codemirror.min");
+            editormd.loadScript("static/js/codemirror/codemirror.min", function() {
+
                 editormd.$CodeMirror = CodeMirror;
-                
-                editormd.loadScript(loadPath + "codemirror/modes.min", function() {
-                    
-                    editormd.loadScript(loadPath + "codemirror/addons.min", function() {
-                        
-                        _this.setCodeMirror(); 
+
+                editormd.loadScript("static/js/codemirror/modes.min", function() {
+
+                    editormd.loadScript("static/js/codemirror/addons.min", function() {
+
+                        _this.setCodeMirror();
                         _this.setToolbar();
 
-                        editormd.loadScript(loadPath + "marked.min", function() {
+                        editormd.loadScript("static/js/marked.min", function() {
 
                             editormd.$marked = marked;
-                                
-                            if (settings.previewCodeHighlight) 
+
+                            if (settings.previewCodeHighlight)
                             {
-                                editormd.loadScript(loadPath + "prettify.min", function() {
+                                editormd.loadScript("static/js/prettify.min", function() {
                                     loadFlowChartOrSequenceDiagram();
                                 });
-                            } 
+                            }
                             else
-                            {                  
+                            {
                                 loadFlowChartOrSequenceDiagram();
                             }
                         });
-                        
+
                     });
-                    
+
                 });
-                
+
             });
 
             return this;
         },
-        
+
         /**
          * 配置和初始化CodeMirror组件
          * @returns {editormd}  返回editormd的实例对象
          */
-        
-        setCodeMirror : function() { 
-            var settings         = this.settings;            
+
+        setCodeMirror : function() {
+            var settings         = this.settings;
             var codeMirrorConfig = {
                 mode                      : settings.mode,
                 theme                     : "default",
@@ -427,13 +427,13 @@
                 showTrailingSpace         : true,
                 highlightSelectionMatches : {
                     showToken: /\w/
-                } 
+                }
             };
-            
+
             this.codeEditor = editormd.$CodeMirror.fromTextArea(this.markdownTextarea[0], codeMirrorConfig);
 
             this.codeMirror = this.editor.find(".CodeMirror");
-            
+
             this.codeMirror.css({
                 fontSize : this.settings.fontSize,
                 width    : (!settings.watch) ? "100%" : "50%"
@@ -441,91 +441,91 @@
 
             return this;
         },
-        
+
         /**
          * 显示工具栏
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         showToolbar : function() {
             var settings = this.settings;
             if(settings.readOnly) return ;
-            
-            settings.toolbar = true; 
+
+            settings.toolbar = true;
             this.toolbar.show();
             this.resize();
 
             return this;
         },
-        
+
         /**
          * 隐藏工具栏
          * @returns {editormd}  返回editormd的实例对象
          */
-        
-        hideToolbar : function() { 
-            var settings = this.settings; 
-            
-            settings.toolbar = false;  
+
+        hideToolbar : function() {
+            var settings = this.settings;
+
+            settings.toolbar = false;
             this.toolbar.hide();
             this.resize();
 
             return this;
         },
-        
+
         /**
          * 配置和初始化工具栏
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         setToolbar : function() {
-            var settings    = this.settings;  
-            
+            var settings    = this.settings;
+
             if(settings.readOnly) return ;
-            
+
             var editor      = this.editor;
             var preview     = this.preview;
             var classPrefix = this.classPrefix;
-            
+
             editor.append('<div class="'+classPrefix+'toolbar"><div class="'+classPrefix+'toolbar-container"><ul class="'+classPrefix+'menu"></ul></div></div>');
-            
+
             var toolbar     = this.toolbar = editor.find("." + classPrefix + "toolbar");
-            
-            if (!settings.toolbar) 
+
+            if (!settings.toolbar)
             {
                 toolbar.hide();
-                
+
                 return ;
-            } 
-            else 
+            }
+            else
             {
                 toolbar.show();
             }
-            
+
             var icons       = settings.toolbarIcons();
             var toolbarMenu = toolbar.find("." + this.classPrefix + "menu"), menu = "";
-            
+
             for (var i = 0, len = icons.length; i < len; i++)
             {
                 var name = icons[i];
-                
+
                 if (name !== "|")
                 {
                     var isHeader = (/h(\d)/.test(name));
                     var index    = name;
-                    
+
                     if (name === "watch" && !settings.watch) {
                         index = "unwatch";
                     }
-                    
+
                     var title     = settings.lang.toolbar[index];
                     var iconTexts = settings.toolbarIconTexts[index];
                     var iconClass = settings.toolbarIconsClass[index];
-                    
+
                     title     = (typeof title     === "undefined") ? "" : title;
                     iconTexts = (typeof iconTexts === "undefined") ? "" : iconTexts;
                     iconClass = (typeof iconClass === "undefined") ? "" : iconClass;
-                    
+
                     menu += "<li><a href=\"javascript:;\" title=\"" + title + "\" unselectable=\"on\">" +
                             "<i class=\"fa " + iconClass + "\" name=\""+name+"\" unselectable=\"on\">"+((isHeader) ? name : ( (iconClass === "") ? iconTexts : "") ) + "</i></a></li>";
                 }
@@ -534,20 +534,20 @@
                     menu += "<li class=\"divider\" unselectable=\"on\">|</li>";
                 }
             }
-            
+
             toolbarMenu.html(menu);
-            
+
             this.setToolbarHandler();
 
             return this;
         },
-        
+
         /**
          * 工具栏图标事件处理对象序列
          * @param   {String}   name  要获取的事件处理器名称
          * @returns {Object}         返回处理对象序列
          */
-        
+
         getToolbarHandles : function(name) {
             var _this       = this;
             var settings    = this.settings;
@@ -557,24 +557,24 @@
             var cursor      = codeEditor.getCursor();
             var selection   = codeEditor.getSelection();
             var classPrefix = this.classPrefix;
-            
-            var dialogLockScreen = function() {    
+
+            var dialogLockScreen = function() {
                 if (settings.dialogLockScreen) {
                     $("html,body").css("overflow", "hidden");
                 }
             };
-            
+
             var dialogShowMask = function(dialog) {
                 dialog.css({
                     top    : ($(window).height() - dialog.height()) / 2 + "px",
                     left   : ($(window).width() - dialog.width()) / 2 + "px"
                 });
-                
+
                 if (settings.dialogShowMask) {
                     editor.find("." + classPrefix + "mask").css("z-index", parseInt(dialog.css("z-index")) - 1).show();
                 }
             };
-            
+
             var toolbarHandlers = this.toolbarHandlers = {
                 undo : function() {
                     codeEditor.undo();
@@ -588,7 +588,7 @@
 
                     if(selection === "") {
                         codeEditor.setCursor(cursor.line, cursor.ch + 2);
-                    }                    
+                    }
                 },
                 del : function() {
 
@@ -638,15 +638,15 @@
 
                 "list-ul" : function() {
 
-                    if (selection === "") 
+                    if (selection === "")
                     {
                         codeEditor.replaceSelection("- " + selection);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         var selectionText = selection.split("\n");
 
-                        for (var i = 0, len = selectionText.length; i < len; i++) 
+                        for (var i = 0, len = selectionText.length; i < len; i++)
                         {
                             selectionText[i] = (selectionText[i] === "") ? "" : "- " + selectionText[i];
                         }
@@ -657,7 +657,7 @@
 
                 "list-ol" : function() {
 
-                    if(selection === "") 
+                    if(selection === "")
                     {
                         codeEditor.replaceSelection("1. " + selection);
                     }
@@ -665,7 +665,7 @@
                     {
                         var selectionText = selection.split("\n");
 
-                        for (var i = 0, len = selectionText.length; i < len; i++) 
+                        for (var i = 0, len = selectionText.length; i < len; i++)
                         {
                             selectionText[i] = (selectionText[i] === "") ? "" : (i+1) + ". " + selectionText[i];
                         }
@@ -687,19 +687,19 @@
                         linkDialog = editor.find("." + linkDialogName);
                         linkDialog.find("[data-url]").val("http://");
                         linkDialog.find("[data-title]").val(selection);
-                        
+
                         dialogShowMask(linkDialog);
                         dialogLockScreen();
                         linkDialog.show();
                     }
                     else
-                    {                        
-                        var linkDialogHTML = "<div class=\"" + classPrefix + "form\">" + 
-                                                "<label>" + linkLang.url + "</label>" + 
+                    {
+                        var linkDialogHTML = "<div class=\"" + classPrefix + "form\">" +
+                                                "<label>" + linkLang.url + "</label>" +
                                                 "<input type=\"text\" value=\"http://\" data-url />" +
-                                                "<br/>" + 
-                                                "<label>" + linkLang.urlTitle + "</label>" + 
-                                                "<input type=\"text\" value=\"" + selection + "\" data-title />" + 
+                                                "<br/>" +
+                                                "<label>" + linkLang.urlTitle + "</label>" +
+                                                "<input type=\"text\" value=\"" + selection + "\" data-title />" +
                                                 "<br/>" +
                                             "</div>";
 
@@ -719,13 +719,13 @@
                                 enter  : [lang.buttons.enter, function() {
                                     var url   = this.find("[data-url]").val();
                                     var title = this.find("[data-title]").val();
-                                    
+
                                     if (url === "http://" || url === "")
                                     {
                                         alert(linkLang.urlEmpty);
                                         return false;
                                     }
-                                    
+
                                     if (title === "")
                                     {
                                         alert(linkLang.titleEmpty);
@@ -733,14 +733,14 @@
                                     }
 
                                     codeEditor.replaceSelection("[" + title + "](" + url + " \""+title+"\")");
-                                   
+
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }],
-                                cancel : [lang.buttons.cancel, function() {                                   
+                                cancel : [lang.buttons.cancel, function() {
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }]
                             }
@@ -749,7 +749,7 @@
                 },
 
                 anchor : function() {
-                    
+
                     var anchorLang = lang.dialog.anchor;
                     var anchorDialogName = classPrefix + "anchor-dialog", anchorDialog;
 
@@ -759,26 +759,26 @@
                         anchorDialog.find("[data-name]").val("");
                         anchorDialog.find("[data-url]").val("http://");
                         anchorDialog.find("[data-title]").val(selection);
-                        
+
                         dialogShowMask(anchorDialog);
                         dialogLockScreen();
                         anchorDialog.show();
                     }
-                    else 
-                    {      
+                    else
+                    {
                         var anchorDialogHTML = "<div class=\"" + classPrefix + "form\">" +
                                                 "<label>" + anchorLang.name + "</label>" +
-                                                "<input type=\"text\" data-name />" +  
+                                                "<input type=\"text\" data-name />" +
                                                 "<br/>" +
                                                 "<label>" + anchorLang.url + "</label>" +
-                                                "<input type=\"text\" value=\"http://\" data-url />" + 
+                                                "<input type=\"text\" value=\"http://\" data-url />" +
                                                 "<br/>" +
                                                 "<label>" + anchorLang.urlTitle + "</label>" +
                                                 "<input type=\"text\" value=\"" + selection + "\" data-title />" +
                                                 "<br/>" +
                                             "</div>";
 
-                        anchorDialog = _this.createDialog({   
+                        anchorDialog = _this.createDialog({
                             name   : anchorDialogName,
                             title  : anchorLang.title,
                             width  : 380,
@@ -796,19 +796,19 @@
                                     var name  = this.find("[data-name]").val();
                                     var url   = this.find("[data-url]").val();
                                     var title = this.find("[data-title]").val();
-                                    
+
                                     if (name === "")
                                     {
                                         alert(anchorLang.nameEmpty);
                                         return false;
                                     }
-                                    
+
                                     if (url === "http://" || url === "")
                                     {
                                         alert(anchorLang.urlEmpty);
                                         return false;
                                     }
-                                    
+
                                     if (title === "")
                                     {
                                         alert(anchorLang.titleEmpty);
@@ -820,14 +820,14 @@
                                     if (selection === "") {
                                         codeEditor.setCursor(cursor.line, cursor.ch + 1);
                                     }
-                                   
+
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }],
-                                cancel : [lang.buttons.cancel, function() {                                   
+                                cancel : [lang.buttons.cancel, function() {
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }]
                             }
@@ -837,30 +837,30 @@
 
                 image : function() {
                     var imageLang       = lang.dialog.image;
-                    var iframeName      = classPrefix + "image-iframe";                        
+                    var iframeName      = classPrefix + "image-iframe";
                     var imageDialogName = classPrefix + "image-dialog", imageDialog;
 
-                    if (editor.find("." + imageDialogName).length > 0) 
+                    if (editor.find("." + imageDialogName).length > 0)
                     {
                         imageDialog = editor.find("." + imageDialogName);
                         imageDialog.find("[type=\"text\"]").val("");
                         imageDialog.find("[type=\"file\"]").val("");
                         imageDialog.find("[data-link]").val("http://");
-                        
+
                         dialogShowMask(imageDialog);
                         dialogLockScreen();
                         imageDialog.show();
-                    } 
-                    else 
-                    {    
+                    }
+                    else
+                    {
                         var guid   = (new Date).getTime();
                         var action = settings.imageUploadURL + "?guid=" + guid;
-                        
+
                         if (settings.crossDomainUpload)
                         {
                             action += "&callback=" + settings.uploadCallbackURL + "&dialog_id=editormd-image-dialog-" + guid;
                         }
-                        
+
                         var imageDialogHTML = ( (settings.imageUpload) ? "<form action=\"" + action +"\" target=\"" + iframeName + "\" method=\"post\" enctype=\"multipart/form-data\" class=\"" + classPrefix + "form\">" : "<div class=\"" + classPrefix + "form\">" ) +
                                                 ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) +
                                                 "<label>" + imageLang.url + "</label>" +
@@ -872,14 +872,14 @@
                                                 })() +
                                                 "<br/>" +
                                                 "<label>" + imageLang.alt + "</label>" +
-                                                "<input type=\"text\" data-alt />" + 
+                                                "<input type=\"text\" data-alt />" +
                                                 "<br/>" +
                                                 "<label>" + imageLang.link + "</label>" +
                                                 "<input type=\"text\" value=\"http://\" data-link />" +
                                                 "<br/>" +
                                             ( (settings.imageUpload) ? "</form>" : "</div>");
 
-                        //var imageFooterHTML = "<button class=\"" + classPrefix + "btn " + classPrefix + "image-manager-btn\" style=\"float:left;\">" + imageLang.managerButton + "</button>";  
+                        //var imageFooterHTML = "<button class=\"" + classPrefix + "btn " + classPrefix + "image-manager-btn\" style=\"float:left;\">" + imageLang.managerButton + "</button>";
 
                         imageDialog = _this.createDialog({
                             title   : imageLang.title,
@@ -899,7 +899,7 @@
                                     var url  = this.find("[data-url]").val();
                                     var alt  = this.find("[data-alt]").val();
                                     var link = this.find("[data-link]").val();
-                                    
+
                                     if (url === "")
                                     {
                                         alert(imageLang.imageURLEmpty);
@@ -907,33 +907,33 @@
                                     }
 
                                     if (link === "" || link === "http://")
-                                    {                                    
+                                    {
                                         codeEditor.replaceSelection("![" + alt + "](" + url + " \"" + alt + "\")");
                                     }
-                                    else 
-                                    {                                   
+                                    else
+                                    {
                                         codeEditor.replaceSelection("[![" + alt + "](" + url + " \"" + alt + "\")](" + link + " \"" + alt + "\")");
                                     }
 
                                     if (alt === "") {
                                         codeEditor.setCursor(cursor.line, cursor.ch + 2);
                                     }
-                                   
+
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }],
-                                cancel : [lang.buttons.cancel, function() {                                   
+                                cancel : [lang.buttons.cancel, function() {
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }]
                             }
                         });
-                        
+
                         imageDialog.attr("id", classPrefix + "image-dialog-" + guid);
                     }
-                    
+
                     var fileInput  = imageDialog.find("[name=\"" + classPrefix + "image-file\"]");
 
                     fileInput.bind("change", function() {
@@ -945,20 +945,20 @@
                             alert(imageLang.uploadFileEmpty);
                         }
                         else if (!isImage.test(fileName))
-                        {      
+                        {
                             alert(imageLang.formatNotAllowed + settings.imageFormats.join(", "));
-                        } 
-                        else 
+                        }
+                        else
                         {
                             imageDialog.loading(true);
 
                             var submitHandler = function() {
-                                
+
                                 var uploadIframe = document.getElementById(iframeName);
-                                
+
                                 uploadIframe.onload = function() {
                                     imageDialog.loading(false);
-                                    
+
                                     var json = uploadIframe.contentWindow.document.body.innerHTML;
                                     json = (typeof JSON.parse !== "undefined") ? JSON.parse(json) : eval("(" + json + ")");
 
@@ -977,7 +977,7 @@
 
                             imageDialog.find("[type=\"submit\"]").bind(editormd.mouseOrTouch("click", "touchend"), submitHandler).trigger("click");
 
-                        }                    
+                        }
 
                         return false;
                     });
@@ -994,19 +994,19 @@
                 },
 
                 "code-block-tab" : function() {
-                    var tabCodeBlockDialogName = classPrefix + "dialog-tab-code-block", tabCodeBlockDialog;                     
-                    
+                    var tabCodeBlockDialogName = classPrefix + "dialog-tab-code-block", tabCodeBlockDialog;
+
                     if (editor.find("." + tabCodeBlockDialogName).length > 0)
                     {
                         tabCodeBlockDialog = editor.find("." + tabCodeBlockDialogName);
                         tabCodeBlockDialog.find("textarea").val("");
-                        
+
                         dialogShowMask(tabCodeBlockDialog);
                         dialogLockScreen();
                         tabCodeBlockDialog.show();
                     }
-                    else 
-                    {      
+                    else
+                    {
                         var tabCodeBlockDialogHTML = "<textarea placeholder=\"coding now....\" style=\"width: 680px;height: 300px;\"></textarea>";
 
                         tabCodeBlockDialog = _this.createDialog({
@@ -1025,29 +1025,29 @@
                             buttons : {
                                 enter  : [lang.buttons.enter, function() {
                                     var codeTexts  = this.find("textarea").val();
-                                    
+
                                     if (codeTexts === "")
                                     {
                                         alert(lang.dialog.tabCodeBlock.codeEmptyAlert);
                                         return false;
                                     }
-                                    
+
                                     codeTexts = codeTexts.split("\n");
-                                    
+
                                     for (var i in codeTexts)
                                     {
                                         codeTexts[i] = "    " + codeTexts[i];
                                     }
-                                    
+
                                     codeEditor.replaceSelection(codeTexts.join("\n"));
-                                   
+
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }],
-                                cancel : [lang.buttons.cancel, function() {                                  
+                                cancel : [lang.buttons.cancel, function() {
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }]
                             }
@@ -1064,13 +1064,13 @@
                         codeBlockDialog = editor.find("." + codeBlockDialogName);
                         codeBlockDialog.find("option:first").attr("selected", "selected");
                         codeBlockDialog.find("textarea").val("");
-                        
+
                         dialogShowMask(codeBlockDialog);
                         dialogLockScreen();
                         codeBlockDialog.show();
                     }
-                    else 
-                    {      
+                    else
+                    {
                         var codeBlockDialogHTML = "<div class=\"" + classPrefix + "code-toolbar\">" +
                                                 lang.dialog.codeBlock.selectLabel + "<select><option selected=\"selected\" value=\"\">" + lang.dialog.codeBlock.selectDefaultText + "</option></select>" +
                                             "</div>" +
@@ -1093,47 +1093,47 @@
                                 enter  : [lang.buttons.enter, function() {
                                     var codeTexts  = this.find("textarea").val();
                                     var langName   = this.find("select").val();
-                                    
+
                                     if (langName === "")
                                     {
                                         alert(lang.dialog.codeBlock.unselectedLanguageAlert);
                                         return false;
                                     }
-                                    
+
                                     if (codeTexts === "")
                                     {
                                         alert(lang.dialog.codeBlock.codeEmptyAlert);
                                         return false;
                                     }
-                                    
+
                                     langName = (langName === "other") ? "" : langName;
-                                    
+
                                     codeEditor.replaceSelection(["```" + langName, codeTexts, "```"].join("\n"));
 
                                     if (langName === "") {
                                         codeEditor.setCursor(cursor.line, cursor.ch + 3);
                                     }
-                                   
+
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }],
-                                cancel : [lang.buttons.cancel, function() {                                   
+                                cancel : [lang.buttons.cancel, function() {
                                     this.hide().lockScreen(false).hideMask();
-                                    
+
                                     return false;
                                 }]
                             }
                         });
-                        
+
                         var langSelect = codeBlockDialog.find("select");
-                        
+
                         for (var key in editormd.codeLanguages)
                         {
                             var codeLang = editormd.codeLanguages[key];
                             langSelect.append("<option value=\"" + key + "\">" + codeLang + "</option>");
                         }
-                        
+
                         langSelect.append("<option value=\"other\">" + lang.dialog.codeBlock.otherLanguage + "</option>");
                     }
                 },
@@ -1144,7 +1144,7 @@
                     codeEditor.replaceSelection(editormd.dateFormat() + " " + editormd.dateFormat((langName === "zh-cn" || langName === "zh-tw") ? "cn-week-day" : "week-day"));
                 },
 
-                watch : function() {                        
+                watch : function() {
                     _this[_this.settings.watch ? "unwatch" : "watch"]();
                 },
 
@@ -1166,33 +1166,33 @@
                     _this.showInfoDialog();
                 }
             };
-            
+
             return (name && typeof toolbarIconHandlers[name] !== "undefined") ? toolbarHandlers[name] : toolbarHandlers;
         },
-        
+
         /**
          * 工具栏图标事件处理器
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         setToolbarHandler : function() {
             var _this               = this;
             var settings            = this.settings;
-            
+
             if (!settings.toolbar || settings.readOnly) {
                 return ;
             }
-            
+
             var editor              = this.editor;
             var preview             = this.preview;
             var toolbar             = this.toolbar;
             var codeEditor          = this.codeEditor;
             var codeMirror          = this.codeMirror;
             var classPrefix         = this.classPrefix;
-            var previewContainer    = this.previewContainer;            
-            var toolbarIcons        = this.toolbarIcons = toolbar.find("." + classPrefix + "menu a");            
+            var previewContainer    = this.previewContainer;
+            var toolbarIcons        = this.toolbarIcons = toolbar.find("." + classPrefix + "menu a");
             var toolbarIconHandlers = _this.getToolbarHandles();
-                
+
             toolbarIcons.bind(editormd.mouseOrTouch("click", "touchend"), function(event) {
 
                 var icon      = $(this).children(".fa");
@@ -1203,22 +1203,22 @@
                 if (name === "") {
                     return ;
                 }
-                
+
                 _this.activeIcon = icon;
 
-                if (typeof toolbarIconHandlers[name] !== "undefined") 
+                if (typeof toolbarIconHandlers[name] !== "undefined")
                 {
                     toolbarIconHandlers[name]();
                 }
-                else 
+                else
                 {
-                    if (typeof settings.toolbarHandlers[name] !== "undefined") 
+                    if (typeof settings.toolbarHandlers[name] !== "undefined")
                     {
                         $.proxy(settings.toolbarHandlers[name], _this)(codeEditor, icon, cursor, selection);
                     }
                 }
-                
-                if (name !== "link" && name !== "anchor" && name !== "image" && name !== "code-block" && name !== "code-block-tab" && name !== "watch" && name !== "preview" && name !== "fullscreen" && name !== "info") 
+
+                if (name !== "link" && name !== "anchor" && name !== "image" && name !== "code-block" && name !== "code-block-tab" && name !== "watch" && name !== "preview" && name !== "fullscreen" && name !== "info")
                 {
                     codeEditor.focus();
                 }
@@ -1229,13 +1229,13 @@
 
             return this;
         },
-        
+
         /**
          * 动态创建对话框
          * @param   {Object} options  配置项键值对 Key/Value
          * @returns {dialog}          返回创建的dialog的jQuery实例对象
          */
-        
+
         createDialog : function(options) {
             var defaults = {
                 name : "",
@@ -1262,7 +1262,7 @@
             var guid         = (new Date).getTime();
             var dialogName   = ( (options.name === "") ? classPrefix + "dialog-" + guid : options.name);
             var mouseOrTouch = editormd.mouseOrTouch;
-            
+
             var html         = "<div class=\"" + classPrefix + "dialog " + dialogName + "\">";
 
             if (options.title !== "")
@@ -1277,9 +1277,9 @@
                 html += "<a href=\"javascript:;\" class=\"fa fa-close " + classPrefix + "dialog-close\"></a>";
             }
 
-            html += "<div class=\"" + classPrefix + "dialog-container\">" + options.content;                    
+            html += "<div class=\"" + classPrefix + "dialog-container\">" + options.content;
 
-            if (options.footer || typeof options.footer === "string") 
+            if (options.footer || typeof options.footer === "string")
             {
                 html += "<div class=\"" + classPrefix + "dialog-footer\">" + ( (typeof options.footer === "boolean") ? "" : options.footer) + "</div>";
             }
@@ -1293,13 +1293,13 @@
             editor.append(html);
 
             var dialog = editor.find("." + dialogName);
-            
+
             dialog.lockScreen = function(lock) {
                 if (options.lockScreen)
-                {                
+                {
                     $("html,body").css("overflow", (lock) ? "hidden" : "");
                 }
-                
+
                 return dialog;
             };
 
@@ -1311,22 +1311,22 @@
                 return dialog;
             };
 
-            dialog.hideMask = function() {                        
+            dialog.hideMask = function() {
                 if (options.mask)
                 {
                     editor.find("." + classPrefix + "mask").hide();
                 }
-                
+
                 return dialog;
             };
 
-            dialog.loading = function(show) {                        
+            dialog.loading = function(show) {
                 var loading = dialog.find("." + classPrefix + "dialog-mask");
                 loading[(show) ? "show" : "hide"]();
-                
+
                 return dialog;
             };
-            
+
             dialog.lockScreen(true).showMask();
 
             dialog.show().css({
@@ -1367,7 +1367,7 @@
             }
 
             if (options.title !== "" && options.drag)
-            {                        
+            {
                 var posX, posY;
                 var dialogHeader = dialog.children("." + classPrefix + "dialog-header");
 
@@ -1383,7 +1383,7 @@
                     posX = e.clientX - parseInt(dialog[0].style.left);
                     posY = e.clientY - parseInt(dialog[0].style.top);
 
-                    document.onmousemove = moveAction;                   
+                    document.onmousemove = moveAction;
                 });
 
                 var userCanSelect = function (obj) {
@@ -1391,7 +1391,7 @@
                 }
 
                 var userUnselect = function (obj) {
-                    obj.addClass(classPrefix + "user-unselect").on("selectstart", function(event) { // selectstart for IE                        
+                    obj.addClass(classPrefix + "user-unselect").on("selectstart", function(event) { // selectstart for IE
                         return false;
                     });
                 }
@@ -1404,7 +1404,7 @@
                     if( nowLeft >= 0 ) {
                         if( nowLeft + dialog.width() <= $(window).width()) {
                             left = e.clientX - posX;
-                        } else {	
+                        } else {
                             left = $(window).width() - dialog.width();
                             document.onmousemove = null;
                         }
@@ -1420,29 +1420,29 @@
                         document.onmousemove = null;
                     }
 
-                    
+
                     document.onselectstart = function() {
                         return false;
                     };
-                    
+
                     userUnselect($("body"));
                     userUnselect(dialog);
                     dialog[0].style.left = left + "px";
                     dialog[0].style.top  = top + "px";
                 }
 
-                document.onmouseup = function() {                            
+                document.onmouseup = function() {
                     userCanSelect($("body"));
                     userCanSelect(dialog);
-                    
-                    document.onselectstart = null;         
+
+                    document.onselectstart = null;
                     document.onmousemove = null;
                 };
 
                 dialogHeader.touchDraggable = function() {
                     var offset = null;
                     var start  = function(e) {
-                        var orig = e.originalEvent; 
+                        var orig = e.originalEvent;
                         var pos  = $(this).parent().position();
 
                         offset = {
@@ -1471,17 +1471,17 @@
 
             return dialog;
         },
-        
+
         /**
          * 创建关于Editor.md的对话框
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         createInfoDialog : function() {
             var _this        = this;
 			var editor       = this.editor;
-            var classPrefix  = this.classPrefix;  
-            
+            var classPrefix  = this.classPrefix;
+
             var infoDialogHTML = [
                 "<div class=\"" + classPrefix + "dialog " + classPrefix + "dialog-info\">",
                 "<div class=\"" + classPrefix + "dialog-container\">",
@@ -1495,32 +1495,32 @@
             ].join("\n");
 
             editor.append(infoDialogHTML);
-            
+
             var infoDialog  = this.infoDialog = editor.find("." + classPrefix + "dialog-info");
 
             infoDialog.find("." + classPrefix + "dialog-close").bind(editormd.mouseOrTouch("click", "touchend"), function() {
                 _this.hideInfoDialog();
             });
-            
+
             infoDialog.css("border", (editormd.isIE8) ? "1px solid #ddd" : "");
 
             return this;
         },
-        
+
         /**
          * 显示关于Editor.md
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         showInfoDialog : function() {
 
             $("html,body").css("overflow-x", "hidden");
-            
+
             var _this       = this;
 			var editor      = this.editor;
-            var classPrefix = this.classPrefix;            
+            var classPrefix = this.classPrefix;
 			var infoDialog  = this.infoDialog = editor.find("." + classPrefix + "dialog-info");
-            
+
             if (infoDialog.length < 1)
             {
                 this.createInfoDialog();
@@ -1541,28 +1541,28 @@
 
             return this;
         },
-        
+
         /**
          * 隐藏关于Editor.md
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         hideInfoDialog : function() {
             $("html,body").css("overflow-x", "");
             this.infoDialog.hide();
 
             return this;
         },
-        
+
         /**
          * 配置和初始化marked组件
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         setMarked : function() {
-            var marked       = editormd.$marked; 
+            var marked       = editormd.$marked;
             var markdownToC  = this.markdownToC = [];
-            
+
             marked.setOptions({
                 renderer    : editormd.markedRenderer(markdownToC),
                 gfm         : true,
@@ -1576,23 +1576,23 @@
 
             return this;
         },
-        
-        
+
+
         /**
          * 编辑器界面重建，用于动态语言包或模块加载等
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         recreateEditor : function() {
             var _this            = this;
             var editor           = this.editor;
             var settings         = this.settings;
-            var toolbarIcons     = settings.toolbarIcons();            
-            
+            var toolbarIcons     = settings.toolbarIcons();
+
             if (typeof this.infoDialog !== "undefined") {
                 this.infoDialog.remove();
             }
-            
+
             if (typeof toolbarIcons["info"] !== "undefined") {
                 createInfoDialog();
             }
@@ -1601,21 +1601,21 @@
                 this.getToolbarHandles();
                 this.setToolbar();
             }
-            
+
             this.resize();
 
             return this;
         },
-        
+
         /**
          * 加载队列完成之后的显示处理
          * @returns {editormd}  返回editormd的实例对象
          */
-        
+
         loadedDisplay : function() {
-            
+
             this.state.loaded    = true;
-            
+
             var _this            = this;
             var editor           = this.editor;
             var preview          = this.preview;
@@ -1624,40 +1624,40 @@
             var codeMirror       = this.codeMirror;
             var previewContainer = this.previewContainer;
             var mouseOrTouch     = editormd.mouseOrTouch;
-            
+
             editor.find("." + this.classPrefix  + "container-mask").hide();
-            
+
             this.saveToTextareas();
-            
+
             if(settings.watch) {
                 preview.show();
             }
-            
-            var codeHighlight = function() {                       
-                if (settings.previewCodeHighlight) 
+
+            var codeHighlight = function() {
+                if (settings.previewCodeHighlight)
                 {
                     previewContainer.find("pre").addClass("prettyprint linenums");
                     prettyPrint();
                 }
             };
-            
+
             var flowChartAndSequenceDiagramHandle = function() {
-            
+
                 if (editormd.isIE8) return ;
 
                 if (settings.flowChart) {
-                    previewContainer.find(".flowchart").flowChart(); 
+                    previewContainer.find(".flowchart").flowChart();
                 }
 
                 if (settings.sequenceDiagram) {
                     previewContainer.find(".sequence-diagram").sequenceDiagram({theme: "simple"});
                 }
             };
-            
+
             codeHighlight();
-            
+
             flowChartAndSequenceDiagramHandle();
-            
+
             var katexHandle = function() {
                 previewContainer.find("." + editormd.classNames.tex).each(function(){
                     var tex  = $(this);
@@ -1665,8 +1665,8 @@
                 });
             };
 
-            if (settings.tex) 
-            {            
+            if (settings.tex)
+            {
                 if (!settings.inRequirejs) {
                     editormd.loadKaTeX(function(){
                         editormd.$katex = katex;
@@ -1676,33 +1676,33 @@
                     katexHandle();
                 }
             }
-            
+
             editor.data("oldWidth", editor.width()).data("oldHeight", editor.height()); // 为了兼容Zepto
-            
+
             this.resize();
-            
+
             $(window).resize(function(){
                 _this.resize();
             });
-            
+
             $.proxy(settings.onload, this)();
-                
-            var codeEditorBindScroll = function() {    
+
+            var codeEditorBindScroll = function() {
                 codeMirror.find(".CodeMirror-scroll").bind(mouseOrTouch("scroll", "touchmove"), function() {
                     var height    = $(this).height();
-                    var scrollTop = $(this).scrollTop();                    
+                    var scrollTop = $(this).scrollTop();
                     var percent   = (scrollTop / $(this)[0].scrollHeight);
 
-                    if (scrollTop === 0) 
+                    if (scrollTop === 0)
                     {
                         preview.scrollTop(0);
-                    } 
+                    }
                     else if (scrollTop + height >= $(this)[0].scrollHeight)
-                    { 
-                        preview.scrollTop(preview[0].scrollHeight);                        
-                    } 
+                    {
+                        preview.scrollTop(preview[0].scrollHeight);
+                    }
                     else
-                    {                    
+                    {
                         preview.scrollTop(preview[0].scrollHeight * percent);
                     }
                 });
@@ -1715,20 +1715,20 @@
             var previewBindScroll = function() {
                 preview.bind(mouseOrTouch("scroll", "touchmove"), function() {
                     var height    = $(this).height();
-                    var scrollTop = $(this).scrollTop();                    
+                    var scrollTop = $(this).scrollTop();
                     var percent   = (scrollTop / $(this)[0].scrollHeight);
                     var codeView  = codeMirror.find(".CodeMirror-scroll");
 
-                    if(scrollTop === 0) 
+                    if(scrollTop === 0)
                     {
                         codeView.scrollTop(0);
-                    } 
+                    }
                     else if (scrollTop + height >= $(this)[0].scrollHeight)
-                    { 
-                        codeView.scrollTop(codeView[0].scrollHeight);                        
-                    } 
-                    else 
-                    {                    
+                    {
+                        codeView.scrollTop(codeView[0].scrollHeight);
+                    }
+                    else
+                    {
                         codeView.scrollTop(codeView[0].scrollHeight * percent);
                     }
                 });
@@ -1736,7 +1736,7 @@
 
             var previewUnbindScroll = function() {
                 preview.unbind(mouseOrTouch("scroll", "touchmove"));
-            }; 
+            };
 
 			codeMirror.bind({
 				mouseover  : codeEditorBindScroll,
@@ -1744,7 +1744,7 @@
 				touchstart : codeEditorBindScroll,
 				touchend   : codeEditorUnbindScroll
 			});
-            
+
 			preview.bind({
 				mouseover  : previewBindScroll,
 				mouseout   : previewUnbindScroll,
@@ -1752,65 +1752,65 @@
 				touchend   : previewUnbindScroll
 			});
 
-            codeEditor.on("change", function(cm, changeObj) { 
+            codeEditor.on("change", function(cm, changeObj) {
 
                 if (!settings.watch) {
                     return ;
                 }
-                
+
                 _this.saveToTextareas();
-                
+
                 codeHighlight();
 
                 flowChartAndSequenceDiagramHandle();
-                
-                if (settings.tex) {                             
+
+                if (settings.tex) {
                     katexHandle();
                 }
-                
+
                 $.proxy(settings.onchange, _this)();
             });
 
             return this;
         },
-        
+
         /**
          * 设置编辑器的宽度
          * @param   {Number|String} width  编辑器宽度值
          * @returns {editormd}             返回editormd的实例对象
          */
-        
+
         width : function(width) {
-                
-            this.editor.css("width", (typeof width === "number") ? width  + "px" : width);            
+
+            this.editor.css("width", (typeof width === "number") ? width  + "px" : width);
             this.resize();
-            
+
             return this;
         },
-        
+
         /**
          * 设置编辑器的高度
          * @param   {Number|String} height  编辑器高度值
          * @returns {editormd}              返回editormd的实例对象
          */
-        
+
         height : function(height) {
-                
-            this.editor.css("height", (typeof height === "number")  ? height  + "px" : height);            
+
+            this.editor.css("height", (typeof height === "number")  ? height  + "px" : height);
             this.resize();
-            
+
             return this;
         },
-        
+
         /**
          * 调整编辑器的尺寸和布局
          * @param   {Number|String} [width=null]  编辑器宽度值
          * @param   {Number|String} [height=null] 编辑器高度值
          * @returns {editormd}                    返回editormd的实例对象
          */
-        
+
         resize : function(width, height) {
-            
+
             width  = width  || null;
             height = height || null;
 
@@ -1820,35 +1820,35 @@
             var settings         = this.settings;
             var codeEditor       = this.codeEditor;
             var codeMirror       = this.codeMirror;
-            
-            if(width && height) 
-            {                
+
+            if(width && height)
+            {
                 editor.css({
                     width  : (typeof width  === "number") ? width  + "px" : width,
                     height : (typeof height === "number") ? height + "px" : height
                 });
             }
-                        
+
             if (settings.toolbar && !settings.readOnly) {
                 codeMirror.css("margin-top", toolbar.height() + 1).height(editor.height() - toolbar.height());
             } else {
                 codeMirror.css("margin-top", 0).height(editor.height());
             }
-            
+
             codeMirror.find(".CodeMirror-gutters").height(codeMirror.height());
-            
-            if(settings.watch) 
+
+            if(settings.watch)
             {
                 codeMirror.width(editor.width() / 2);
                 preview.width(editor.width() / 2);
-                
+
                 if (settings.toolbar && !settings.readOnly) {
                     preview.css("top", toolbar.height()).height(editor.height() - toolbar.height());
                 } else {
                     preview.css("top", 0).height(editor.height());
                 }
-            } 
-            else 
+            }
+            else
             {
                 codeMirror.width(editor.width());
                 preview.hide();
@@ -1856,32 +1856,32 @@
 
             return this;
         },
-        
+
         /**
          * 分别将Markdown源码和解析的HTML源码保存到对应的textarea
          * @returns {editormd}                    返回editormd的实例对象
          */
-        
+
         saveToTextareas : function() {
             var settings         = this.settings;
             var codeEditor       = this.codeEditor;
             var previewContainer = this.previewContainer;
-            
+
             codeEditor.save();
-            
+
             var markdownToC      = this.markdownToC   = [];
             var newMarkdownDoc   = editormd.$marked(codeEditor.getValue(), {renderer : editormd.markedRenderer(markdownToC)});
 
             this.markdownTextarea.val(codeEditor.getValue());
-            
-            if (settings.saveHTMLToTextarea) {     
+
+            if (settings.saveHTMLToTextarea) {
                 this.htmlTextarea.html(newMarkdownDoc);
             }
-            
+
             if(settings.watch)
             {
                 previewContainer.html(newMarkdownDoc);
-            
+
                 if (settings.toc) {
                     editormd.markdownToCRenderer(markdownToC, previewContainer, settings.tocStartLevel);
                 }
@@ -1889,74 +1889,74 @@
 
             return this;
         },
-        
+
         /**
          * 聚焦光标位置
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         focus : function() {
             this.codeEditor.focus();
 
             return this;
         },
-        
+
         /**
          * 设置光标的位置
          * @param   {Object}    cursor 要设置的光标位置键值对象，例：{line:1, ch:0}
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         setCursor : function(cursor) {
             this.codeEditor.setCursor(cursor);
 
             return this;
         },
-        
+
         /**
          * 获取当前光标的位置
          * @returns {Cursor}         返回一个光标Cursor对象
          */
-        
+
         getCursor : function() {
             return this.codeEditor.getCursor();
         },
-        
+
         /**
          * 设置光标选中的范围
          * @param   {Object}    from   开始位置的光标键值对象，例：{line:1, ch:0}
          * @param   {Object}    to     结束位置的光标键值对象，例：{line:1, ch:0}
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         setSelection : function(from, to) {
-        
+
             this.codeEditor.setSelection(from, to);
-        
+
             return this;
         },
-        
+
         /**
          * 获取光标选中的文本
          * @returns {String}         返回选中文本的字符串形式
          */
-        
+
         getSelection : function() {
             return this.codeEditor.getSelection();
         },
-        
+
         /**
          * 替换当前光标选中的文本或在当前光标处插入新字符
          * @param   {String}    value  要插入的字符值
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         replaceSelection : function(value) {
             this.codeEditor.replaceSelection(value);
 
             return this;
         },
-        
+
         /**
          * 在当前光标处插入新字符
          *
@@ -1964,52 +1964,52 @@
          * @param   {String}    value  要插入的字符值
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         insertValue : function(value) {
             this.replaceSelection(value);
 
             return this;
         },
-        
+
         /**
          * 设置和传入编辑器的markdown源文档
          * @param   {String}    md     要传入的markdown源文档
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         setMarkdown : function(md) {
             this.codeEditor.setValue(md);
             this.saveToTextareas();
-            
+
             return this;
         },
-        
+
         /**
          * 获取编辑器的markdown源文档
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         getMarkdown : function() {
             return this.codeEditor.getValue();
         },
-        
+
         /**
          * 清空编辑器
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         clear : function() {
             this.codeEditor.setValue("");
             this.saveToTextareas();
-            
-            return this;            
+
+            return this;
         },
-        
+
         /**
          * 获取解析后存放在Textarea的HTML源码
          * @returns {String}               返回HTML源码
          */
-        
+
         getHTML : function() {
             if (!settings.saveHTMLToTextarea)
             {
@@ -2017,24 +2017,24 @@
 
                 return false;
             }
-            
+
             return this.htmlTextarea.html();
         },
-        
+
         /**
          * getHTML()的别名
          * @returns {editormd}         返回HTML源码
          */
-        
+
         getTextareaSavedHTML : function() {
             return this.getHTML();
         },
-        
+
         /**
          * 获取预览窗口的HTML源码
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         getPreviewedHTML : function() {
             if (!settings.watch)
             {
@@ -2042,63 +2042,63 @@
 
                 return false;
             }
-            
+
             return this.preivewContainer.html();
         },
-        
+
         /**
          * 开启实时预览
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         watch : function(callback) {
             callback  = callback || function() {};
-            
+
             this.settings.watch = true;
             this.preview.show();
-            
+
             var watchIcon   = this.settings.toolbarIconsClass.watch;
             var unWatchIcon = this.settings.toolbarIconsClass.unwatch;
             var icon        = this.toolbar.find(".fa[name=watch]");
             icon.parent().attr("title", this.settings.lang.toolbar.watch);
             icon.removeClass(unWatchIcon).addClass(watchIcon);
-            
-            this.codeMirror.css("border-right", "1px solid #ddd").width(this.editor.width() / 2); 
-            
+
+            this.codeMirror.css("border-right", "1px solid #ddd").width(this.editor.width() / 2);
+
             this.saveToTextareas().resize();
-            
+
             $.proxy(callback, this)();
-            
+
             return this;
         },
-        
+
         /**
          * 关闭实时预览
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         unwatch : function(callback) {
             callback  = callback || function() {};
-            
+
             this.settings.watch = false;
             this.preview.hide();
-            
+
             var watchIcon   = this.settings.toolbarIconsClass.watch;
             var unWatchIcon = this.settings.toolbarIconsClass.unwatch;
-            
+
             var icon        = this.toolbar.find(".fa[name=watch]");
             icon.parent().attr("title", this.settings.lang.toolbar.unwatch);
             icon.removeClass(watchIcon).addClass(unWatchIcon);
-            
+
             this.codeMirror.css("border-right", "none").width(this.editor.width());
-            
+
             this.resize();
-            
+
             $.proxy(callback, this)();
-            
+
             return this;
         },
-        
+
         /**
          * 显示编辑器
          * @param   {Function} [callback=function()] 回调函数
@@ -2106,46 +2106,46 @@
          */
         show : function(callback) {
             callback  = callback || function() {};
-            
+
             var _this = this;
             this.editor.show(function(){
                 $.proxy(callback, _this)();
             });
-            
+
             return this;
         },
-        
+
         /**
          * 隐藏编辑器
          * @param   {Function} [callback=function()] 回调函数
          * @returns {editormd}                       返回editormd的实例对象
          */
-        
+
         hide : function(callback) {
             callback  = callback || function() {};
-            
+
             var _this = this;
             this.editor.hide(function(){
                 $.proxy(callback, _this)();
             });
-            
+
             return this;
         },
-        
+
         /**
          * 隐藏编辑器部分，只预览HTML
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         previewing : function() {
-            
+
             var _this            = this;
             var editor           = this.editor;
             var preview          = this.preview;
             var toolbar          = this.toolbar;
             var settings         = this.settings;
             var codeMirror       = this.codeMirror;
-            
+
             if (settings.toolbar) {
                 toolbar.toggle();
             }
@@ -2160,7 +2160,7 @@
                 if(this.state.fullscreen) {
                     preview.css("background", "#fff");
                 }
-                
+
                 editor.find("." + this.classPrefix + "preview-close-btn").show().bind(editormd.mouseOrTouch("click", "touchend"), function(){
                     _this.previewed();
                 });
@@ -2170,8 +2170,8 @@
                     width     : editor.width(),
                     height    : editor.height()
                 });
-            } 
-            else 
+            }
+            else
             {
                 this.previewed();
             }
@@ -2182,14 +2182,14 @@
                 }
             });
         },
-        
+
         /**
          * 显示编辑器部分，退出只预览HTML
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         previewed : function() {
-            
+
             var editor           = this.editor;
             var preview          = this.preview;
             var toolbar          = this.toolbar;
@@ -2198,9 +2198,9 @@
             var previewCloseBtn  = editor.find("." + this.classPrefix + "preview-close-btn");
 
             this.state.preview   = false;
-            
+
             codeMirror.show();
-            
+
             if (settings.toolbar) {
                 toolbar.show();
             }
@@ -2210,64 +2210,64 @@
             } else {
                 preview.hide();
             }
-            
+
             previewCloseBtn.hide().bind(editormd.mouseOrTouch("click", "touchend"));
-            
-            preview.css({ 
+
+            preview.css({
                 background : null,
                 width      : editor.width() / 2,
                 height     : editor.height() - toolbar.height(),
                 top        : (settings.toolbar) ? toolbar.height() : 0
             });
-            
+
             return this;
         },
-        
+
         /**
          * 编辑器全屏显示
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         fullscreen : function() {
-            
+
             var _this            = this;
             var editor           = this.editor;
             var preview          = this.preview;
             var toolbar          = this.toolbar;
             var fullscreenClass  = this.classPrefix + "fullscreen";
-            
-            toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active"); 
 
-            if (!editor.hasClass(fullscreenClass)) 
-            {               
+            toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active");
+
+            if (!editor.hasClass(fullscreenClass))
+            {
                 this.state.fullscreen = true;
 
                 $("html,body").css("overflow", "hidden");
-                
+
                 editor.css({
-                    position : "fixed", 
-                    top      : 0, 
-                    left     : 0, 
-                    margin   : 0, 
+                    position : "fixed",
+                    top      : 0,
+                    left     : 0,
+                    margin   : 0,
                     border   : "none",
                     width    : $(window).width(),
                     height   : $(window).height()
-                }).addClass(fullscreenClass);                                             
+                }).addClass(fullscreenClass);
 
                 this.resize();
-    
-                $.proxy(this.settings.onfullscreen, this)();            
+
+                $.proxy(this.settings.onfullscreen, this)();
             }
             else
-            {                
-                this.fullscreenExit();             
+            {
+                this.fullscreenExit();
             }
 
             $(window).keyup(function(event) {
                 if (_this.state.preview) {
-                    return ;                
+                    return ;
                 }
-                
+
                 if (event.keyCode === 27) {
                     _this.fullscreenExit();
                 }
@@ -2275,27 +2275,27 @@
 
             return this;
         },
-        
+
         /**
          * 编辑器退出全屏显示
          * @returns {editormd}         返回editormd的实例对象
          */
-        
+
         fullscreenExit : function() {
-            
+
             var editor            = this.editor;
-            var fullscreenClass   = this.classPrefix + "fullscreen";            
+            var fullscreenClass   = this.classPrefix + "fullscreen";
             this.state.fullscreen = false;
-            
-            this.toolbar.find(".fa[name=fullscreen]").parent().removeClass("active"); 
+
+            this.toolbar.find(".fa[name=fullscreen]").parent().removeClass("active");
 
             $("html,body").css("overflow", "");
 
             editor.css({
-                position : "", 
+                position : "",
                 top      : "",
-                left     : "", 
-                margin   : "0 auto", 
+                left     : "",
+                margin   : "0 auto",
                 width    : editor.data("oldWidth"),
                 height   : editor.data("oldHeight"),
                 border   : "1px solid #ddd"
@@ -2303,26 +2303,26 @@
 
             this.resize();
 
-            
+
             $.proxy(this.settings.onfullscreenExit, this)();
 
             return this;
         }
     };
-    
-    editormd.fn.init.prototype = editormd.fn; 
-    
+
+    editormd.fn.init.prototype = editormd.fn;
+
     /**
      * 自定义marked的解析器
      * @param   {Array}    markdownToC     传入用于接收TOC的数组
-     * @returns {Renderer} markedRenderer  返回marked的Renderer自定义对象            
+     * @returns {Renderer} markedRenderer  返回marked的Renderer自定义对象
      */
-    
+
     editormd.markedRenderer = function(markdownToC) {
         var marked             = editormd.$marked;
         var markedRenderer     = new marked.Renderer();
         markdownToC            = markdownToC || [];
-        
+
         markedRenderer.heading = function(text, level, raw) {
             var escapedText    = text.toLowerCase().replace(/[^\w]+/g, "-");
             var toc = {
@@ -2343,42 +2343,42 @@
             var isTeXLine       = /^\$\$(.*)\$\$$/.test(text);
             var isTeXAddClass   = (isTeXLine) ? " class=\"" + editormd.classNames.tex + "\"" : "";
             var isToC           = /^\[TOC\]$/.test(text);
-            
-            if (!isTeXLine && isTeXInline) 
+
+            if (!isTeXLine && isTeXInline)
             {
                 text = text.replace(/(\$\$([^\$]*)\$\$)+/g, function($1, $2) {
                     return "<span class=\"" + editormd.classNames.tex + "\">" + $2.replace(/\$/g, "") + "</span>";
                 });
-            } 
-            else 
+            }
+            else
             {
                 text = (isTeXLine) ? text.replace(/\$/g, "") : text;
             }
-            
-            return (isToC) ? "<div class=\"markdown-toc\"><ul class=\"markdown-toc-list\">" + text + "</ul></div>" 
+
+            return (isToC) ? "<div class=\"markdown-toc\"><ul class=\"markdown-toc-list\">" + text + "</ul></div>"
                            : "<p" + isTeXAddClass + ">" + text + "</p>\n";
         };
 
-        markedRenderer.code = function (code, lang, escaped) { 
+        markedRenderer.code = function (code, lang, escaped) {
 
             if (lang === "seq" || lang === "sequence")
             {
                 return "<div class=\"sequence-diagram\">" + code + "</div>";
-            } 
+            }
             else if ( lang === "flow")
             {
                 return "<div class=\"flowchart\">" + code + "</div>";
-            } 
-            else 
+            }
+            else
             {
 
                 return marked.Renderer.prototype.code.apply(this, arguments);
             }
         };
-        
+
         return markedRenderer;
     };
-    
+
     /**
      * 生成TOC(Table of Contents)
      * @param   {Array}    toc             从marked获取的TOC数组列表
@@ -2386,31 +2386,31 @@
      * @param   {Integer}  startLevel      Hx 起始层级
      * @returns {Object}   tocContainer    返回ToC列表容器层的jQuery对象元素
      */
-    
+
     editormd.markdownToCRenderer = function(toc, container, startLevel) {
-        
-        var html       = "";    
+
+        var html       = "";
         var lastLevel  = 0;
         startLevel     = startLevel || 1;
-        
-        for (var i = 0, len = toc.length; i < len; i++) 
+
+        for (var i = 0, len = toc.length; i < len; i++)
         {
             var text  = toc[i].text;
             var level = toc[i].level;
-            
+
             if (level < startLevel) {
                 continue;
             }
-            
-            if (level > lastLevel) 
+
+            if (level > lastLevel)
             {
                 html += "";
             }
-            else if (level < lastLevel) 
+            else if (level < lastLevel)
             {
                 html += (new Array(lastLevel - level + 2)).join("</ul></li>");
-            } 
-            else 
+            }
+            else
             {
                 html += "</ul></li>";
             }
@@ -2418,24 +2418,24 @@
             html += "<li><a class=\"toc-level-" + level + "\" href=\"#" + text + "\" level=\"" + level + "\">" + text + "</a><ul>";
             lastLevel = level;
         }
-        
+
         var tocContainer = container.find('.markdown-toc');
-        
+
         tocContainer.children('.markdown-toc-list').html("").html(html);
-        
+
         return tocContainer;
     };
-    
+
     /**
      * 将Markdown文档解析为HTML用于前台显示
      * @param   {String}   id            用于显示HTML的对象ID
      * @param   {Object}   [options={}]  配置选项，可选
      * @returns {Object}   div           返回jQuery对象元素
      */
-    
+
     editormd.markdownToHTML = function(id, options) {
         options      = options || {};
-        
+
         var defaults = {
             toc                  : true,
             tocStartLevel        : 2,
@@ -2447,13 +2447,13 @@
             sequenceDiagram      : false,
             previewCodeHighlight : true
         };
-        
+
         editormd.$marked = marked;
 
         var div           = $("#" + id);
         var settings      = div.settings = $.extend(true, defaults, options);
         var saveTo        = div.find("textarea");
-        var markdownDoc   = (settings.markdown === "") ? saveTo.val() : settings.markdown; 
+        var markdownDoc   = (settings.markdown === "") ? saveTo.val() : settings.markdown;
         var markdownToC   = [];
 
         var markedOptions = {
@@ -2466,34 +2466,34 @@
             smartLists  : true,
             smartypants : true
         };
-        
+
         var markdownParsed   = marked(markdownDoc, markedOptions);
-        
-        if (editormd.isIE8) 
+
+        if (editormd.isIE8)
         {
             saveTo.val(markdownDoc);
         }
-        else 
+        else
         {
             saveTo.html(markdownDoc);
         }
-        
+
         div.addClass("markdown-body " + this.classPrefix + "html-preview").append(markdownParsed);
-         
+
         if (settings.toc) {
             div.tocContainer = this.markdownToCRenderer(markdownToC, div, settings.tocStartLevel);
         }
-            
-        if (settings.previewCodeHighlight) 
+
+        if (settings.previewCodeHighlight)
         {
             div.find("pre").addClass("prettyprint linenums");
             prettyPrint();
         }
-        
-        if (!editormd.isIE8) 
+
+        if (!editormd.isIE8)
         {
             if (settings.flowChart) {
-                div.find(".flowchart").flowChart(); 
+                div.find(".flowchart").flowChart();
             }
 
             if (settings.sequenceDiagram) {
@@ -2509,7 +2509,7 @@
                     editormd.$katex.render(tex.html(), tex[0]);
                 });
             };
-            
+
             if (!settings.inRequirejs) {
                 this.loadKaTeX(function(){
                     editormd.$katex = katex;
@@ -2519,14 +2519,14 @@
                 katexHandle();
             }
         }
-        
+
         div.getMarkdown = function() {
             return (editormd.isIE8) ? saveTo.val() : saveTo.html();
         };
-        
+
         return div;
     };
-    
+
     // for CodeBlock dialog select
     editormd.codeLanguages = {
         asp           : "ASP",
@@ -2589,8 +2589,8 @@
             "python",
             "perl",
             "lua",
-            "r", 
-            "ruby", 
+            "r",
+            "ruby",
             "rst",
             "smartymixed",
             "vb",
@@ -2603,82 +2603,82 @@
         ],
 
         addons : [
-            "edit/trailingspace", 
-            "dialog/dialog", 
-            "search/searchcursor", 
-            "search/search", 
-            "scroll/annotatescrollbar", 
-            "search/matchesonscrollbar", 
-            "display/placeholder", 
-            "edit/closetag", 
-            "fold/xml-fold", 
-            "mode/overlay", 
-            "selection/active-line", 
-            "edit/closebrackets", 
-            "display/fullscreen", 
-            "search/searchcursor", 
+            "edit/trailingspace",
+            "dialog/dialog",
+            "search/searchcursor",
+            "search/search",
+            "scroll/annotatescrollbar",
+            "search/matchesonscrollbar",
+            "display/placeholder",
+            "edit/closetag",
+            "fold/xml-fold",
+            "mode/overlay",
+            "selection/active-line",
+            "edit/closebrackets",
+            "display/fullscreen",
+            "search/searchcursor",
             "search/match-highlighter"
         ]
     };
-    
+
     /**
      * 用于支持Require.js加载的方法，注入
      * @param {Function} CodeMirror  CodeMirror对象
      * @param {Function} marked      marked对象
      * @param {Function} prettyPrint prettyPrint函数
      */
-    
+
     editormd.requirejsInit    = function(CodeMirror, marked, katex, prettyPrint) {
         editormd.$CodeMirror  = CodeMirror;
         editormd.$marked      = marked;
         editormd.$katex       = katex;
         editormd.$prettyPrint = prettyPrint;
     };
-    
+
     /**
      * 用于Require.js加载的模块队列
      * @param   {String} [loadPath=""] 基本路径，默认为空
      * @returns {Array}  modules       返回队列路径数组
      */
-    
+
     editormd.requireModules = function(loadPath) {
         loadPath     = loadPath || "";
         var settings = editormd.defaults;
         var modules  = [];
-        
+
         modules.push(loadPath + "codemirror/codemirror.min");
-        
+
         var codeMirrorModules = editormd.codeMirrorModules;
-        
-        for (var i = 0, len = codeMirrorModules.modes.length; i < len; i++) 
+
+        for (var i = 0, len = codeMirrorModules.modes.length; i < len; i++)
         {
             var modeName = codeMirrorModules.modes[i];
             modules.push(loadPath + "codemirror/mode/" + modeName + "/" + modeName);
-        }   
+        }
 
-        for (var i = 0, len = codeMirrorModules.addons.length; i < len; i++) 
+        for (var i = 0, len = codeMirrorModules.addons.length; i < len; i++)
         {
             var addonName = codeMirrorModules.addons[i];
             modules.push(loadPath + "codemirror/addon/" + addonName);
         }
-        
+
         editormd.loadCSS(editormd.katexURL.css);
 
         return modules;
     };
-    
+
     /**
      * 动态加载CSS文件的方法
      * @param {String}   fileName              CSS文件名
      * @param {Function} [callback=function()] 加载成功后执行的回调函数
      * @param {String}   [into="head"]         嵌入页面的位置
      */
-    
+
     editormd.loadCSS   = function(fileName, callback, into) {
-        
-        into       = into     || "head";        
+
+        into       = into     || "head";
         callback   = callback || function() {};
-        
+
         var css    = document.createElement("link");
         css.type   = "text/css";
         css.rel    = "stylesheet";
@@ -2694,7 +2694,7 @@
             document.body.appendChild(css);
         }
     };
-    
+
     editormd.isIE    = (navigator.appName == "Microsoft Internet Explorer");
     editormd.isIE8   = (editormd.isIE && navigator.appVersion.match(/8./i) == "8.");
 
@@ -2706,27 +2706,27 @@
      */
 
     editormd.loadScript = function(fileName, callback, into) {
-        
+
         into          = into     || "head";
         callback      = callback || function() {};
-        
-        var script    = null; 
+
+        var script    = null;
         script        = document.createElement("script");
         script.id     = fileName.replace(/[\./]+/g, "-");
-        script.type   = "text/javascript";        
+        script.type   = "text/javascript";
         script.src    = fileName + ".js";
-        
+
         if (editormd.isIE8) {
-            
+
             script.onreadystatechange = function() {
-                if(script.readyState) 
+                if(script.readyState)
                 {
-                    if (script.readyState === "loaded" || script.readyState === "complete") 
+                    if (script.readyState === "loaded" || script.readyState === "complete")
                     {
-                        script.onreadystatechange = null; 
+                        script.onreadystatechange = null;
                         callback();
                     }
-                } 
+                }
             };
         }
         else
@@ -2742,62 +2742,62 @@
             document.body.appendChild(script);
         }
     };
-    
+
     // 使用国外的CDN，加载速度有时会很慢，或者自定义URL
     editormd.katexURL  = {
         css : "//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min",
         js  : "//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min"
     };
-    
+
     /**
      * 加载KaTex文件
      * @param {Function} [callback=function()]  加载成功后执行的回调函数
      */
-    
+
     editormd.loadKaTeX = function (callback) {
         editormd.loadCSS(editormd.katexURL.css, function(){
             editormd.loadScript(editormd.katexURL.js, callback || function(){});
         });
     };
-    
+
     /**
      * 鼠标和触摸事件的判断/选择方法
      * @param   {String} [mouseEventType="click"]    供选择的鼠标事件
      * @param   {String} [touchEventType="touchend"] 供选择的触摸事件
      * @returns {String} EventType                   返回事件类型名称
      */
-    
+
     editormd.mouseOrTouch = function(mouseEventType, touchEventType) {
         mouseEventType = mouseEventType || "click";
         touchEventType = touchEventType || "touchend";
-        
+
         var eventType  = mouseEventType;
 
         try
         {
             document.createEvent("TouchEvent");
             eventType = touchEventType;
-        }  
+        }
         catch(e) {
-        } 
+        }
 
         return eventType;
     };
-    
+
     /**
      * 日期时间的格式化方法
      * @param   {String}   [format=""]  日期时间的格式，类似PHP的格式
      * @returns {String}   datefmt      返回格式化后的日期时间字符串
      */
-    
-    editormd.dateFormat = function(format) {                
+
+    editormd.dateFormat = function(format) {
         format      = format || "";
 
         var addZero = function(d) {
             return (d < 10) ? "0" + d : d;
         };
 
-        var date    = new Date; 
+        var date    = new Date;
         var year    = date.getFullYear();
         var year2   = year.toString().slice(2, 4);
         var month   = addZero(date.getMonth() + 1);
@@ -2806,14 +2806,14 @@
         var hour    = addZero(date.getHours());
         var min     = addZero(date.getMinutes());
         var second  = addZero(date.getSeconds());
-        var ms      = addZero(date.getMilliseconds()); 
+        var ms      = addZero(date.getMilliseconds());
         var datefmt = "";
 
         var ymd     = year2 + "-" + month + "-" + day;
         var fymd    = year  + "-" + month + "-" + day;
         var hms     = hour  + ":" + min   + ":" + second;
 
-        switch (format) 
+        switch (format)
         {
             case "UNIX Time" :
                     datefmt = date.getTime();
@@ -2821,11 +2821,11 @@
 
             case "UTC" :
                     datefmt = date.toUTCString();
-                break;	
+                break;
 
             case "yy" :
                     datefmt = year2;
-                break;	
+                break;
 
             case "year" :
             case "yyyy" :
@@ -2835,7 +2835,7 @@
             case "month" :
             case "mm" :
                     datefmt = month;
-                break;                        
+                break;
 
             case "cn-week-day" :
             case "cn-wd" :
@@ -2871,7 +2871,7 @@
 
             case "ms" :
                     datefmt = ms;
-                break;	
+                break;
 
             case "yy-mm-dd" :
                     datefmt = ymd;
@@ -2882,20 +2882,20 @@
                 break;
 
             case "yyyy-mm-dd h:i:s ms" :
-            case "full + ms" : 
+            case "full + ms" :
                     datefmt = fymd + " " + hms + " " + ms;
-                break;	
+                break;
 
             case "full" :
             case "yyyy-mm-dd h:i:s" :
                 default:
                     datefmt = fymd + " " + hms;
-                break;	
+                break;
         };
 
         return datefmt;
     };
-    
+
     return editormd;
-    
+
 }));
