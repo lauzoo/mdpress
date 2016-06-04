@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from user import *
-from todo import *
-from upload import *
+# from user import *
+# from todo import *
+# from upload import *
 
 
 def all():
     result = []
-    models = [user, todo, upload]
+    models = []
 
     for m in models:
         result += m.__all__

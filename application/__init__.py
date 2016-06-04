@@ -7,11 +7,9 @@ import logging.handlers
 from datetime import datetime
 
 from flask import Flask, current_app
-from flask_admin.contrib.mongoengine import ModelView
 
 from config import load_config
-from application.extensions import db, login_manager, admin, jwt
-from application.models import User, Role
+from application.extensions import login_manager, admin, jwt
 from application.controllers import all_bp
 
 # convert python's encoding to utf8
@@ -42,19 +40,17 @@ def create_app(mode):
 
 def register_extensions(app):
     """Register models."""
-    db.init_app(app)
     login_manager.init_app(app)
 
     # flask-admin configs
     admin.init_app(app)
-    admin.add_view(ModelView(User))
-    admin.add_view(ModelView(Role))
 
     login_manager.login_view = 'auth.login'
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.objects(id=user_id).first()
+        # return User.objects(id=user_id).first()
+        pass
 
     # jwt config
     def jwt_authenticate(username, password):
