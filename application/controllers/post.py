@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from flask import Blueprint
+from flask import request, jsonify, current_app, Blueprint
 from flask_jwt import jwt_required
 
 
@@ -16,7 +16,9 @@ def qry_post():
 @post_bp.route('/post', methods=['POST'])
 @jwt_required()
 def add_post():
-    pass
+    data = request.get_json()
+    current_app.logger.info("add post: {}".format(data))
+    return jsonify(**data)
 
 
 @post_bp.route('/post', methods=['PUT'])

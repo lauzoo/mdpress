@@ -8,7 +8,7 @@ class Config(object):
     DEBUG = True
     TESTING = True
     SECRET_KEY = "sample_key"
-    JWT_AUTH_USERNAME_KEY = "username"
+    JWT_AUTH_USERNAME_KEY = "email"
     JWT_AUTH_PASSWORD_KEY = "password"
 
     # Root path of project

@@ -6,8 +6,6 @@ class DevelopmentConfig(Config):
     """Base config class."""
     TESTING = False
     SECRET_KEY = "DevelopmentConfig"
-    JWT_AUTH_USERNAME_KEY = "username"
-    JWT_AUTH_PASSWORD_KEY = "password"
 
     # Site domain
     SITE_TITLE = "mdpress"

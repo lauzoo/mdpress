@@ -62,7 +62,6 @@
 	});
 
 	function login_selected(){
-		mainNav.children('ul').removeClass('is-visible');
 		formModal.addClass('is-visible');
 		formLogin.addClass('is-selected');
 		formSignup.removeClass('is-selected');
@@ -91,15 +90,14 @@
 	formLogin.find('input[type="submit"]').on('click', function(event){
 		event.preventDefault();
 		// formLogin.find('input[type="email"]').toggleClass('has-error').next('span').toggleClass('is-visible');
-    username = $("#signin-email").val()
+    email = $("#signin-email").val()
     password = $("#signin-password").val()
     req_data = JSON.stringify({
-        'username': username,
+        'email': email,
         'password': password,
     })
-    console.log(req_data)
     $.ajax({
-      url: "/auth/login",
+      url: "/auth",
       type: "POST",
       'processData': false,
       headers: {
@@ -109,6 +107,8 @@
       data: req_data,
       success: function(data){
           console.log(data)
+          jwt_token = data.access_token
+          formModal.toggleClass('is-visible');
       }
     });
 	});

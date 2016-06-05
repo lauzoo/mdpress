@@ -2,7 +2,7 @@
 # encoding: utf-8
 from redisco import models as db
 
-__all__ = ['Role', 'User']
+__all__ = ['Permission', 'Role', 'User']
 
 
 class Permission:
@@ -14,6 +14,7 @@ class Permission:
 
 
 class Role(db.Model):
+    id = db.IntegerField(required=False)
     name = db.Attribute(required=True)
     permission = db.IntegerField(required=True)
 
@@ -28,18 +29,15 @@ class Role(db.Model):
 
 
 class User(db.Model):
-    name = db.Attribute(required=True)
+    id = db.IntegerField(required=True)
+    username = db.Attribute(required=True)
     password = db.Attribute(required=True, indexed=False)
     email = db.Attribute(required=True)
     role = db.IntegerField(required=True)
 
-    @property
-    def id(self):
-        return str(self._id)
-
     def to_json(self):
-        role = Role.objects(id=self.role).first()
-        return {"name": self.name,
+        role = Role.objects.filter(id=self.role).first()
+        return {"username": self.username,
                 "email": self.email,
                 "role": role.name}
 

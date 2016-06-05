@@ -44,29 +44,21 @@ def register_extensions(app):
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
                              db=app.config['REDIS_CONFIG']['DB'])
-    """Register models."""
-    login_manager.init_app(app)
-
-    # flask-admin configs
-    admin.init_app(app)
-
-    login_manager.login_view = 'auth.login'
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        # return User.objects(id=user_id).first()
-        pass
-
     # jwt config
-    def jwt_authenticate(username, password):
-        logging.info("username:{}\npassword:{}\n".format(username, password))
-        user = User.objects(name=username, password=password).first()
-        return user
+    def jwt_authenticate(email, password):
+        logging.info("email:{}\npassword:{}\n".format(email, password))
+        from application.models import User
+        user = User.objects.filter(email=email).first()
+        if user and user.password==password:
+            return user
+        else:
+            return None
 
     def jwt_identity(payload):
         logging.info("payload:{}".format(payload))
+        from application.models import User
         user_id = payload['identity']
-        return User.objects(id=user_id).first()
+        return User.objects.filter(id=user_id).first()
 
     def make_payload(identity):
         iat = datetime.utcnow()

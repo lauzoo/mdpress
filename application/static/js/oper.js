@@ -22,16 +22,18 @@ function saveAs(title, content)
         name = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + "-" + dt.getTime() + ".html";
     }
 
+    req_data = JSON.stringify({
+        'name': name,
+        'content': result,
+    })
     $.ajax({
       url: "/posts/post",
       type: "POST",
       headers: {
-        "Authorization": "JWT",
+        "Authorization": "JWT " + jwt_token,
       },
-      data: {
-          'name': name,
-          'content': result
-      },
+      contentType: 'application/json',
+      data: req_data,
       success: function(){
           alert("Save Success");
       }
