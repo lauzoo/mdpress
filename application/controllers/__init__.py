@@ -2,14 +2,14 @@
 # encoding: utf-8
 import auth
 import user
-import todo
+import post
 import upload
 import frontend
 
 all_bp = [
     auth.auth_bp,
     user.user_bp,
-    todo.todo_bp,
+    post.post_bp,
     upload.upload_bp,
     frontend.frontend_bp,
 ]

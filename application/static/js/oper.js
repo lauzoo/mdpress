@@ -23,7 +23,7 @@ function saveAs(title, content)
     }
 
     $.ajax({
-      url: "/post",
+      url: "/posts/post",
       type: "POST",
       headers: {
         "Authorization": "JWT",
@@ -40,5 +40,10 @@ function saveAs(title, content)
 
 function listAll()
 {
-    window.location.href = "/post";
+    window.location.href = "/posts/post";
+}
+
+
+function openLogin() {
+  editor.htmlEntitiesDialog();
 }

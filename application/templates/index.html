@@ -33,6 +33,17 @@
                 background-repeat: no-repeat;
                 background-position: -139px -29px;
             }
+
+            .cd-user-modal {
+              visibility: hidden;
+              opacity: 0;
+              transition: opacity 0.3s, visibility 0.3s;
+            }
+             
+            .cd-user-modal.is-visible {
+                visibility: visible;
+                    opacity: 1;
+            }
         </style>
     </head>
     <body>
@@ -43,7 +54,8 @@
 				<input type="button" value="新建">
 				-->
 			<div>
-            <div id="test-editormd">
+        <button id="open-html-entities-dialog">Open html entities dialog</button>
+            <div id="editor">
                 <textarea style="display:none;">
                       ##Hello world!
 
@@ -52,52 +64,188 @@
             </div>
       </div>
 
-      <script src="static/js/jquery.min.js"></script>
-      <script src="static/js/editormd.js"></script>   
-      <script src="static/js/handlerbars.js"></script>
+<div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
+		<div class="cd-user-modal-container"> <!-- this is the container wrapper -->
+			<ul class="cd-switcher">
+				<li><a href="#0">Sign in</a></li>
+				<li><a href="#0">New account</a></li>
+			</ul>
+
+			<div id="cd-login"> <!-- log in form -->
+				<form class="cd-form">
+					<p class="fieldset">
+						<label class="image-replace cd-email" for="signin-email">E-mail</label>
+						<input class="full-width has-padding has-border" id="signin-email" type="email" placeholder="E-mail">
+						<span class="cd-error-message">Error message here!</span>
+					</p>
+
+					<p class="fieldset">
+						<label class="image-replace cd-password" for="signin-password">Password</label>
+						<input class="full-width has-padding has-border" id="signin-password" type="text"  placeholder="Password">
+						<a href="#0" class="hide-password">Hide</a>
+						<span class="cd-error-message">Error message here!</span>
+					</p>
+
+					<p class="fieldset">
+						<input type="checkbox" id="remember-me" checked>
+						<label for="remember-me">Remember me</label>
+					</p>
+
+					<p class="fieldset">
+						<input class="full-width" type="submit" value="Login">
+					</p>
+				</form>
+				
+				<p class="cd-form-bottom-message"><a href="#0">Forgot your password?</a></p>
+				<!-- <a href="#0" class="cd-close-form">Close</a> -->
+			</div> <!-- cd-login -->
+
+			<div id="cd-signup"> <!-- sign up form -->
+				<form class="cd-form">
+					<p class="fieldset">
+						<label class="image-replace cd-username" for="signup-username">Username</label>
+						<input class="full-width has-padding has-border" id="signup-username" type="text" placeholder="Username">
+						<span class="cd-error-message">Error message here!</span>
+					</p>
+
+					<p class="fieldset">
+						<label class="image-replace cd-email" for="signup-email">E-mail</label>
+						<input class="full-width has-padding has-border" id="signup-email" type="email" placeholder="E-mail">
+						<span class="cd-error-message">Error message here!</span>
+					</p>
+
+					<p class="fieldset">
+						<label class="image-replace cd-password" for="signup-password">Password</label>
+						<input class="full-width has-padding has-border" id="signup-password" type="text"  placeholder="Password">
+						<a href="#0" class="hide-password">Hide</a>
+						<span class="cd-error-message">Error message here!</span>
+					</p>
+
+					<p class="fieldset">
+						<input type="checkbox" id="accept-terms">
+						<label for="accept-terms">I agree to the <a href="#0">Terms</a></label>
+					</p>
+
+					<p class="fieldset">
+						<input class="full-width has-padding" type="submit" value="Create account">
+					</p>
+				</form>
+
+				<!-- <a href="#0" class="cd-close-form">Close</a> -->
+			</div> <!-- cd-signup -->
+
+			<div id="cd-reset-password"> <!-- reset password form -->
+				<p class="cd-form-message">Lost your password? Please enter your email address. You will receive a link to create a new password.</p>
+
+				<form class="cd-form">
+					<p class="fieldset">
+						<label class="image-replace cd-email" for="reset-email">E-mail</label>
+						<input class="full-width has-padding has-border" id="reset-email" type="email" placeholder="E-mail">
+						<span class="cd-error-message">Error message here!</span>
+					</p>
+
+					<p class="fieldset">
+						<input class="full-width has-padding" type="submit" value="Reset password">
+					</p>
+				</form>
+
+				<p class="cd-form-bottom-message"><a href="#0">Back to log-in</a></p>
+			</div> <!-- cd-reset-password -->
+			<a href="#0" class="cd-close-form">Close</a>
+		</div> <!-- cd-user-modal-container -->
+	</div> <!-- cd-user-modal -->
+
+
+      <script src="static/js/lib/jquery.min.js"></script>
+      <script src="static/js/lib/handlerbars.js"></script>
+      <script src="static/editor/lib/codemirror/codemirror.min.js"></script>
+      <script src="static/editor/lib/codemirror/addons.min.js"></script>
+      <script src="static/editor/lib/codemirror/modes.min.js"></script>
+      <script src="static/editor/lib/marked.min.js"></script>
+      <script src="static/editor/lib/prettify.min.js"></script>
+      <!-- if setting flowchart == true, or sequence-diagram == true -->
+      <script src="static/editor/lib/raphael.min.js"></script>
+      <script src="static/editor/lib/underscore.min.js"></script>
+      <script src="static/editor/lib/sequence-diagram.min.js"></script>
+      <script src="static/editor/lib/flowchart.min.js"></script>
+      <script src="static/editor/lib/jquery.flowchart.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.js"></script>
+      <link rel="stylesheet" href="static/editor/lib/codemirror/theme/monokai.css " />
+      <link rel="stylesheet" href="static/editor/lib/codemirror/codemirror.min.css" />
+      <link rel="stylesheet" href="static/editor/lib/codemirror/addon/dialog/dialog.css" />
+      <link rel="stylesheet" href="static/editor/lib/codemirror/addon/search/matchesonscrollbar.css" />
+      <!-- if setting tex == true -->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.css" />
+      <link rel="stylesheet" href="static/editor/css/editormd.css" />
+      <link rel="stylesheet" href="static/css/reset.css" />
+      <link rel="stylesheet" href="static/css/login.css" />
+      <script src="static/editor/editormd.js"></script>   
+      <script src="static/js/lib/modernizr.js"></script>
       <script src="static/js/oper.js"></script>
+      <script src="static/js/login.js"></script>
       <script type="text/javascript">
-        var testEditor;
+        var editor;
 
-            $(function() {
-                testEditor = editormd("test-editormd", {
-                    width: "90%",
-                    height: 540,
-                    path : './lib/',
-                    htmlDecode: true,
+        $(function() {
+            editor = editormd("editor", {
+                width: "90%",
+                height: 540,
+                htmlDecode: true,
 
-                    // 显示的工具栏
-                    toolbarIcons : function() {
-                        return [
-                          "undo", "redo", "|",
-                          "bold", "del", "italic", "quote", "|",
-                          "h1", "h2", "h3", "h4", "h5", "h6", "|",
-                          "list-ul", "list-ol", "hr", "|",
-                          "link", "anchor", "image", "code", "code-block-tab", "code-block", "datetime", "|",
-                          "watch", "preview", "fullscreen", "clear", "|",
-                          "info","save", "list"
-                      ]
-                    },
+                // 显示的工具栏
+                toolbarIcons : function() {
+                    return [
+                      "undo", "redo", "|",
+                      "bold", "del", "italic", "quote", "|",
+                      "h1", "h2", "h3", "h4", "h5", "h6", "|",
+                      "list-ul", "list-ol", "hr", "|",
+                      "link", "anchor", "image", "datetime", "|",
+                      "watch", "preview", "fullscreen", "clear", "|",
+                      "login", "info","save", "list"
+                  ]
+                },
 
-                    // 自定义工具栏
-                    toolbarIconTexts : {
-                        save : "保存",
-                        list : "查看"
-                    },
+                // 自定义工具栏图标
+                toolbarIconsClass : {
+                    anchor: "fa-anchor",
+                    login : "fa-sign-in",
+                    save  : "fa-save",
+                    list  : "fa-list",
+                },
+                // 自定义工具栏
+                toolbarIconTexts : {
+                    login: "登录",
+                    save : "保存",
+                    list : "查看"
+                },
 
-                    // 设置工具栏的响应函数
-                    toolbarHandlers : {
-                      save : function (cm, icon, cursor, selection) {
-                        var content = $(".editormd-preview").html();
-                        var title = $("#title").val();
-                        saveAs(title, content);
-                      },
-                      list : function (cm, icon, cursor, selection) {
-                        listAll();
-                      }
-                    }
-                 });
-               });
+                // 设置工具栏的响应函数
+                toolbarHandlers : {
+                  login: function(cm, icon, cursor, Selection) {
+                    login_selected();
+                  },
+                  save : function (cm, icon, cursor, selection) {
+                    var content = $(".editormd-preview").html();
+                    var title = $("#title").val();
+                    saveAs(title, content);
+                  },
+                  list : function (cm, icon, cursor, selection) {
+                    listAll();
+                  },
+                },
+
+                theme: 'dark',
+                editorTheme: 'monokai',
+                previewTheme: 'dark',
+
+                // 自定义模块目录
+                autoLoadModules : false,
+            });
+        });
+
+        $("#open-html-entities-dialog").bind('click', function() {
+            editor.executePlugin("htmlEntitiesDialog", "html-entities-dialog/html-entities-dialog");
+        });
         </script>
     </body>
 </html>
