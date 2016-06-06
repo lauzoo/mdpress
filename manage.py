@@ -15,8 +15,11 @@ manager.add_command("gevent", GEventServer())
 manager.add_command("profile", ProfileServer())
 
 
-@manager.command
-def create_db():
+# @manager.command
+@manager.option('-c', '--config', help='enviroment config')
+def create_db(config):
+    print config
+    create_app(config)
     role = Models.Role.objects.filter(
         permission=Models.Permission.DELETE).first()
     if not role:
@@ -26,7 +29,17 @@ def create_db():
         Models.Role(id=4, name="DELETER", permission=Models.Permission.DELETE).save()
         print "create roles finish..."
     else:
-        print "no need to create role"
+        print "no need to create role..."
+
+    user = Models.User.objects.filter(
+        id=10000).first()
+    if not user:
+        Models.User(id=10000, username="admin", password="admin",
+                    email="liqianglau@outlook.com",
+                    role=Models.Permission.DELETE).save()
+        print "create admin finish..."
+    else:
+        print "user admin exists..."
 
 
 if __name__ == "__main__":

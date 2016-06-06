@@ -91,7 +91,6 @@ class ValidateTest(TestCase):
                 'title': 'test',
                 'excerpt': 'test-post',
                 'content': 'content',
-                'user': 10000,
                 'categories': '["1", "2"]',
                 'tags': '["hello", "world"]',
                 'status': 'publish'

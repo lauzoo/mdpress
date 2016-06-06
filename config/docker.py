@@ -2,10 +2,10 @@
 from .default import Config
 
 
-class TestingConfig(Config):
+class DockerConfig(Config):
     """Base config class."""
-    TESTING = True
-    SECRET_KEY = "DevelopmentConfig"
+    TESTING = False
+    SECRET_KEY = "DockerConfig"
 
     # Site domain
     SITE_TITLE = "mdpress"
@@ -13,7 +13,7 @@ class TestingConfig(Config):
     REDIS_CONFIG = {
         'HOST': '192.168.59.103',
         'PORT': 26379,
-        'DB': 8
+        'DB': 7
     }
 
     UPLOAD_FOLDER = "/tmp/upload"

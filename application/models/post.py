@@ -2,6 +2,8 @@
 # encoding: utf-8
 from redisco import models as db
 
+from .user import User
+
 
 __all__ = ['Category', 'Tag', 'Post']
 
@@ -44,7 +46,8 @@ class Tag(db.Model):
 
 
 class Post(db.Model):
-    title = db.Attribute()
+    id = db.IntegerField(required=True)
+    title = db.Attribute(required=True)
     excerpt = db.Attribute(required=True)
     content = db.Attribute(indexed=False)
     user = db.IntegerField(required=True)
@@ -55,3 +58,21 @@ class Post(db.Model):
     last_update = db.DateTimeField(auto_now=True)
     comments = db.ListField(int)
     status = db.IntegerField(required=True)
+
+    def to_json(self):
+        cats = [Category.objects.filter(id=id).first().name for id in self.categories]
+        tags = [Tag.objects.filter(id=id).first().name for id in self.tags]
+        cmts = [Comment.objects.filter(id=id).first().to_json() for id in self.comments]
+        author = User.objects.filter(id=self.user).first().username
+        return {
+            "id": self.id,
+            "title": self.title,
+            "excerpt": self.excerpt,
+            "content": self.content,
+            "user": author,
+            "categories": cats,
+            "tags": tags,
+            "create_at": self.create_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "comments": cmts,
+            "status": self.status
+        }
