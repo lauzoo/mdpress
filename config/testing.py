@@ -11,8 +11,8 @@ class TestingConfig(Config):
     SITE_TITLE = "mdpress"
 
     REDIS_CONFIG = {
-        'HOST': '192.168.59.103',
-        'PORT': 26379,
+        'HOST': '127.0.0.1',
+        'PORT': 6379,
         'DB': 8
     }
 

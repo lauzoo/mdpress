@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from datetime import datetime
+from voluptuous import MultipleInvalid
 
 from flask import request, jsonify, current_app, Blueprint
 from flask_jwt import jwt_required, current_identity
@@ -55,7 +56,7 @@ def qry_post():
         }
     else:
         resp = {
-            'data': post.to_json(),
+            'data': {'post': post.to_json()},
             'msg': '',
             'code': 2000,
             'extra': {}
@@ -68,7 +69,16 @@ def qry_post():
 def add_post():
     """add post to db"""
     data = request.get_json()
-    post = post_schema(data)
+    try:
+        post = post_schema(data)
+    except MultipleInvalid as e:
+        resp = {
+            'data': {},
+            'msg': str(e),
+            'code': 2001,
+            'extra': {}
+        }
+        return jsonify(**resp)
     post = Models.Post(
         id=generator_post_id(), title=post.get('title'), create_at=datetime.now(),
         excerpt=post.get('excerpt'), content=post.get('content'),
@@ -78,13 +88,49 @@ def add_post():
     current_app.logger.info("save post with status: {}".format(status))
     post = Models.Post.objects.filter(id=post.id).first()
     current_app.logger.info("post create at: {}".format(post.create_at))
-    return jsonify(**post.to_json())
+    resp = {
+        'data': {'post': post.to_json()},
+        'msg': 'success',
+        'code': 2000,
+        'extra': {}
+    }
+    return jsonify(**resp)
 
 
 @post_bp.route('/post', methods=['PUT'])
 @jwt_required()
 def udt_post():
-    pass
+    post = request.get_json()
+    if not post or not post.get('id'):
+        resp = {
+            'data': {},
+            'msg': 'post or id not found',
+            'code': 2001,
+            'extra': {}
+        }
+        return jsonify(**resp)
+    db_post = Models.Post.objects.filter(
+        id=post.get('id')).first()
+    if not db_post:
+        resp = {
+            'data': {},
+            'msg': 'post not found in db',
+            'code': 2001,
+            'extra': {}
+        }
+        return jsonify(**resp)
+    db_post.update(
+        title=post.get('title'), excerpt=post.get('excerpt'),
+        content=post.get('content'), categories=post.get('categories'),
+        tags=post.get('tags'), status=post.get('status')
+    )
+    resp = {
+        'data': {'post': db_post.to_json()},
+        'msg': 'success',
+        'code': 2000,
+        'extra': {}
+    }
+    return jsonify(**resp)
 
 
 @post_bp.route('/post', methods=['DELETE'])
@@ -98,6 +144,7 @@ def del_post():
             'code': 2001,
             'extra': {}
         }
+        return jsonify(**resp)
     current_app.logger.info("delete post id :{}".format(ids))
     uids = set(ids)
     posts = []

@@ -91,9 +91,10 @@ class ValidateTest(TestCase):
                 'title': 'test',
                 'excerpt': 'test-post',
                 'content': 'content',
-                'categories': '["1", "2"]',
-                'tags': '["hello", "world"]',
-                'status': 'publish'
+                'categories': ["1", "2"],
+                'tags': ["hello", "world"],
+                'status': 0
             })
-        except Invalid:
+        except Invalid as e:
+            print e
             self.assertTrue(False)
