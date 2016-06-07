@@ -18,14 +18,49 @@ def all_post():
     """query all posts"""
     page = request.args.get('page', 1)
     page_size = request.args.get('pagesize', 10)
-    ps = Models.Post.objects.filter()[page_size * (page - 1): page_size * page]
-    return jsonify({'posts': [p.to_json() for p in ps]})
+    ps = Models.Post.objects.filter()
+    total = len(ps)
+    ps = ps[page_size * (page - 1): page_size * page]
+    resp = {
+        'data': {'total': total,
+                 'posts': [p.to_json() for p in ps],
+                 'page': page,
+                 'page_size': page_size},
+        'msg': 'success',
+        'code': 2000,
+        'extra': {}
+    }
+    return jsonify(**resp)
 
 
 @post_bp.route('/post', methods=['GET'])
 def qry_post():
     """query post with post id"""
-    pass
+    id = request.args.get('id')
+    if not id:
+        resp = {
+            'data': {},
+            'msg': 'id not found',
+            'code': 2001,
+            'extra': {}
+        }
+    current_app.logger.info("post id :{}".format(id))
+    post = Models.Post.objects.filter(id=id).first()
+    if not post:
+        resp = {
+            'data': {},
+            'msg': 'post not found',
+            'code': 2002,
+            'extra': {}
+        }
+    else:
+        resp = {
+            'data': post.to_json(),
+            'msg': '',
+            'code': 2000,
+            'extra': {}
+        }
+    return jsonify(**resp)
 
 
 @post_bp.route('/post', methods=['POST'])
@@ -55,4 +90,39 @@ def udt_post():
 @post_bp.route('/post', methods=['DELETE'])
 @jwt_required()
 def del_post():
-    pass
+    ids = request.get_json().get('ids')
+    if not ids:
+        resp = {
+            'data': {},
+            'msg': 'id not found',
+            'code': 2001,
+            'extra': {}
+        }
+    current_app.logger.info("delete post id :{}".format(ids))
+    uids = set(ids)
+    posts = []
+    for id in uids:
+        post = Models.Post.objects.filter(id=id).first()
+        if post:
+            posts.append(post)
+    if not posts:
+        resp = {
+            'data': {'post_ids': [id for id in ids]},
+            'msg': 'posts not found',
+            'code': 2002,
+            'extra': {}
+        }
+    else:
+        resp = {
+            'data': {
+                'success': len(posts),
+                'total': len(ids),
+                'posts': [p.to_json() for p in posts]
+            },
+            'msg': 'success',
+            'code': 2000,
+            'extra': {}
+        }
+        for p in posts:
+            p.delete()
+    return jsonify(**resp)
