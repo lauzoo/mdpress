@@ -119,11 +119,13 @@ def udt_post():
             'extra': {}
         }
         return jsonify(**resp)
-    db_post.update(
-        title=post.get('title'), excerpt=post.get('excerpt'),
-        content=post.get('content'), categories=post.get('categories'),
-        tags=post.get('tags'), status=post.get('status')
-    )
+    db_post.title=post.get('title')
+    db_post.excerpt=post.get('excerpt')
+    db_post.content=post.get('content')
+    db_post.categories=post.get('categories')
+    db_post.tags=post.get('tags')
+    db_post.status=post.get('status')
+    db_post.save()
     resp = {
         'data': {'post': db_post.to_json()},
         'msg': 'success',

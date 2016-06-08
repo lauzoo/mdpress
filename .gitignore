@@ -1,5 +1,6 @@
 tags
 *.py[cod]
+*.pyc
 node_modules
 # C extensions
 *.so
@@ -20,6 +21,9 @@ develop-eggs
 lib64
 env
 db
+
+#config
+config/*
 
 # Installer logs
 pip-log.txt
