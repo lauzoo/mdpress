@@ -15,8 +15,8 @@ class PermissionTest(TestCase):
         self.client = self.app.test_client()
         Models.Role.objects.create(id=1, name="READER", permission=Models.Permission.READ)
         Models.Role.objects.create(id=2, name="CREATER", permission=Models.Permission.CREATE)
-        Models.Role.objects.create(id=3, name="UPDATER", permission=Models.Permission.UPDATE)
-        Models.Role.objects.create(id=4, name="DELETER", permission=Models.Permission.DELETE)
+        Models.Role.objects.create(id=3, name="UPDATER", permission=Models.Permission.UPDATE | Models.Permission.CREATE)
+        Models.Role.objects.create(id=4, name="DELETER", permission=Models.Permission.DELETE | Models.Permission.CREATE)
         Models.Role.objects.create(id=5, name="READER", permission=Models.Permission.DEFAULT)
 
     def tearDown(self):
@@ -45,8 +45,8 @@ class PermissionTest(TestCase):
         return json.loads(self.client.get('/posts/all').data)['data']['posts']
 
     def user_update_post(self):
-        self.user_add_post()
         post = self._get_all_post()[0]
+        print "all post {}".format(post)
         post['title'] = 'new_title'
         resp = self.client.put(
             '/posts/post', data=json.dumps(post),
@@ -93,14 +93,14 @@ class PermissionTest(TestCase):
         self.assertEquals(resp_code, 2000)
         self.assertEqual(resp_data.get('post').get('title'), 'title')
         self.assertIn('success', resp_msg)
-        resp_code = self.user_update_post()
+        resp_json = self.user_update_post()
         resp_code = resp_json.get('code')
         resp_data = resp_json.get('data')
         resp_msg = resp_json.get('msg')
         self.assertEquals(resp_code, 2009)
         self.assertEquals(resp_data, {})
         self.assertIn('no permission', resp_msg)
-        resp_code = self.user_delete_post()
+        resp_json = self.user_delete_post()
         resp_code = resp_json.get('code')
         resp_data = resp_json.get('data')
         resp_msg = resp_json.get('msg')
@@ -109,7 +109,7 @@ class PermissionTest(TestCase):
         self.assertIn('no permission', resp_msg)
 
     def test_update_post_permission(self):
-        self.create_permission_user_and_login(Models.Permission.UPDATE)
+        self.create_permission_user_and_login(Models.Permission.UPDATE | Models.Permission.CREATE)
         resp_json = self.user_add_post()
         resp_code = resp_json.get('code')
         resp_data = resp_json.get('data')
@@ -117,14 +117,14 @@ class PermissionTest(TestCase):
         self.assertEquals(resp_code, 2000)
         self.assertEqual(resp_data.get('post').get('title'), 'title')
         self.assertIn('success', resp_msg)
-        resp_code = self.user_update_post()
+        resp_json = self.user_update_post()
         resp_code = resp_json.get('code')
         resp_data = resp_json.get('data')
         resp_msg = resp_json.get('msg')
         self.assertEquals(resp_code, 2000)
         self.assertEqual(resp_data.get('post').get('title'), 'new_title')
         self.assertIn('success', resp_msg)
-        resp_code = self.user_delete_post()
+        resp_json = self.user_delete_post()
         resp_code = resp_json.get('code')
         resp_data = resp_json.get('data')
         resp_msg = resp_json.get('msg')
@@ -133,7 +133,8 @@ class PermissionTest(TestCase):
         self.assertIn('no permission', resp_msg)
 
     def test_delete_post_permission(self):
-        self.create_permission_user_and_login(Models.Permission.CREATE)
+        self.create_permission_user_and_login(
+            Models.Permission.DELETE | Models.Permission.CREATE)
         resp_json = self.user_add_post()
         resp_code = resp_json.get('code')
         resp_data = resp_json.get('data')
@@ -141,17 +142,18 @@ class PermissionTest(TestCase):
         self.assertEquals(resp_code, 2000)
         self.assertEqual(resp_data.get('post').get('title'), 'title')
         self.assertIn('success', resp_msg)
-        resp_code = self.user_update_post()
+        resp_json = self.user_update_post()
+        resp_code = resp_json.get('code')
+        resp_data = resp_json.get('data')
+        resp_msg = resp_json.get('msg')
+        self.assertEquals(resp_code, 2009)
+        self.assertEqual(resp_data, {})
+        self.assertIn('no permission', resp_msg)
+        resp_json = self.user_delete_post()
+        print "resp_json: {}".format(resp_json)
         resp_code = resp_json.get('code')
         resp_data = resp_json.get('data')
         resp_msg = resp_json.get('msg')
         self.assertEquals(resp_code, 2000)
-        self.assertEqual(resp_data.get('post').get('title'), 'new_title')
-        self.assertIn('success', resp_msg)
-        resp_code = self.user_delete_post()
-        resp_code = resp_json.get('code')
-        resp_data = resp_json.get('data')
-        resp_msg = resp_json.get('msg')
-        self.assertEquals(resp_code, 2000)
-        self.assertEqual(resp_data.get('post').get('title'), 'new_title')
+        self.assertEqual(resp_data.get('posts')[0].get('title'), 'title')
         self.assertIn('success', resp_msg)

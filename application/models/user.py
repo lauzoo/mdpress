@@ -11,6 +11,7 @@ class Permission:
     UPDATE = 0x04
     DELETE = 0x08
     DEFAULT = READ
+    ADMIN = READ | CREATE | UPDATE | DELETE
 
 
 class Role(db.Model):

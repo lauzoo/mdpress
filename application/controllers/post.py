@@ -9,6 +9,7 @@ from flask_jwt import jwt_required, current_identity
 import application.models as Models
 from application.utils.validator import post_schema
 from application.utils.generator import generator_post_id
+from application.utils.permission import permission_required
 
 
 post_bp = Blueprint('posts', __name__, url_prefix='/posts')
@@ -66,6 +67,7 @@ def qry_post():
 
 @post_bp.route('/post', methods=['POST'])
 @jwt_required()
+@permission_required(Models.Permission.CREATE)
 def add_post():
     """add post to db"""
     data = request.get_json()
@@ -108,6 +110,7 @@ def add_post():
 
 @post_bp.route('/post', methods=['PUT'])
 @jwt_required()
+@permission_required(Models.Permission.UPDATE)
 def udt_post():
     post = request.get_json()
     if not post or not post.get('id'):
@@ -146,6 +149,7 @@ def udt_post():
 
 @post_bp.route('/post', methods=['DELETE'])
 @jwt_required()
+@permission_required(Models.Permission.DELETE)
 def del_post():
     ids = request.get_json().get('ids')
     if not ids:

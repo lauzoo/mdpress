@@ -15,7 +15,8 @@ class PostApiTest(TestCase):
         self.client = self.app.test_client()
         Models.Role.objects.create(
             id=1, name="Test",
-            permission=Models.Permission.DELETE)
+            permission=Models.Permission.ADMIN)
+        print Models.Role.objects.all()[0].permission
         r = Models.Role.objects.all()[0]
         Models.User(id=10000, username="zhangsan",
                     password="password",
