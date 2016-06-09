@@ -79,11 +79,20 @@ def add_post():
             'extra': {}
         }
         return jsonify(**resp)
+    user = Models.User.objects.filter(id=str(current_identity.id)).first()
     post = Models.Post(
-        id=generator_post_id(), title=post.get('title'), create_at=datetime.now(),
-        excerpt=post.get('excerpt'), content=post.get('content'),
-        user=int(current_identity.id), categories=post.get('categories'),
-        tags=post.get('tags'), status=post.get('status'))
+        id=generator_post_id(),
+        title=post.get('title'),
+        excerpt=post.get('excerpt'),
+        content=post.get('content'),
+        user=user,
+        categories=[],
+        tags=[],
+        create_at=datetime.now(),
+        version=1,
+        last_update=datetime.now(),
+        comments=[],
+        status=post.get('status'))
     status = post.save()
     current_app.logger.info("save post with status: {}".format(status))
     post = Models.Post.objects.filter(id=post.id).first()

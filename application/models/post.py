@@ -50,26 +50,25 @@ class Post(db.Model):
     title = db.Attribute(required=True)
     excerpt = db.Attribute(required=True)
     content = db.Attribute(indexed=False)
-    user = db.IntegerField(required=True)
-    categories = db.ListField(int)
-    tags = db.ListField(int)
+    user = db.ReferenceField(User, required=True)
+    categories = db.ListField(Category)
+    tags = db.ListField(Tag)
     create_at = db.DateTimeField(auto_now_add=True)
     version = db.IntegerField()
     last_update = db.DateTimeField(auto_now=True)
-    comments = db.ListField(int)
+    comments = db.ListField(Comment)
     status = db.IntegerField(required=True)
 
     def to_json(self):
         cats = [Category.objects.filter(id=id).first().name for id in self.categories]
         tags = [Tag.objects.filter(id=id).first().name for id in self.tags]
         cmts = [Comment.objects.filter(id=id).first().to_json() for id in self.comments]
-        author = User.objects.filter(id=self.user).first().username
         return {
             "id": self.id,
             "title": self.title,
             "excerpt": self.excerpt,
             "content": self.content,
-            "user": author,
+            "user": self.user.username,
             "categories": cats,
             "tags": tags,
             "create_at": self.create_at.strftime("%Y-%m-%d %H:%M:%S"),

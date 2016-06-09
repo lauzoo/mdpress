@@ -14,7 +14,7 @@ class Permission:
 
 
 class Role(db.Model):
-    id = db.IntegerField(required=False)
+    id = db.IntegerField(required=True)
     name = db.Attribute(required=True)
     permission = db.IntegerField(required=True)
 
@@ -33,7 +33,7 @@ class User(db.Model):
     username = db.Attribute(required=True)
     password = db.Attribute(required=True, indexed=False)
     email = db.Attribute(required=True)
-    role = db.IntegerField(required=True)
+    role = db.ReferenceField(Role, required=True)
 
     def to_json(self):
         role = Role.objects.filter(id=self.role).first()

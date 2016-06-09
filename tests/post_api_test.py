@@ -13,10 +13,14 @@ class PostApiTest(TestCase):
         self.ctx = self.app.app_context()
         self.ctx.push()
         self.client = self.app.test_client()
+        Models.Role.objects.create(
+            id=1, name="Test",
+            permission=Models.Permission.DELETE)
+        r = Models.Role.objects.all()[0]
         Models.User(id=10000, username="zhangsan",
                     password="password",
                     email="liqianglau@outlook.com",
-                    role=1).save()
+                    role=r).save()
         user = {
             'email': 'liqianglau@outlook.com',
             'password': 'password',
