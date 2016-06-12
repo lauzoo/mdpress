@@ -24,9 +24,14 @@ def create_db(config):
         permission=Models.Permission.DELETE).first()
     if not role:
         Models.Role(id=1, name="READER", permission=Models.Permission.READ).save()
-        Models.Role(id=2, name="CREATER", permission=Models.Permission.CREATE).save()
-        Models.Role(id=3, name="UPDATER", permission=Models.Permission.UPDATE).save()
-        Models.Role(id=4, name="DELETER", permission=Models.Permission.DELETE).save()
+        Models.Role(id=2, name="CREATER",
+                    permission=Models.Permission.CREATE | Models.Permission.READ).save()
+        Models.Role(id=3, name="UPDATER",
+                    permission=Models.Permission.UPDATE | Models.Permission.CREATE |
+                    Models.Permission.READ).save()
+        Models.Role(id=4, name="DELETER",
+                    permission=Models.Permission.DELETE | Models.Permission.UPDATE |
+                    Models.Permission.CREATE | Models.Permission.READ).save()
         print "create roles finish..."
     else:
         print "no need to create role..."
@@ -34,9 +39,10 @@ def create_db(config):
     user = Models.User.objects.filter(
         id=10000).first()
     if not user:
+        role = Models.Role.objects.filter(id=4).first()
         Models.User(id=10000, username="admin", password="admin",
                     email="liqianglau@outlook.com",
-                    role=Models.Permission.DELETE).save()
+                    role=role).save()
         print "create admin finish..."
     else:
         print "user admin exists..."

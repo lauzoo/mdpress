@@ -6,60 +6,33 @@
         <link rel="stylesheet" href="static/css/style.css" />
         <link rel="stylesheet" href="static/css/editormd.css" />
         <style>
-            .ME_global_nav {
-                background-color: #ddf;
-                width: 100%;
-                height: 3rem;
-            }
-
-            .ME_global_nav_register, .ME_global_nav_login {
-                margin: 0 1rem;
-                width: 4rem;
-                height: 3rem;
-                float: right;
-            }
-
-            .ME_global_nav_register a, .ME_global_nav_login a {
-                text-decoration: none;
-                font-size: 2rem;
-            }
-
-            .ME_global_nav_QQlogin {
-                margin-top: 12px;
-                display: block;
-                width: 76px;
-                height: 24px;
-                background-image: url("//pub.idqqimg.com/qconn/wiki/wikiv2//sprite/style.png");
-                background-repeat: no-repeat;
-                background-position: -139px -29px;
-            }
-
             .cd-user-modal {
               visibility: hidden;
               opacity: 0;
               transition: opacity 0.3s, visibility 0.3s;
             }
-             
             .cd-user-modal.is-visible {
                 visibility: visible;
                     opacity: 1;
-            }
+            }/*
+            #category {
+                float: left;
+                position: relative;
+                width: 20%;
+                height: 500px;
+            }*/
         </style>
     </head>
     <body>
-				<!--
-				标题:<input type="text" id="title"><br>
-				<input type="button" onclick="save();"value="保存">
-				<input type="button" value="另存为">
-				<input type="button" value="新建">
-				-->
 			<div>
-        <button id="open-html-entities-dialog">Open html entities dialog</button>
+        <div id="category">
+
+        </div>
             <div id="editor">
                 <textarea style="display:none;">
-                      ##Hello world!
+##Hello world!
 
-                      ####开启识别和解析HTML标签
+####开启识别和解析HTML标签
                 </textarea>
             </div>
       </div>
@@ -190,7 +163,7 @@
         $(function() {
             editor = editormd("editor", {
                 width: "90%",
-                height: 540,
+                height: 640,
                 htmlDecode: true,
 
                 // 显示的工具栏

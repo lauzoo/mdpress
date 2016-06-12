@@ -27,6 +27,7 @@ config/*
 
 # Installer logs
 pip-log.txt
+logs/*
 
 # Unit test / coverage reports
 .coverage

@@ -10,7 +10,7 @@ import redisco
 from flask import Flask, current_app
 
 from config import load_config
-from application.extensions import login_manager, admin, jwt
+from application.extensions import jwt
 from application.controllers import all_bp
 
 # convert python's encoding to utf8
@@ -23,6 +23,7 @@ except (AttributeError, NameError):
 
 def create_app(mode):
     """Create Flask app."""
+    print "mode: {}".format(mode)
     config = load_config(mode)
 
     app = Flask(__name__)
@@ -90,7 +91,8 @@ def configure_logging(app):
 
     app.logger.setLevel(logging.INFO)
 
-    info_log = os.path.join("running-info.log")
+    # info_log = os.path.join("running-info.log")
+    info_log = "/home/liqiang/gitosc/mdpress/logs/running.info"
     info_file_handler = logging.handlers.RotatingFileHandler(
         info_log, maxBytes=104857600, backupCount=10)
     info_file_handler.setLevel(logging.DEBUG)

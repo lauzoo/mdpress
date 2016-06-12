@@ -42,7 +42,7 @@ function saveAs(title, content)
 
 function listAll()
 {
-    window.location.href = "/posts/post";
+    window.location.href = "/posts/all";
 }
 
 
