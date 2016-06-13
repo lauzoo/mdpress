@@ -94,7 +94,6 @@ class PostApiTest(TestCase):
         old_posts = self._get_all_post()
         post = old_posts[0]
         data = {'ids': [int(post.get('id'))]}
-        print data
         resp = self.client.delete(
             '/posts/post', data=json.dumps(data),
             headers={'Authorization': 'JWT {}'.format(self.token),
@@ -104,3 +103,26 @@ class PostApiTest(TestCase):
         self.assertEquals(resp_code, 2000)
         new_posts = self._get_all_post()
         self.assertEquals(len(old_posts) - 1, len(new_posts))
+
+    def test_query_post(self):
+        self._add_a_post()
+        post = self._get_all_post()[0]
+        resp = self.client.get('/posts/post?id={}'.format(post.get('id')))
+        resp_data = json.loads(resp.data)
+        resp_code = resp_data.get('code')
+        self.assertEquals(resp_code, 2000)
+        resp_post = resp_data.get('data').get('post')
+        self.assertIsNotNone(resp_post.get('id'))
+        self.assertIsNotNone(resp_post.get('title'))
+        self.assertIsNotNone(resp_post.get('content'))
+
+    def test_query_all_post(self):
+        self._add_a_post()
+        resp = self.client.get('/posts/all')
+        resp_data = json.loads(resp.data)
+        self.assertEquals(resp_data.get('code'), 2000)
+        self.assertEquals(resp_data.get('data').get('total'), 1)
+        self.assertEquals(resp_data.get('data').get('page'), 1)
+        self.assertEquals(resp_data.get('data').get('page_size'), 10)
+        self.assertEquals(resp_data.get('data').get('has_prev'), False)
+        self.assertEquals(resp_data.get('data').get('has_next'), False)

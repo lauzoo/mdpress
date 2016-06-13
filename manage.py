@@ -48,5 +48,10 @@ def create_db(config):
         print "user admin exists..."
 
 
+@manager.option('-c', '--config', help='enviroment config')
+def simple_run(config):
+    app = create_app(config)
+    app.run(debug=True)
+
 if __name__ == "__main__":
     manager.run()

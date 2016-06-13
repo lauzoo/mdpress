@@ -92,7 +92,7 @@ def configure_logging(app):
     app.logger.setLevel(logging.INFO)
 
     # info_log = os.path.join("running-info.log")
-    info_log = "/home/liqiang/gitosc/mdpress/logs/running.info"
+    info_log = "logs/running.info"
     info_file_handler = logging.handlers.RotatingFileHandler(
         info_log, maxBytes=104857600, backupCount=10)
     info_file_handler.setLevel(logging.DEBUG)
