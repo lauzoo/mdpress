@@ -27,7 +27,9 @@ def all_post():
         'data': {'total': total,
                  'posts': [p.to_json() for p in ps],
                  'page': page,
-                 'page_size': page_size},
+                 'page_size': page_size,
+                 'has_prev': page > 1,
+                 'has_next': (page_size) * page < total},
         'msg': 'success',
         'code': 2000,
         'extra': {}
