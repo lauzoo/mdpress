@@ -48,30 +48,44 @@ class Tag(db.Model):
 class Post(db.Model):
     id = db.IntegerField(required=True)
     title = db.Attribute(required=True)
-    excerpt = db.Attribute(required=True)
-    content = db.Attribute(indexed=False)
-    user = db.ReferenceField(User, required=True)
+    slug = db.Attribute(required=True)
+    markdown = db.Attribute(indexed=False)
+    image = db.Attribute(indexed=False)
+    featured = db.BooleanField()
+    page = db.BooleanField()
+    status = db.Attribute(required=True)
+    language = db.Attribute(indexed=False)
+    meta_title = db.Attribute(indexed=False)
+    meta_description = db.Attribute(indexed=False)
+    updated_at = db.DateTimeField(auto_now=True)
+    updated_by = db.ReferenceField(User)
+    published_at = db.DateTimeField()
+    created_at = db.DateTimeField()
+    created_by = db.ReferenceField(User)
+    author = db.ReferenceField(User)
+    publishedBy = db.ReferenceField(User)
     categories = db.ListField(Category)
     tags = db.ListField(Tag)
-    create_at = db.DateTimeField(auto_now_add=True)
-    version = db.IntegerField()
-    last_update = db.DateTimeField(auto_now=True)
-    comments = db.ListField(Comment)
-    status = db.IntegerField(required=True)
 
     def to_json(self):
-        cats = [Category.objects.filter(id=id).first().name for id in self.categories]
-        tags = [Tag.objects.filter(id=id).first().name for id in self.tags]
-        cmts = [Comment.objects.filter(id=id).first().to_json() for id in self.comments]
         return {
             "id": self.id,
             "title": self.title,
-            "excerpt": self.excerpt,
-            "content": self.content,
-            "user": self.user.username,
-            "categories": cats,
-            "tags": tags,
-            "create_at": self.create_at.strftime("%Y-%m-%d %H:%M:%S"),
-            "comments": cmts,
-            "status": self.status
+            "slug": self.slug,
+            "markdown": self.markdown,
+            "image": self.image,
+            "featured": self.featured,
+            "page": self.page,
+            "status": self.status,
+            "language": self.language,
+            "meta_title": self.meta_title,
+            "meta_description": self.meta_description,
+            "updated_at": self.updated_at.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
+            "updated_by": self.updated_by.id if self.updated_by else None,
+            "published_at": self.published_at.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
+            "created_at": self.created_at.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
+            "created_by": self.created_by.id if self.created_by else None,
+            "author": "1",
+            "publishedBy": self.publishedBy.id if self.publishedBy else None,
+            "tags": []
         }

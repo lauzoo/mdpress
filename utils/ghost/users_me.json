@@ -1,0 +1,42 @@
+{
+    "users": [
+            {
+                        "id": 1,
+                        "uuid": "0dd96ef2-d7e7-4f92-b74b-a514e2de85af",
+                        "name": "Tyrael",
+                        "slug": "tyrael",
+                        "email": "liqianglau@outlook.com",
+                        "image": null,
+                        "cover": null,
+                        "bio": null,
+                        "website": null,
+                        "location": null,
+                        "facebook": null,
+                        "twitter": null,
+                        "accessibility": null,
+                        "status": "active",
+                        "language": "en_US",
+                        "visibility": "public",
+                        "meta_title": null,
+                        "meta_description": null,
+                        "tour": null,
+                        "last_login": "2016-06-13T17:15:05.593Z",
+                        "created_at": "2016-06-13T15:58:47.347Z",
+                        "created_by": 1,
+                        "updated_at": "2016-06-13T17:15:05.594Z",
+                        "updated_by": 1,
+                        "roles": [
+                                        {
+                                                            "id": 4,
+                                                            "uuid": "a2ee97c5-8742-4625-9cbe-4478c6c23873",
+                                                            "name": "Owner",
+                                                            "description": "Blog Owner",
+                                                            "created_at": "2016-06-13T15:58:44.521Z",
+                                                            "created_by": 1,
+                                                            "updated_at": "2016-06-13T15:58:44.521Z",
+                                                            "updated_by": 1
+                                                        }
+                                    ]
+                    }
+        ]
+}

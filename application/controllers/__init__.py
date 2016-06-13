@@ -5,6 +5,7 @@ import user
 import post
 import upload
 import frontend
+import ghost
 
 all_bp = [
     auth.auth_bp,
@@ -12,4 +13,5 @@ all_bp = [
     post.post_bp,
     upload.upload_bp,
     frontend.frontend_bp,
+    ghost.ghost_bp,
 ]

@@ -1,0 +1,221 @@
+{
+    "settings": [
+        {
+            "id": 5,
+            "uuid": "2eead3fe-6e40-48dc-b578-dd3ea29521ba",
+            "key": "title",
+            "value": "AngirisCouncil",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.395Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T16:00:06.853Z",
+            "updated_by": 1
+        },
+        {
+            "id": 6,
+            "uuid": "5eb10ea5-f17a-4091-9f48-e5041501822e",
+            "key": "description",
+            "value": "Thoughts, stories and ideas.",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.395Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T16:00:06.857Z",
+            "updated_by": 1
+        },
+        {
+            "id": 7,
+            "uuid": "5f127a58-1352-41fb-ba22-48e63f8464c1",
+            "key": "logo",
+            "value": "",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.396Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.396Z",
+            "updated_by": 1
+        },
+        {
+            "id": 8,
+            "uuid": "0932a315-dd15-40c9-b420-e7e6b0f9e7e6",
+            "key": "cover",
+            "value": "",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.396Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.396Z",
+            "updated_by": 1
+        },
+        {
+            "id": 9,
+            "uuid": "8774ac57-4a92-4ab6-a1ae-d0cf5dce38c5",
+            "key": "defaultLang",
+            "value": "en_US",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.396Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.396Z",
+            "updated_by": 1
+        },
+        {
+            "id": 10,
+            "uuid": "8af17b71-79a0-45c8-ba92-d4f6dc87d335",
+            "key": "postsPerPage",
+            "value": "5",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.396Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.396Z",
+            "updated_by": 1
+        },
+        {
+            "id": 11,
+            "uuid": "9d3a52f2-5965-4bd8-ae04-272136464b87",
+            "key": "forceI18n",
+            "value": "true",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.396Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.396Z",
+            "updated_by": 1
+        },
+        {
+            "id": 12,
+            "uuid": "c3425a56-08d2-4a3e-9e03-ef497d7e27ab",
+            "key": "permalinks",
+            "value": "/:slug/",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.396Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.396Z",
+            "updated_by": 1
+        },
+        {
+            "id": 13,
+            "uuid": "ca6ba214-84ee-421f-ac39-9509513dac34",
+            "key": "ghost_head",
+            "value": "",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.397Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.397Z",
+            "updated_by": 1
+        },
+        {
+            "id": 14,
+            "uuid": "896060d3-93fd-44f1-93b2-4e2f2840cf33",
+            "key": "ghost_foot",
+            "value": "",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.398Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.398Z",
+            "updated_by": 1
+        },
+        {
+            "id": 15,
+            "uuid": "2afe8e74-936c-44f2-be0e-217f6e8c5235",
+            "key": "facebook",
+            "value": "",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.398Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.398Z",
+            "updated_by": 1
+        },
+        {
+            "id": 16,
+            "uuid": "4deeb942-5398-4356-8a08-0230acb4a238",
+            "key": "twitter",
+            "value": "",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.398Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.398Z",
+            "updated_by": 1
+        },
+        {
+            "id": 17,
+            "uuid": "62e2dd1a-6bc6-4eef-8cbd-161c311021fd",
+            "key": "labs",
+            "value": "{}",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.398Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.398Z",
+            "updated_by": 1
+        },
+        {
+            "id": 18,
+            "uuid": "2add4684-71d1-4ec4-9b82-f09fa2906ded",
+            "key": "navigation",
+            "value": "[{\"label\":\"Home\", \"url\":\"/\"}]",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.398Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.398Z",
+            "updated_by": 1
+        },
+        {
+            "id": 19,
+            "uuid": "cf98fce7-5f27-46ea-a480-0981532aaff9",
+            "key": "slack",
+            "value": "[{\"url\":\"\"}]",
+            "type": "blog",
+            "created_at": "2016-06-13T15:58:47.398Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.398Z",
+            "updated_by": 1
+        },
+        {
+            "id": 22,
+            "uuid": "88c660bd-575d-4ba3-9654-e3ffa3f36955",
+            "key": "isPrivate",
+            "value": "false",
+            "type": "private",
+            "created_at": "2016-06-13T15:58:47.399Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.399Z",
+            "updated_by": 1
+        },
+        {
+            "id": 23,
+            "uuid": "b9316a64-1fdc-43e7-9016-bb65f87d101e",
+            "key": "password",
+            "value": "",
+            "type": "private",
+            "created_at": "2016-06-13T15:58:47.400Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.400Z",
+            "updated_by": 1
+        },
+        {
+            "id": 24,
+            "uuid": "f1c4bd37-83c8-4456-8ae6-4c5ca2a1abef",
+            "key": "activeTheme",
+            "value": "casper",
+            "type": "theme",
+            "created_at": "2016-06-13T15:58:47.398Z",
+            "created_by": 1,
+            "updated_at": "2016-06-13T15:58:47.398Z",
+            "updated_by": 1
+        },
+        {
+            "key": "availableThemes",
+            "value": [
+                {
+                    "name": "casper",
+                    "package": {
+                        "name": "Casper",
+                        "version": "1.3.0"
+                    },
+                    "active": true
+                }
+            ],
+            "type": "theme"
+        }
+    ],
+    "meta": {
+        "filters": {
+            "type": "blog,theme,private"
+        }
+    }
+}
