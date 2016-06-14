@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Add New - Pure Admin</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/pure-min.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/admin.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="assets/css/select2.css" />
+</head>
+<body>
+<div class="pure-g-r" id="layout">
+
+    <div class="pure-u" id="nav">
+        <a href="#nav" class="nav-menu-button">Menu</a>
+
+        <div class="nav-inner">
+        	<div class="user">
+        		<p><img class="user-avatar" alt="Avatar" src="assets/img/avatar.gif" height="64" width="64"></p>
+        		<p><a href="profile.html"><span class="user-label-editor"></span>User Name</a></p>
+        	</div>
+
+            <div class="pure-menu pure-menu-open">
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="post-list.html">Posts</a></li>
+                    <li><a href="post-list.html">Tags</a></li>
+                    <li><a href="post-list.html">Gallery</a></li>
+                    <li><a href="post-list.html">Comments</a></li>
+                    <li class="pure-menu-heading">Options</li>
+                    <li><a href="options.html" class="selected">General</a></li>
+                    <li><a href="options.html">Seo</a></li>
+                    <li><a href="options.html">Meta</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="pure-u" id="main">
+    	<div class="crud">
+    		<h2 class="main-subhead">Add New Post</h2>
+    		<div class="pure-g-r">
+    			<div class="pure-u-1">
+    				<form class="pure-form pure-form-stacked">
+					    <fieldset>
+                  <div>
+                    <input id="text" type="text" class="pure-input-1" placeholder="Post Title">
+                    <input id="text" type="text" class="pure-input-1" placeholder="Post Slug" disabled>
+                  </div>
+                  <div id="my-editor">
+                  </div>
+
+                  <div>
+                    <input type="hidden" id="tags" class="pure-input-1" name="tags" value="" />
+                  </div>
+
+                            <h2 class="main-subhead">Extra Settings</h2>
+					        <div class="pure-g-r extra-settings">
+					            <div class="pure-u-1-3">
+                                    <div class="l-box">
+    					                <label for="state">Select Category</label>
+    							        <select id="state" class="pure-input-1" multiple>
+    							            <option>AL</option>
+    							            <option>CA</option>
+    							            <option>IL</option>
+    							        </select>
+                                    </div>
+					            </div>
+
+					            <div class="pure-u-1-3">
+                                    <div class="l-box">
+    					                <label for="publish">Publish Settings</label>
+    					                <select id="publish" class="pure-input-1">
+    					                    <option>Draft</option>
+    					                    <option>Scheduled</option>
+    					                    <option>Moderate</option>
+    					                    <option>Publish</option>
+    					                </select>
+
+    					                <label for="last-name">Date Time</label>
+    					                <input id="last-name" class="pure-input-1" type="text">
+                                    </div>
+					            </div>
+					        </div>
+					        <button type="submit" class="pure-button pure-button-secondary pure-input-1">Save</button>
+					    </fieldset>
+					</form>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</div>	
+<div class="pure-g-r">
+	<div class="pure-u" id="footer">
+        <p>&copy; 2013 - Pure Admin - Powered by: <a href="detail.html">v0.1</a></p>
+    </div>
+</div>
+<script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="assets/js/Countable.js"></script>
+<script type="text/javascript" src="assets/js/select2/select2.js"></script>
+<script type="text/javascript" src="assets/js/select2/select2_locale_tr.js"></script>
+
+<!--editor.md begin-->
+      <link rel="stylesheet" href="/static/css/style.css" />
+      <link rel="stylesheet" href="/static/css/editormd.css" />
+      <script src="/static/js/lib/jquery.min.js"></script>
+      <script src="/static/js/lib/handlerbars.js"></script>
+      <script src="/static/editor/lib/codemirror/codemirror.min.js"></script>
+      <script src="/static/editor/lib/codemirror/addons.min.js"></script>
+      <script src="/static/editor/lib/codemirror/modes.min.js"></script>
+      <script src="/static/editor/lib/marked.min.js"></script>
+      <script src="/static/editor/lib/prettify.min.js"></script>
+      <!-- if setting flowchart == true, or sequence-diagram == true -->
+      <script src="/static/editor/lib/raphael.min.js"></script>
+      <script src="/static/editor/lib/underscore.min.js"></script>
+      <script src="/static/editor/lib/sequence-diagram.min.js"></script>
+      <script src="/static/editor/lib/flowchart.min.js"></script>
+      <script src="/static/editor/lib/jquery.flowchart.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.js"></script>
+      <link rel="stylesheet" href="/static/css/bootstrap.css" />
+      <link rel="stylesheet" href="/static/editor/lib/codemirror/theme/monokai.css " />
+      <link rel="stylesheet" href="/static/editor/lib/codemirror/codemirror.min.css" />
+      <link rel="stylesheet" href="/static/editor/lib/codemirror/addon/dialog/dialog.css" />
+      <link rel="stylesheet" href="/static/editor/lib/codemirror/addon/search/matchesonscrollbar.css" />
+      <!-- if setting tex == true -->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.css" />
+      <link rel="stylesheet" href="/static/editor/css/editormd.css" />
+      <link rel="stylesheet" href="/static/css/reset.css" />
+      <link rel="stylesheet" href="/static/css/login.css" />
+      <link rel="stylesheet" href="/static/css/own.css" />
+      <script src="/static/editor/editormd.js"></script>   
+      <script src="/static/js/lib/modernizr.js"></script>
+      <script src="/static/js/oper.js"></script>
+      <script src="/static/js/login.js"></script>
+      <script type="text/javascript">
+        var editor;
+        var jwt_token = "";
+        console.log("here");
+
+        $(function() {
+            editor = editormd("my-editor", {
+                width: "100%",
+                height: 480,
+                htmlDecode: true,
+
+                // 显示的工具栏
+                toolbarIcons : function() {
+                    return [
+                      "undo", "redo", "|",
+                      "bold", "del", "italic", "quote", "|",
+                      "h1", "h2", "h3", "h4", "h5", "h6", "|",
+                      "list-ul", "list-ol", "hr", "|",
+                      "link", "anchor", "image", "datetime", "|",
+                      "watch", "preview", "fullscreen", "clear", "|",
+                      "login", "info","save", "list"
+                  ]
+                },
+
+                // 自定义工具栏图标
+                toolbarIconsClass : {
+                    anchor: "fa-anchor",
+                    login : "fa-sign-in",
+                    save  : "fa-save",
+                    list  : "fa-list",
+                },
+                // 自定义工具栏
+                toolbarIconTexts : {
+                    login: "登录",
+                    save : "保存",
+                    list : "查看"
+                },
+
+                // 设置工具栏的响应函数
+                toolbarHandlers : {
+                  login: function(cm, icon, cursor, Selection) {
+                    login_selected();
+                  },
+                  save : function (cm, icon, cursor, selection) {
+                    var content = $(".editormd-preview").html();
+                    var title = $("#title").val();
+                    saveAs(title, content);
+                  },
+                  list : function (cm, icon, cursor, selection) {
+                    listAll();
+                  },
+                },
+
+                // 全屏响应事件
+                onfullscreen : function() {
+                  // alert("onfullscreen");
+                  console.log("onfullscreen =>", this, this.id, this.settings);
+                },
+                onfullscreenExit : function() {
+                  // alert("onfullscreenExit");
+                  console.log("onfullscreenExit =>", this, this.id, this.settings);
+                },
+
+                theme: 'dark',
+                editorTheme: 'monokai',
+                previewTheme: 'dark',
+
+                // 自定义模块目录
+                autoLoadModules : false,
+            });
+          //editor.fullscreen();
+        });
+
+        $("#open-html-entities-dialog").bind('click', function() {
+            editor.executePlugin("htmlEntitiesDialog", "html-entities-dialog/html-entities-dialog");
+        });
+  </script>
+
+<!--editor.md end-->
+
+</body>
+</html>

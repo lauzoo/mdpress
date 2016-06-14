@@ -7,9 +7,6 @@
     visibility: visible;
         opacity: 1;
 }
-.editormd-fullscreen {
-  top: 41px;
-}
 #title{
     float: left;
     position: fixed;

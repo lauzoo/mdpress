@@ -1,226 +1,191 @@
-<!DOCTYPE html>
-<html lang="zh">
-    <head>
-        <meta charset="utf-8" />
-        <title>mbpress</title>
-        <link rel="stylesheet" href="static/css/style.css" />
-        <link rel="stylesheet" href="static/css/editormd.css" />
-    </head>
-    <body>
-			<div>
-        <div id="category">
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard - Pure Admin</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/pure-min.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/admin.css">
+</head>
+<body>
+<div class="pure-g-r" id="layout">
 
+    <div class="pure-u" id="nav">
+        <a href="#nav" class="nav-menu-button">Menu</a>
+
+        <div class="nav-inner">
+        	<div class="user">
+        		<p><img class="user-avatar" alt="Avatar" src="assets/img/avatar.gif" height="64" width="64"></p>
+        		<p><a href="profile.html"><span class="user-label-editor"></span>User Name</a></p>
+        	</div>
+
+            <div class="pure-menu pure-menu-open">
+                <ul>
+                    <li><a href="index.html" class="selected">Dashboard</a></li>
+                    <li><a href="post-list.html">Posts</a></li>
+                    <li><a href="post-list.html">Tags</a></li>
+                    <li><a href="post-list.html">Gallery</a></li>
+                    <li><a href="post-list.html">Comments</a></li>
+                    <li class="pure-menu-heading">Options</li>
+                    <li><a href="options.html">General</a></li>
+                    <li><a href="options.html">Seo</a></li>
+                    <li><a href="options.html">Meta</a></li>
+                </ul>
+            </div>
         </div>
-            <div id="title" class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Title</span>
-                <input name="title" id="title" type="text" class="form-control" placeholder="Title Here" aria-describedby="basic-addon1"/>
-            </div>
-            <div id="editor">
-                <textarea style="display:none;">
-##Hello world!
+    </div>
+    <div class="pure-u" id="main">
+    	
+    	<div class="dashboard">
+    		<h2 class="main-subhead">Dashboard</h2>
+    		<div class="pure-g-r">
+    			<div class="pure-u-1">
+    				<p>Dashboard description is here.</p>
+    			</div>
+    			<div class="pure-u-1-4">
+    				<div class="l-box">
+    					<table class="pure-table pure-table-striped">
+						    <thead>
+						        <tr>
+						            <th colspan="2">Posts Report</th>
+						        </tr>
+						    </thead>
 
-####开启识别和解析HTML标签
-                </textarea>
-            </div>
-      </div>
+						    <tbody>
+						        <tr class="pure-table-odd">
+						            <td>Total Posts</td>
+						            <td>125</td>
+						        </tr>
+						        <tr>
+						            <td>Active Posts</td>
+						            <td>123</td>
+						        </tr>
+						        <tr>
+						            <td>Draft Posts</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Moderate Posts</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Schedule Posts</td>
+						            <td>1</td>
+						        </tr>
+						    </tbody>
+						</table>
+    				</div>
+    			</div>
+    			<div class="pure-u-1-4">
+    				<div class="l-box">
+    					<table class="pure-table pure-table-striped">
+						    <thead>
+						        <tr>
+						            <th colspan="2">Users Report</th>
+						        </tr>
+						    </thead>
 
-<div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
-		<div class="cd-user-modal-container"> <!-- this is the container wrapper -->
-			<ul class="cd-switcher">
-				<li><a href="#0">Sign in</a></li>
-				<li><a href="#0">New account</a></li>
-			</ul>
+						    <tbody>
+						        <tr class="pure-table-odd">
+						            <td>Total Users</td>
+						            <td>125</td>
+						        </tr>
+						        <tr>
+						            <td>Active Users</td>
+						            <td>123</td>
+						        </tr>
+						        <tr>
+						            <td>Moderate Users</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Draft Users</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Schedule Users</td>
+						            <td>1</td>
+						        </tr>
+						    </tbody>
+						</table>
+    				</div>
+    			</div>
+    			<div class="pure-u-1-4">
+    				<div class="l-box">
+    					<table class="pure-table pure-table-striped">
+						    <thead>
+						        <tr>
+						            <th colspan="2">Galleries Report</th>
+						        </tr>
+						    </thead>
 
-			<div id="cd-login"> <!-- log in form -->
-				<form class="cd-form">
-					<p class="fieldset">
-						<label class="image-replace cd-email" for="signin-email">E-mail</label>
-						<input class="full-width has-padding has-border" id="signin-email" type="email" placeholder="E-mail">
-						<span class="cd-error-message">Error message here!</span>
-					</p>
+						    <tbody>
+						        <tr class="pure-table-odd">
+						            <td>Total Galleries</td>
+						            <td>125</td>
+						        </tr>
+						        <tr>
+						            <td>Active Galleries</td>
+						            <td>123</td>
+						        </tr>
+						        <tr>
+						            <td>Draft Galleries</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Moderate Galleries</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Schedule Galleries</td>
+						            <td>1</td>
+						        </tr>
+						    </tbody>
+						</table>
+    				</div>
+    			</div>
+    			<div class="pure-u-1-4">
+    				<div class="l-box">
+    					<table class="pure-table pure-table-striped">
+						    <thead>
+						        <tr>
+						            <th colspan="2">Comments Report</th>
+						        </tr>
+						    </thead>
 
-					<p class="fieldset">
-						<label class="image-replace cd-password" for="signin-password">Password</label>
-						<input class="full-width has-padding has-border" id="signin-password" type="text"  placeholder="Password">
-						<a href="#0" class="hide-password">Hide</a>
-						<span class="cd-error-message">Error message here!</span>
-					</p>
-
-					<p class="fieldset">
-						<input type="checkbox" id="remember-me" checked>
-						<label for="remember-me">Remember me</label>
-					</p>
-
-					<p class="fieldset">
-						<input class="full-width" type="submit" value="Login">
-					</p>
-				</form>
-				
-				<p class="cd-form-bottom-message"><a href="#0">Forgot your password?</a></p>
-				<!-- <a href="#0" class="cd-close-form">Close</a> -->
-			</div> <!-- cd-login -->
-
-			<div id="cd-signup"> <!-- sign up form -->
-				<form class="cd-form">
-					<p class="fieldset">
-						<label class="image-replace cd-username" for="signup-username">Username</label>
-						<input class="full-width has-padding has-border" id="signup-username" type="text" placeholder="Username">
-						<span class="cd-error-message">Error message here!</span>
-					</p>
-
-					<p class="fieldset">
-						<label class="image-replace cd-email" for="signup-email">E-mail</label>
-						<input class="full-width has-padding has-border" id="signup-email" type="email" placeholder="E-mail">
-						<span class="cd-error-message">Error message here!</span>
-					</p>
-
-					<p class="fieldset">
-						<label class="image-replace cd-password" for="signup-password">Password</label>
-						<input class="full-width has-padding has-border" id="signup-password" type="text"  placeholder="Password">
-						<a href="#0" class="hide-password">Hide</a>
-						<span class="cd-error-message">Error message here!</span>
-					</p>
-
-					<p class="fieldset">
-						<input type="checkbox" id="accept-terms">
-						<label for="accept-terms">I agree to the <a href="#0">Terms</a></label>
-					</p>
-
-					<p class="fieldset">
-						<input class="full-width has-padding" type="submit" value="Create account">
-					</p>
-				</form>
-
-				<!-- <a href="#0" class="cd-close-form">Close</a> -->
-			</div> <!-- cd-signup -->
-
-			<div id="cd-reset-password"> <!-- reset password form -->
-				<p class="cd-form-message">Lost your password? Please enter your email address. You will receive a link to create a new password.</p>
-
-				<form class="cd-form">
-					<p class="fieldset">
-						<label class="image-replace cd-email" for="reset-email">E-mail</label>
-						<input class="full-width has-padding has-border" id="reset-email" type="email" placeholder="E-mail">
-						<span class="cd-error-message">Error message here!</span>
-					</p>
-
-					<p class="fieldset">
-						<input class="full-width has-padding" type="submit" value="Reset password">
-					</p>
-				</form>
-
-				<p class="cd-form-bottom-message"><a href="#0">Back to log-in</a></p>
-			</div> <!-- cd-reset-password -->
-			<a href="#0" class="cd-close-form">Close</a>
-		</div> <!-- cd-user-modal-container -->
-	</div> <!-- cd-user-modal -->
-
-
-      <script src="static/js/lib/jquery.min.js"></script>
-      <script src="static/js/lib/handlerbars.js"></script>
-      <script src="static/editor/lib/codemirror/codemirror.min.js"></script>
-      <script src="static/editor/lib/codemirror/addons.min.js"></script>
-      <script src="static/editor/lib/codemirror/modes.min.js"></script>
-      <script src="static/editor/lib/marked.min.js"></script>
-      <script src="static/editor/lib/prettify.min.js"></script>
-      <!-- if setting flowchart == true, or sequence-diagram == true -->
-      <script src="static/editor/lib/raphael.min.js"></script>
-      <script src="static/editor/lib/underscore.min.js"></script>
-      <script src="static/editor/lib/sequence-diagram.min.js"></script>
-      <script src="static/editor/lib/flowchart.min.js"></script>
-      <script src="static/editor/lib/jquery.flowchart.min.js"></script>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.js"></script>
-      <link rel="stylesheet" href="static/css/bootstrap.css" />
-      <link rel="stylesheet" href="static/editor/lib/codemirror/theme/monokai.css " />
-      <link rel="stylesheet" href="static/editor/lib/codemirror/codemirror.min.css" />
-      <link rel="stylesheet" href="static/editor/lib/codemirror/addon/dialog/dialog.css" />
-      <link rel="stylesheet" href="static/editor/lib/codemirror/addon/search/matchesonscrollbar.css" />
-      <!-- if setting tex == true -->
-      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.css" />
-      <link rel="stylesheet" href="static/editor/css/editormd.css" />
-      <link rel="stylesheet" href="static/css/reset.css" />
-      <link rel="stylesheet" href="static/css/login.css" />
-      <link rel="stylesheet" href="static/css/own.css" />
-      <script src="static/editor/editormd.js"></script>   
-      <script src="static/js/lib/modernizr.js"></script>
-      <script src="static/js/oper.js"></script>
-      <script src="static/js/login.js"></script>
-      <script type="text/javascript">
-        var editor;
-        var jwt_token = "";
-
-        $(function() {
-            editor = editormd("editor", {
-                width: "90%",
-                height: 640,
-                htmlDecode: true,
-
-                // 显示的工具栏
-                toolbarIcons : function() {
-                    return [
-                      "undo", "redo", "|",
-                      "bold", "del", "italic", "quote", "|",
-                      "h1", "h2", "h3", "h4", "h5", "h6", "|",
-                      "list-ul", "list-ol", "hr", "|",
-                      "link", "anchor", "image", "datetime", "|",
-                      "watch", "preview", "fullscreen", "clear", "|",
-                      "login", "info","save", "list"
-                  ]
-                },
-
-                // 自定义工具栏图标
-                toolbarIconsClass : {
-                    anchor: "fa-anchor",
-                    login : "fa-sign-in",
-                    save  : "fa-save",
-                    list  : "fa-list",
-                },
-                // 自定义工具栏
-                toolbarIconTexts : {
-                    login: "登录",
-                    save : "保存",
-                    list : "查看"
-                },
-
-                // 设置工具栏的响应函数
-                toolbarHandlers : {
-                  login: function(cm, icon, cursor, Selection) {
-                    login_selected();
-                  },
-                  save : function (cm, icon, cursor, selection) {
-                    var content = $(".editormd-preview").html();
-                    var title = $("#title").val();
-                    saveAs(title, content);
-                  },
-                  list : function (cm, icon, cursor, selection) {
-                    listAll();
-                  },
-                },
-
-                // 全屏响应事件
-                onfullscreen : function() {
-                  // alert("onfullscreen");
-                  console.log("onfullscreen =>", this, this.id, this.settings);
-                },
-                onfullscreenExit : function() {
-                  // alert("onfullscreenExit");
-                  console.log("onfullscreenExit =>", this, this.id, this.settings);
-                },
-
-                theme: 'dark',
-                editorTheme: 'monokai',
-                previewTheme: 'dark',
-
-                // 自定义模块目录
-                autoLoadModules : false,
-            });
-          editor.fullscreen();
-        });
-
-        $("#open-html-entities-dialog").bind('click', function() {
-            editor.executePlugin("htmlEntitiesDialog", "html-entities-dialog/html-entities-dialog");
-        });
-
-        </script>
-    </body>
+						    <tbody>
+						        <tr class="pure-table-odd">
+						            <td>Total Comments</td>
+						            <td>125</td>
+						        </tr>
+						        <tr>
+						            <td>Active Comments</td>
+						            <td>123</td>
+						        </tr>
+						        <tr>
+						            <td>Moderate Comments</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Draft Comments</td>
+						            <td>1</td>
+						        </tr>
+						        <tr>
+						            <td>Schedule Comments</td>
+						            <td>1</td>
+						        </tr>
+						    </tbody>
+						</table>
+    				</div>
+    			</div>
+    		</div>
+		</div>
+    </div>
+</div>	
+<div class="pure-g-r">
+	<div class="pure-u" id="footer">
+		<p>&copy; 2013 - Pure Admin <a href="detail.html">v0.1</a></p>
+    </div>
+</div>
+</body>
 </html>
