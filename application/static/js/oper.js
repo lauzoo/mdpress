@@ -30,7 +30,7 @@ function saveAs(title, content)
       url: "/posts/post",
       type: "POST",
       headers: {
-        "Authorization": "JWT " + jwt_token,
+        "Authorization": "Bearer " + jwt_token,
       },
       contentType: 'application/json',
       data: req_data,

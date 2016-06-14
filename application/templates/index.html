@@ -5,29 +5,16 @@
         <title>mbpress</title>
         <link rel="stylesheet" href="static/css/style.css" />
         <link rel="stylesheet" href="static/css/editormd.css" />
-        <style>
-            .cd-user-modal {
-              visibility: hidden;
-              opacity: 0;
-              transition: opacity 0.3s, visibility 0.3s;
-            }
-            .cd-user-modal.is-visible {
-                visibility: visible;
-                    opacity: 1;
-            }/*
-            #category {
-                float: left;
-                position: relative;
-                width: 20%;
-                height: 500px;
-            }*/
-        </style>
     </head>
     <body>
 			<div>
         <div id="category">
 
         </div>
+            <div id="title" class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Title</span>
+                <input name="title" id="title" type="text" class="form-control" placeholder="Title Here" aria-describedby="basic-addon1"/>
+            </div>
             <div id="editor">
                 <textarea style="display:none;">
 ##Hello world!
@@ -143,6 +130,7 @@
       <script src="static/editor/lib/flowchart.min.js"></script>
       <script src="static/editor/lib/jquery.flowchart.min.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.js"></script>
+      <link rel="stylesheet" href="static/css/bootstrap.css" />
       <link rel="stylesheet" href="static/editor/lib/codemirror/theme/monokai.css " />
       <link rel="stylesheet" href="static/editor/lib/codemirror/codemirror.min.css" />
       <link rel="stylesheet" href="static/editor/lib/codemirror/addon/dialog/dialog.css" />
@@ -152,6 +140,7 @@
       <link rel="stylesheet" href="static/editor/css/editormd.css" />
       <link rel="stylesheet" href="static/css/reset.css" />
       <link rel="stylesheet" href="static/css/login.css" />
+      <link rel="stylesheet" href="static/css/own.css" />
       <script src="static/editor/editormd.js"></script>   
       <script src="static/js/lib/modernizr.js"></script>
       <script src="static/js/oper.js"></script>
@@ -208,6 +197,16 @@
                   },
                 },
 
+                // 全屏响应事件
+                onfullscreen : function() {
+                  // alert("onfullscreen");
+                  console.log("onfullscreen =>", this, this.id, this.settings);
+                },
+                onfullscreenExit : function() {
+                  // alert("onfullscreenExit");
+                  console.log("onfullscreenExit =>", this, this.id, this.settings);
+                },
+
                 theme: 'dark',
                 editorTheme: 'monokai',
                 previewTheme: 'dark',
@@ -215,11 +214,13 @@
                 // 自定义模块目录
                 autoLoadModules : false,
             });
+          editor.fullscreen();
         });
 
         $("#open-html-entities-dialog").bind('click', function() {
             editor.executePlugin("htmlEntitiesDialog", "html-entities-dialog/html-entities-dialog");
         });
+
         </script>
     </body>
 </html>

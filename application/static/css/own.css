@@ -1,0 +1,19 @@
+.cd-user-modal {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.cd-user-modal.is-visible {
+    visibility: visible;
+        opacity: 1;
+}
+.editormd-fullscreen {
+  top: 41px;
+}
+#title{
+    float: left;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 36px;
+}

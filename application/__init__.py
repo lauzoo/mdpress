@@ -74,29 +74,10 @@ def register_extensions(app):
                         'expires_in': 24 * 60 * 60,
                         'token_type': 'Bearer'})
 
-    def auth_request_handler():
-        data = request.form
-        username = data.get(current_app.config.get('JWT_AUTH_USERNAME_KEY'), None)
-        password = data.get(current_app.config.get('JWT_AUTH_PASSWORD_KEY'), None)
-        current_app.logger.info("username: {} password: {}".format(username, password))
-        criterion = [username, password]
-
-        if not all(criterion):
-            raise JWTError('Bad Request', 'Invalid credentials')
-
-        identity = jwt.authentication_callback(username, password)
-
-        if identity:
-            access_token = jwt.jwt_encode_callback(identity)
-            return jwt.auth_response_callback(access_token, identity)
-        else:
-            raise JWTError('Bad Request', 'Invalid credentials')
-
     jwt.authentication_handler(jwt_authenticate)
     jwt.identity_handler(jwt_identity)
     jwt.jwt_payload_handler(make_payload)
     jwt.auth_response_handler(response_handler)
-    jwt.auth_request_handler(auth_request_handler)
 
     jwt.init_app(app)
 

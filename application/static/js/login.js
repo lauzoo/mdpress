@@ -93,15 +93,15 @@
     email = $("#signin-email").val()
     password = $("#signin-password").val()
     req_data = JSON.stringify({
-        'email': email,
+        'username': email,
         'password': password,
     })
     $.ajax({
-      url: "/auth",
+      url: "/authentication/token",
       type: "POST",
       'processData': false,
       headers: {
-        "Authorization": "JWT",
+        "Authorization": "Bearer",
       },
       contentType: 'application/json',
       data: req_data,
