@@ -75,7 +75,7 @@ class User(db.Model):
         rst['last_login'] = format_datetime(self.last_login)
         rst['created_at'] = format_datetime(self.created_at)
         rst['updated_at'] = format_datetime(self.updated_at)
-        rst['roles'] = [role.to_json() for role in self.role]
+        rst['roles'] = [role.to_json(self) for role in self.role]
         return rst
 
     def is_authenticated(self):
