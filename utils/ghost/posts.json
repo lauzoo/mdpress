@@ -2,11 +2,11 @@
   "meta": {
     "pagination": {
       "total": 2, 
-      "pages": 1, 
+      "page": 1, 
       "next": null, 
       "limit": 15, 
       "prev": null, 
-      "page": 1
+      "pages": 1
     }
   }, 
   "posts": [
@@ -25,8 +25,7 @@
       "status": "published", 
       "meta_title": null, 
       "updated_by": 1, 
-      "tags": [
-      ], 
+      "tags": [], 
       "visibility": "public", 
       "published_by": 1, 
       "slug": "welcome-to-ghost", 

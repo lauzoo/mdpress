@@ -23,25 +23,23 @@ def create_db(config):
     role = Models.Role.objects.filter(
         permission=Models.Permission.DELETE).first()
     if not role:
-        Models.Role(id=1, name="READER", permission=Models.Permission.READ).save()
-        Models.Role(id=2, name="CREATER",
+        Models.Role(name="READER", permission=Models.Permission.READ).save()
+        Models.Role(name="CREATER",
                     permission=Models.Permission.CREATE | Models.Permission.READ).save()
-        Models.Role(id=3, name="UPDATER",
+        Models.Role(name="UPDATER",
                     permission=Models.Permission.UPDATE | Models.Permission.CREATE |
                     Models.Permission.READ).save()
-        Models.Role(id=4, name="DELETER",
+        Models.Role(name="DELETER",
                     permission=Models.Permission.DELETE | Models.Permission.UPDATE |
                     Models.Permission.CREATE | Models.Permission.READ).save()
         print "create roles finish..."
     else:
         print "no need to create role..."
 
-    user = Models.User.objects.filter(
-        id=10000).first()
+    user = Models.User.objects.first()
     if not user:
-        role = Models.Role.objects.filter(id=4).first()
-        Models.User(id=10000, username="admin", password="admin",
-                    email="liqianglau@outlook.com",
+        role = Models.Role.objects.filter(name='DELETER').first()
+        Models.User(username="admin", password="admin", email="liqianglau@outlook.com",
                     role=role).save()
         print "create admin finish..."
     else:

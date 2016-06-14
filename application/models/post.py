@@ -3,6 +3,7 @@
 from redisco import models as db
 
 from .user import User
+from application.utils import format_datetime
 
 
 __all__ = ['Category', 'Tag', 'Post']
@@ -13,13 +14,11 @@ COMMENT_STATUS = ('APPROVED', 'PENDING', 'DELETED')
 
 
 class Category(db.Model):
-    id = db.IntegerField(required=True)
     name = db.Attribute(required=True)
     super = db.IntegerField()
 
 
 class Comment(db.Model):
-    id = db.IntegerField(required=True)
     # 评论者的用户名
     author_name = db.Attribute()
     # 评论者的邮箱，如果没有设置头像会根据这个信息从gravatar获取头像
@@ -41,12 +40,28 @@ class Comment(db.Model):
 
 
 class Tag(db.Model):
-    id = db.IntegerField(required=True)
-    name = db.Attribute()
+    uuid = db.Attribute(indexed=False)
+    name = db.Attribute(indexed=False)
+    slug = db.Attribute(indexed=False)
+    hidden = db.BooleanField()
+    parent = db.Attribute(indexed=False)
+    image = db.Attribute(indexed=False)
+    meta_title = db.Attribute(indexed=False)
+    meta_description = db.Attribute(indexed=False)
+    created_at = db.DateTimeField()
+    updated_at = db.DateTimeField()
+
+    def to_json(self):
+        rst = self.attributes_dict
+        rst["id"] = self.id
+        rst["created_at"] = format_datetime(self.created_at)
+        rst["updated_at"] = format_datetime(self.updated_at)
+        rst["created_by"] = None
+        rst["updated_by"] = None
+        return rst
 
 
 class Post(db.Model):
-    id = db.IntegerField(required=True)
     title = db.Attribute(required=True)
     slug = db.Attribute(required=True)
     markdown = db.Attribute(indexed=False)
@@ -80,12 +95,12 @@ class Post(db.Model):
             "language": self.language,
             "meta_title": self.meta_title,
             "meta_description": self.meta_description,
-            "updated_at": self.updated_at.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
+            "updated_at": format_datetime(self.updated_at),
             "updated_by": self.updated_by.id if self.updated_by else None,
-            "published_at": self.published_at.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
-            "created_at": self.created_at.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
+            "published_at": format_datetime(self.published_at),
+            "created_at": format_datetime(self.created_at),
             "created_by": self.created_by.id if self.created_by else None,
             "author": "1",
             "publishedBy": self.publishedBy.id if self.publishedBy else None,
-            "tags": []
+            "tags": [tag.to_json() for tag in self.tags]
         }

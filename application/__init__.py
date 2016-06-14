@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import os
 import sys
 import logging
 import logging.handlers
 from datetime import datetime
 
 import redisco
-from flask import Flask, current_app
+from flask import Flask, current_app, request, jsonify
+from flask_jwt import JWTError
 
 from config import load_config
 from application.extensions import jwt
@@ -59,7 +59,7 @@ def register_extensions(app):
         logging.info("payload:{}".format(payload))
         from application.models import User
         user_id = payload['identity']
-        return User.objects.filter(id=user_id).first()
+        return User.objects.get_by_id(user_id)
 
     def make_payload(identity):
         iat = datetime.utcnow()
@@ -68,9 +68,35 @@ def register_extensions(app):
         identity = str(identity.id)
         return {'exp': exp, 'iat': iat, 'nbf': nbf, 'identity': identity}
 
+    def response_handler(access_token, identity):
+        return jsonify({'access_token': access_token.decode('utf-8'),
+                        'refresh_token': access_token.decode('utf-8'),
+                        'expires_in': 24 * 60 * 60,
+                        'token_type': 'Bearer'})
+
+    def auth_request_handler():
+        data = request.form
+        username = data.get(current_app.config.get('JWT_AUTH_USERNAME_KEY'), None)
+        password = data.get(current_app.config.get('JWT_AUTH_PASSWORD_KEY'), None)
+        current_app.logger.info("username: {} password: {}".format(username, password))
+        criterion = [username, password]
+
+        if not all(criterion):
+            raise JWTError('Bad Request', 'Invalid credentials')
+
+        identity = jwt.authentication_callback(username, password)
+
+        if identity:
+            access_token = jwt.jwt_encode_callback(identity)
+            return jwt.auth_response_callback(access_token, identity)
+        else:
+            raise JWTError('Bad Request', 'Invalid credentials')
+
     jwt.authentication_handler(jwt_authenticate)
     jwt.identity_handler(jwt_identity)
     jwt.jwt_payload_handler(make_payload)
+    jwt.auth_response_handler(response_handler)
+    jwt.auth_request_handler(auth_request_handler)
 
     jwt.init_app(app)
 
@@ -87,12 +113,11 @@ def configure_logging(app):
         return
     elif app.config.get('DEBUG'):
         app.logger.setLevel(logging.DEBUG)
-        return
-
-    app.logger.setLevel(logging.INFO)
+    else:
+        app.logger.setLevel(logging.INFO)
 
     # info_log = os.path.join("running-info.log")
-    info_log = "logs/running.info"
+    info_log = "/tmp/logs/running.info"
     info_file_handler = logging.handlers.RotatingFileHandler(
         info_log, maxBytes=104857600, backupCount=10)
     info_file_handler.setLevel(logging.DEBUG)
