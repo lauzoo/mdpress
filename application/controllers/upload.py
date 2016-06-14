@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 import application.models as Models
 
 
-upload_bp = Blueprint('upload', __name__, url_prefix='/upload')
+upload_bp = Blueprint('upload', __name__, url_prefix='/uploads')
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
@@ -34,15 +34,13 @@ def upload_to_sm(local_path):
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
+        if 'uploadimage' not in request.files:
+            return "no upload images"
+        file = request.files['uploadimage']
         # if user does not select file, browser also
         # submit a empty part without filename
         if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
+            return "no filenames"
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             local_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
@@ -51,9 +49,7 @@ def upload_file():
             Models.Upload(filename=file.filename,
                           local_path=local_path,
                           url=url).save()
-            return redirect(url_for('upload.uploaded_file',
-                                    filename=filename))
-    return ''
+            return '"{}"'.format(url_for('upload.uploaded_file', filename=filename))
 
 
 @upload_bp.route('/<filename>')
