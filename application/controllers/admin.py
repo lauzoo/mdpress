@@ -2,6 +2,9 @@
 # encoding: utf-8
 from flask import render_template, Blueprint
 
+import application.models as Models
+from application.utils import Pagination
+
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -13,7 +16,9 @@ def index():
 
 @admin_bp.route('/posts', methods=['GET'])
 def all_posts():
-    return render_template('post-list.html')
+    posts = Models.Post.objects.all()
+    page = Pagination(posts)
+    return render_template('post-list.html', page=page)
 
 
 @admin_bp.route('/tags', methods=['GET'])

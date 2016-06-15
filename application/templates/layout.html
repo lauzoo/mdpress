@@ -25,15 +25,15 @@
 
                 <div class="pure-menu pure-menu-open">
                     <ul>
-                      <li><a href="{{url_for('admin.index')}}" class="selected">Dashboard</a></li>
-                      <li><a href="{{url_for('admin.all_posts')}}">Posts</a></li>
-                        <li><a href="{{url_for('admin.all_tags')}}">Tags</a></li>
-                        <li><a href="{{url_for('admin.all_uploads')}}">Gallery</a></li>
-                        <li><a href="{{url_for('admin.all_comments')}}">Comments</a></li>
+                      <li><a href="{{url_for('admin.index')}}" class="{%block index_selected %}{%endblock%}">Dashboard</a></li>
+                      <li><a href="{{url_for('admin.all_posts')}}" class="{%block posts_selected %}{%endblock%}">Posts</a></li>
+                        <li><a href="{{url_for('admin.all_tags')}}" class="{%block tags_selected %}{%endblock%}">Tags</a></li>
+                        <li><a href="{{url_for('admin.all_uploads')}}" class="{%block uploads_selected %}{%endblock%}">Gallery</a></li>
+                        <li><a href="{{url_for('admin.all_comments')}}" class="{%block comments_selected %}{%endblock%}">Comments</a></li>
                         <li class="pure-menu-heading">Options</li>
-                        <li><a href="{{url_for('admin.settings')}}">General</a></li>
-                        <li><a href="{{url_for('admin.other')}}">Seo</a></li>
-                        <li><a href="{{url_for('admin.other')}}">Meta</a></li>
+                        <li><a href="{{url_for('admin.settings')}}" class="{%block settings_selected %}{%endblock%}">General</a></li>
+                        <li><a href="{{url_for('admin.other')}}" class="{%block other1_selected %}{%endblock%}">Seo</a></li>
+                        <li><a href="{{url_for('admin.other')}}" class="{%block other2_selected %}{%endblock%}">Meta</a></li>
                     </ul>
                 </div>
             </div>
