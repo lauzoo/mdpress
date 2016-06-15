@@ -4,8 +4,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Login - Pure Admin</title>
-	<link rel="stylesheet" type="text/css" href="assets/css/pure-min.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/login.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/pure-min.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css">
+  <script type="text/javascript" src="/static/admin/js/jquery-1.10.2.min.js"></script>
 </head>
 <body>
 <div class="pure-g-r" id="login">
@@ -61,12 +62,40 @@
 				            <input id="remember" type="checkbox"> Remember me
 				        </label>
 
-				        <button type="submit" class="pure-button pure-button-success">Sign in</button>
+				        <button type="submit" class="pure-button pure-button-success"
+                  onclick="return sign_in();">Sign in</button>
 				    </fieldset>
 				</form>
             </section>
         </div>
     </div>
 </div>	
+<script type="text/javascript">
+  function sign_in() {
+    email = $("#email").val();
+    password = $("#password").val();
+    req_data = JSON.stringify({
+        'username': email,
+        'password': password,
+    })
+    $.ajax({
+      url: "/authentication/token",
+      type: "POST",
+      'processData': false,
+      headers: {
+        "Authorization": "Bearer",
+      },
+      contentType: 'application/json',
+      data: req_data,
+      success: function(data){
+          console.log(data);
+          jwt_token = data.access_token;
+          localStorage.twtf_jwt_token=jwt_token;
+          console.log(localStorage.twtf_jwt_token);
+      }
+    });
+    return false;
+  }
+</script>
 </body>
 </html>

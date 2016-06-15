@@ -9,8 +9,8 @@
     				<form class="pure-form pure-form-stacked">
 					    <fieldset>
                   <div>
-                      <input id="text" type="text" class="pure-input-1" {%if post %}value="{{post.title}}"{%endif%} placeholder="Post Title">
-                      <input id="text" type="text" class="pure-input-1" {%if post %}value="{{post.slug}}"{%endif%} placeholder="Post Slug">
+                      <input id="title" type="text" class="pure-input-1" {%if post %}value="{{post.title}}"{%endif%} placeholder="Post Title">
+                      <input id="slug" type="text" class="pure-input-1" {%if post %}value="{{post.slug}}"{%endif%} placeholder="Post Slug">
                     <!--input id="text" type="text" class="pure-input-1" placeholder="Post Slug" disabled-->
                   </div>
                   <div id="my-editor">
@@ -24,8 +24,8 @@
 					        <div class="pure-g-r extra-settings">
 					            <div class="pure-u-1-3">
                                     <div class="l-box">
-    					                <label for="state">Select Category</label>
-    							        <select id="state" class="pure-input-1" multiple>
+    					                <label for="category">Select Category</label>
+    							        <select id="category" class="pure-input-1" multiple>
     							            <option>AL</option>
     							            <option>CA</option>
     							            <option>IL</option>
@@ -35,20 +35,21 @@
 
 					            <div class="pure-u-1-3">
                                     <div class="l-box">
-    					                <label for="publish">Publish Settings</label>
-    					                <select id="publish" class="pure-input-1">
+    					                <label for="post-state">Publish Settings</label>
+    					                <select id="post-state" class="pure-input-1">
     					                    <option>Draft</option>
     					                    <option>Scheduled</option>
     					                    <option>Moderate</option>
     					                    <option>Publish</option>
     					                </select>
 
-    					                <label for="last-name">Date Time</label>
-    					                <input id="last-name" class="pure-input-1" type="text">
+    					                <label for="post-date">Date Time</label>
+    					                <input id="post-date" class="pure-input-1" type="text">
                                     </div>
 					            </div>
 					        </div>
-					        <button type="submit" class="pure-button pure-button-secondary pure-input-1">Save</button>
+					        <button type="submit" class="pure-button pure-button-secondary pure-input-1"
+                                onclick="return save_post();">Save</button>
 					    </fieldset>
 					</form>
     			</div>

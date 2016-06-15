@@ -14,6 +14,11 @@ def index():
     return render_template('index.html')
 
 
+@admin_bp.route('/login', methods=['GET'])
+def login():
+    return render_template('login.html')
+
+
 @admin_bp.route('/posts', methods=['GET'])
 def all_posts():
     posts = Models.Post.objects.all()

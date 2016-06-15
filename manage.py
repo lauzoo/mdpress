@@ -40,7 +40,7 @@ def create_db(config):
     if not users:
         role = Models.Role.objects.filter(name='DELETER').first()
         Models.User(name="admin", password="admin", email="liqianglau@outlook.com",
-                    role=role).save()
+                    role=[role]).save()
         print "create admin finish..."
     else:
         print "user admin exists..."
