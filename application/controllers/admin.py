@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from flask import render_template, Blueprint
+from flask import request, render_template, Blueprint
 
 import application.models as Models
 from application.utils import Pagination
@@ -19,6 +19,15 @@ def all_posts():
     posts = Models.Post.objects.all()
     page = Pagination(posts)
     return render_template('post-list.html', page=page)
+
+
+@admin_bp.route('/posts/oper', methods=['GET'])
+def oper_post():
+    id = request.args.get('pid')
+    if id:
+        post = Models.Post.objects.get_by_id(id)
+        return render_template('add-new.html', post=post)
+    return render_template('add-new.html')
 
 
 @admin_bp.route('/tags', methods=['GET'])

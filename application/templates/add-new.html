@@ -1,41 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Add New - Pure Admin</title>
-	<link rel="stylesheet" type="text/css" href="assets/css/pure-min.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/admin.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="assets/css/select2.css" />
-</head>
-<body>
-<div class="pure-g-r" id="layout">
+{% extends 'layout.html' %}
+{% block posts_selected%}selected{%endblock%}
 
-    <div class="pure-u" id="nav">
-        <a href="#nav" class="nav-menu-button">Menu</a>
-
-        <div class="nav-inner">
-        	<div class="user">
-        		<p><img class="user-avatar" alt="Avatar" src="assets/img/avatar.gif" height="64" width="64"></p>
-        		<p><a href="profile.html"><span class="user-label-editor"></span>User Name</a></p>
-        	</div>
-
-            <div class="pure-menu pure-menu-open">
-                <ul>
-                    <li><a href="index.html">Dashboard</a></li>
-                    <li><a href="post-list.html">Posts</a></li>
-                    <li><a href="post-list.html">Tags</a></li>
-                    <li><a href="post-list.html">Gallery</a></li>
-                    <li><a href="post-list.html">Comments</a></li>
-                    <li class="pure-menu-heading">Options</li>
-                    <li><a href="options.html" class="selected">General</a></li>
-                    <li><a href="options.html">Seo</a></li>
-                    <li><a href="options.html">Meta</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="pure-u" id="main">
+{% block content %}
     	<div class="crud">
     		<h2 class="main-subhead">Add New Post</h2>
     		<div class="pure-g-r">
@@ -43,8 +9,9 @@
     				<form class="pure-form pure-form-stacked">
 					    <fieldset>
                   <div>
-                    <input id="text" type="text" class="pure-input-1" placeholder="Post Title">
-                    <input id="text" type="text" class="pure-input-1" placeholder="Post Slug" disabled>
+                      <input id="text" type="text" class="pure-input-1" {%if post %}value="{{post.title}}"{%endif%} placeholder="Post Title">
+                      <input id="text" type="text" class="pure-input-1" {%if post %}value="{{post.slug}}"{%endif%} placeholder="Post Slug">
+                    <!--input id="text" type="text" class="pure-input-1" placeholder="Post Slug" disabled-->
                   </div>
                   <div id="my-editor">
                   </div>
@@ -87,19 +54,16 @@
     			</div>
     		</div>
     	</div>
-    </div>
-</div>	
-<div class="pure-g-r">
-	<div class="pure-u" id="footer">
-        <p>&copy; 2013 - Pure Admin - Powered by: <a href="detail.html">v0.1</a></p>
-    </div>
-</div>
-<script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="assets/js/Countable.js"></script>
-<script type="text/javascript" src="assets/js/select2/select2.js"></script>
-<script type="text/javascript" src="assets/js/select2/select2_locale_tr.js"></script>
+      {% endblock %}
+      
 
-<!--editor.md begin-->
+    {% block tailjs %}
+        <script type="text/javascript" src="/static/admin/js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="/static/admin/js/Countable.js"></script>
+        <script type="text/javascript" src="/static/admin/js/select2/select2.js"></script>
+        <script type="text/javascript" src="/static/admin/js/select2/select2_locale_tr.js"></script>
+
+        <!--editor.md begin-->
       <link rel="stylesheet" href="/static/css/style.css" />
       <link rel="stylesheet" href="/static/css/editormd.css" />
       <script src="/static/js/lib/jquery.min.js"></script>
@@ -210,6 +174,4 @@
   </script>
 
 <!--editor.md end-->
-
-</body>
-</html>
+{% endblock %}
