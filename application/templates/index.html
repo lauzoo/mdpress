@@ -1,42 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Dashboard - Pure Admin</title>
-	<link rel="stylesheet" type="text/css" href="assets/css/pure-min.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/admin.css">
-</head>
-<body>
-<div class="pure-g-r" id="layout">
+{% extends 'layout.html' %}
 
-    <div class="pure-u" id="nav">
-        <a href="#nav" class="nav-menu-button">Menu</a>
 
-        <div class="nav-inner">
-        	<div class="user">
-        		<p><img class="user-avatar" alt="Avatar" src="assets/img/avatar.gif" height="64" width="64"></p>
-        		<p><a href="profile.html"><span class="user-label-editor"></span>User Name</a></p>
-        	</div>
-
-            <div class="pure-menu pure-menu-open">
-                <ul>
-                    <li><a href="index.html" class="selected">Dashboard</a></li>
-                    <li><a href="post-list.html">Posts</a></li>
-                    <li><a href="post-list.html">Tags</a></li>
-                    <li><a href="post-list.html">Gallery</a></li>
-                    <li><a href="post-list.html">Comments</a></li>
-                    <li class="pure-menu-heading">Options</li>
-                    <li><a href="options.html">General</a></li>
-                    <li><a href="options.html">Seo</a></li>
-                    <li><a href="options.html">Meta</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="pure-u" id="main">
-    	
-    	<div class="dashboard">
+{% block content %}
+    <div class="dashboard">
     		<h2 class="main-subhead">Dashboard</h2>
     		<div class="pure-g-r">
     			<div class="pure-u-1">
@@ -180,12 +146,4 @@
     			</div>
     		</div>
 		</div>
-    </div>
-</div>	
-<div class="pure-g-r">
-	<div class="pure-u" id="footer">
-		<p>&copy; 2013 - Pure Admin <a href="detail.html">v0.1</a></p>
-    </div>
-</div>
-</body>
-</html>
+{% endblock %}

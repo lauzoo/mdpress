@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Pure Admin</title>
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/pure-min.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+
+    {% block head_js %}
+    {% endblock %}
+  </head>
+
+  
+  <body>
+    <div class="pure-g-r" id="layout">
+        <div class="pure-u" id="nav">
+            <a href="#nav" class="nav-menu-button">Menu</a>
+
+            <div class="nav-inner">
+              <div class="user">
+                <p><img class="user-avatar" alt="Avatar" src="/static/admin/img/avatar.gif" height="64" width="64"></p>
+                <p><a href="profile.html"><span class="user-label-editor"></span>User Name</a></p>
+              </div>
+
+                <div class="pure-menu pure-menu-open">
+                    <ul>
+                      <li><a href="{{url_for('admin.index')}}" class="selected">Dashboard</a></li>
+                      <li><a href="{{url_for('admin.all_posts')}}">Posts</a></li>
+                        <li><a href="{{url_for('admin.all_tags')}}">Tags</a></li>
+                        <li><a href="{{url_for('admin.all_uploads')}}">Gallery</a></li>
+                        <li><a href="{{url_for('admin.all_comments')}}">Comments</a></li>
+                        <li class="pure-menu-heading">Options</li>
+                        <li><a href="{{url_for('admin.settings')}}">General</a></li>
+                        <li><a href="{{url_for('admin.other')}}">Seo</a></li>
+                        <li><a href="{{url_for('admin.other')}}">Meta</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="pure-u" id="main">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="pure-g-r">
+
+      {% block footer %}
+        <div class="pure-u" id="footer">
+          <p>&copy; 2013 - Pure Admin <a href="detail.html">v0.1</a></p>
+        </div>
+      {% endblock %}
+    </div>
+
+    {% block tailjs %}
+    {% endblock %}
+  </body>
+</html>
