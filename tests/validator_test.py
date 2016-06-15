@@ -89,11 +89,11 @@ class ValidateTest(TestCase):
         try:
             post_schema({
                 'title': 'test',
-                'excerpt': 'test-post',
+                'slug': 'test-post',
                 'content': 'content',
                 'categories': ["1", "2"],
                 'tags': ["hello", "world"],
-                'status': 0
+                'status': 'PUBLISHED'
             })
         except Invalid as e:
             print e

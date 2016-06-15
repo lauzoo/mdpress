@@ -28,15 +28,15 @@ class PermissionTest(TestCase):
     def user_add_post(self):
         post = {
             'title': 'title',
-            'excerpt': 'excerpt',
+            'slug': 'excerpt',
             'content': 'content',
             'categories': [],
             'tags': [],
-            'status': 1
+            'status': 'PUBLISHED'
         }
         resp = self.client.post(
             '/posts/post', data=json.dumps(post),
-            headers={'Authorization': 'JWT {}'.format(self.token),
+            headers={'Authorization': 'Bearer {}'.format(self.token),
                      'Content-Type': 'application/json'})
         resp_json = json.loads(resp.data)
         return resp_json
@@ -50,7 +50,7 @@ class PermissionTest(TestCase):
         post['title'] = 'new_title'
         resp = self.client.put(
             '/posts/post', data=json.dumps(post),
-            headers={'Authorization': 'JWT {}'.format(self.token),
+            headers={'Authorization': 'Bearer {}'.format(self.token),
                      'Content-Type': 'application/json'})
         resp_json = json.loads(resp.data)
         return resp_json
@@ -63,7 +63,7 @@ class PermissionTest(TestCase):
         print data
         resp = self.client.delete(
             '/posts/post', data=json.dumps(data),
-            headers={'Authorization': 'JWT {}'.format(self.token),
+            headers={'Authorization': 'Bearer {}'.format(self.token),
                      'Content-Type': 'application/json'})
         resp_json = json.loads(resp.data)
         return resp_json
@@ -71,14 +71,14 @@ class PermissionTest(TestCase):
     def create_permission_user_and_login(self, permission):
         role = Models.Role.objects.filter(permission=permission).first()
         Models.User.objects.create(
-            id=10000, username="zhangsan", password="password",
-            email="zhangsan@test.com", role=role)
-        print Models.User.objects.all()
+            name="zhangsan", password="password",
+            email="zhangsan@test.com", role=[role])
+        print "create_permission_user_and_login with all user: {}".format(Models.User.objects.all())
         user = {
-            'email': 'zhangsan@test.com',
+            'username': 'zhangsan@test.com',
             'password': 'password',
         }
-        resp = self.client.post('/auth', data=json.dumps(user),
+        resp = self.client.post('/authentication/token', data=json.dumps(user),
                                 headers={'Content-Type': 'application/json'})
         login_resp = json.loads(resp.data)
         print login_resp

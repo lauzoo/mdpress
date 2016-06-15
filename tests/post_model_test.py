@@ -29,7 +29,7 @@ class PostModelTest(TestCase):
     def test_save(self):
         u = Models.User.objects.get_by_id(10000)
         p = Models.Post(
-            id=1, title="123", excerpt="test", content="cnt",
+            title="123", slug="test", content="cnt",
             user=u, categories=[], tags=[],
             version=1, create_at=datetime.now(),
             last_update=datetime.now(), comments=[],

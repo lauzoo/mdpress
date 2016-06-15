@@ -2,7 +2,7 @@
 # encoding: utf-8
 import re
 
-from voluptuous import All, Length, Schema, Invalid, Range
+from voluptuous import All, Length, Schema, Invalid
 
 
 def validate_email(email):
@@ -20,9 +20,9 @@ user_schema = Schema({
 
 post_schema = Schema({
     'title': All(basestring, Length(max=100)),
-    'excerpt': All(basestring, Length(max=100)),
+    'slug': All(basestring, Length(max=100)),
     'content': basestring,
     'categories': list,
     'tags': list,
-    'status': All(int, Range(min=0, max=4))
+    'status': basestring,
 })

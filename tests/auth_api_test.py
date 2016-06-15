@@ -13,25 +13,29 @@ class PostApiTest(TestCase):
         self.ctx = self.app.app_context()
         self.ctx.push()
         self.client = self.app.test_client()
-        Models.Role.objects.create(
-            id=1, name="Test",
+        r = Models.Role.objects.create(
+            name="Test",
             permission=Models.Permission.DELETE)
-        r = Models.Role.objects.all()[0]
-        Models.User(id=10000, username="zhangsan",
-                    password="password",
-                    email="liqianglau@outlook.com",
-                    role=r).save()
+        print "create role with error: {}".format(r.errors)
+        user = Models.User(
+            name="zhangsan", password="password",
+            email="liqianglau@outlook.com", role=[r])
+        print "setup with user error: {}".format(user.errors)
+        user.save()
 
     def tearDown(self):
-        Models.User.objects.filter(id=10000).first().delete()
+        for user in Models.User.objects.all():
+            user.delete()
+        for role in Models.Role.objects.all():
+            role.delete()
         self.ctx.pop()
 
     def test_login(self):
         user = {
-            'email': 'liqianglau@outlook.com',
+            'username': 'liqianglau@outlook.com',
             'password': 'password',
         }
-        resp = self.client.post('/auth', data=json.dumps(user),
+        resp = self.client.post('/authentication/token', data=json.dumps(user),
                                 headers={'Content-Type': 'application/json'})
         login_resp = json.loads(resp.data)
         token = login_resp.get('access_token')

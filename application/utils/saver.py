@@ -12,12 +12,13 @@ def save_model_from_json(model, jobj):
     for key, _ in attr_dict.iteritems():
         setattr(obj, key, jobj.get(key, None))
     obj.save()
-    return not obj.errors
+    current_app.logger.debug("obj errors {}".format(obj.errors))
+    return not obj.errors, obj
 
 
 def update_model_from_json(obj, jobj):
     attr_dict = obj.attributes
-    current_app.logger.info("update {} with {}".format(obj, jobj))
+    current_app.logger.debug("update {} with {}".format(obj, jobj))
     for key, value in attr_dict.iteritems():
         print "{}_{}".format(key, value)
         if isinstance(value, db.DateTimeField) and jobj.get(key):
@@ -25,6 +26,6 @@ def update_model_from_json(obj, jobj):
             jobj[key] = d
         if jobj.get(key, None):
             setattr(obj, key, jobj.get(key))
-    current_app.logger.info("obj errors {}".format(obj.errors))
+    current_app.logger.debug("obj errors {}".format(obj.errors))
     obj.save()
-    return not obj.errors
+    return not obj.errors, obj

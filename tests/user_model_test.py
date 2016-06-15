@@ -22,8 +22,8 @@ class UserModelTest(TestCase):
     def test_save(self):
         r = Models.Role.objects.all()[0]
         u = Models.User(
-            id=100000, username="zhangsan", password="zhangsan",
-            email="zhangsan@test.com", role=r)
+            name="zhangsan", password="zhangsan",
+            email="zhangsan@test.com", role=[r])
         self.assertTrue(u.is_valid(), msg=u.errors)
         status = u.save()
         self.assertTrue(status)

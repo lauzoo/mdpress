@@ -13,7 +13,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    current_app.logger.info("login with rdata: {}".format(request.data))
+    current_app.logger.debug("login with rdata: {}".format(request.data))
     info = json.loads(request.data)
     username = info.get('username', 'guest@test.com')
     password = info.get('password', '')

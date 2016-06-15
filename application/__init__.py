@@ -6,8 +6,7 @@ import logging.handlers
 from datetime import datetime
 
 import redisco
-from flask import Flask, current_app, request, jsonify
-from flask_jwt import JWTError
+from flask import Flask, current_app, jsonify
 
 from config import load_config
 from application.extensions import jwt
@@ -45,6 +44,7 @@ def register_extensions(app):
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
                              db=app.config['REDIS_CONFIG']['DB'])
+
     # jwt config
     def jwt_authenticate(email, password):
         logging.info("email:{}\npassword:{}\n".format(email, password))
@@ -90,7 +90,7 @@ def register_blueprint(app):
 def configure_logging(app):
     logging.basicConfig()
     if app.config.get('TESTING'):
-        app.logger.setLevel(logging.CRITICAL)
+        app.logger.setLevel(logging.INFO)
         return
     elif app.config.get('DEBUG'):
         app.logger.setLevel(logging.DEBUG)
