@@ -23,7 +23,8 @@ def permission_required(permission):
             if not current_identity.is_authenticated:
                 return create_response_with(2001, 'need login')
             user_roles = current_identity.role
-            print "need_permission: {0:b} has_permission: {0:b}".format(permission, user_roles)
+            print "need_permission: {0:b} has_permission: {0:b}".format(
+                permission, user_roles)
             for role in user_roles:
                 user_permission = role.permission
                 if user_permission & permission == permission:

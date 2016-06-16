@@ -3,11 +3,11 @@
 from voluptuous import MultipleInvalid
 
 from flask import request, current_app, Blueprint
-from flask_jwt import jwt_required, current_identity
+from flask_jwt import jwt_required
 
-from application.models import Post, User, Permission
+from application.models import Post, Permission
 from application.utils.validator import post_schema
-from application.utils.saver import save_model_from_json, update_model_from_json
+from application.utils.saver import save_model_from_json
 from application.utils.permission import permission_required
 from application.utils.response import make_error_resp, normal_resp, page_resp
 
@@ -23,7 +23,8 @@ def all_post():
     ps = Post.objects.all()
     total = len(ps)
     ps = ps[page_size * (page - 1): page_size * page]
-    return page_resp({'posts': [p.to_json() for p in ps]}, total, page, page_size)
+    return page_resp({'posts': [p.to_json() for p in ps]},
+                     total, page, page_size)
 
 
 @post_bp.route('/post', methods=['GET'])
@@ -68,12 +69,12 @@ def udt_post():
     db_post = Post.objects.get_by_id(post.get('id'))
     if not db_post:
         return make_error_resp(2001, 'post not found in db')
-    db_post.title=post.get('title')
-    db_post.excerpt=post.get('excerpt')
-    db_post.content=post.get('content')
-    db_post.categories=post.get('categories')
-    db_post.tags=post.get('tags')
-    db_post.status=post.get('status')
+    db_post.title = post.get('title')
+    db_post.excerpt = post.get('excerpt')
+    db_post.content = post.get('content')
+    db_post.categories = post.get('categories')
+    db_post.tags = post.get('tags')
+    db_post.status = post.get('status')
     db_post.save()
     return normal_resp({'post': db_post.to_json()})
 

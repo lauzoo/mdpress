@@ -7,7 +7,8 @@ from application.utils import format_datetime
 __all__ = ['Permission', 'Role', 'User']
 
 
-DEFAULT_AVATAR_URL = "https://www.gravatar.com/avatar/3ca58cb0069eca6979b4a63cd6a5e478?s=64"
+DEFAULT_AVATAR_URL = "https://www.gravatar.com/avatar/\
+    3ca58cb0069eca6979b4a63cd6a5e478?s=64"
 
 
 class Permission:
@@ -51,7 +52,8 @@ class User(db.Model):
     name = db.Attribute(required=True)
     slug = db.Attribute(indexed=False)
     email = db.Attribute(required=True)
-    avatar = db.Attribute(required=True, indexed=False, default=DEFAULT_AVATAR_URL)
+    avatar = db.Attribute(required=True, indexed=False,
+                          default=DEFAULT_AVATAR_URL)
     password = db.Attribute(required=True, indexed=False)
     image = db.Attribute(indexed=False)
     cover = db.Attribute(indexed=False)

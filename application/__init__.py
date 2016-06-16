@@ -50,7 +50,7 @@ def register_extensions(app):
         logging.info("email:{}\npassword:{}\n".format(email, password))
         from application.models import User
         user = User.objects.filter(email=email).first()
-        if user and user.password==password:
+        if user and user.password == password:
             return user
         else:
             return None

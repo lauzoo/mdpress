@@ -4,7 +4,7 @@ import os
 
 import requests
 from flask import (current_app, Blueprint, request,
-                   flash, redirect, url_for, send_from_directory)
+                   url_for, send_from_directory)
 from werkzeug.utils import secure_filename
 
 import application.models as Models
@@ -43,13 +43,15 @@ def upload_file():
             return "no filenames"
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            local_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            local_path = os.path.join(current_app.config['UPLOAD_FOLDER'],
+                                      filename)
             file.save(local_path)
             url = upload_to_sm(local_path)
             Models.Upload(filename=file.filename,
                           local_path=local_path,
                           url=url).save()
-            return '"{}"'.format(url_for('upload.uploaded_file', filename=filename))
+            return '"{}"'.format(url_for('upload.uploaded_file',
+                                         filename=filename))
 
 
 @upload_bp.route('/<filename>')

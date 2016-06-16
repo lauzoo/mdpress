@@ -1,12 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import sys
-import json
-import string
-import random
-import datetime
-import subprocess
-from datetime import datetime
+import pytz
+from datetime import datetime, timedelta
 from datetime import tzinfo
 from dateutil import tz
 
@@ -34,13 +29,6 @@ def convert_datetime_navie_to_aware(dt):
     return dt.astimezone(to_zone)
 
 
-def get_beijing_time():
-    beijing_timezone = timezone('Asia/Shanghai')
-    utc_timezone = timezone('UTC')
-    curr_utc_time = utc_timezone.localize(datetime.utcnow())
-    return curr_utc_time.astimezone(beijing_timezone)
-
-
 class GMT_Beijing(tzinfo):
     def utcoffset(self, dt):
         return timedelta(hours=8)
@@ -65,12 +53,12 @@ def format_date(value, format='%Y-%m-%d %H:%M'):
 
 def isodate_to_local(datestr):
     datestr = datestr.split('+')[0]
-    dt = datetime.datetime.strptime(datestr.split('.')[0], '%Y-%m-%dT%H:%M:%S')
+    dt = datetime.strptime(datestr.split('.')[0], '%Y-%m-%dT%H:%M:%S')
     return format_date(dt)
 
 
 def unix_time(dt):
-    epoch = datetime.datetime.utcfromtimestamp(0)
+    epoch = datetime.utcfromtimestamp(0)
     return (dt - epoch).total_seconds()
 
 
@@ -90,10 +78,10 @@ def timesince(dt, default=None, reverse=False):
 
     if default is None:
         default = u'刚刚'
-    now = datetime.datetime.utcnow()
+    now = datetime.utcnow()
     diff = (dt - now) if reverse else now - dt
 
-    if diff < datetime.timedelta(days=0):
+    if diff < timedelta(days=0):
         return default
 
     periods = (
@@ -124,4 +112,3 @@ def timesince(dt, default=None, reverse=False):
                 return u'%d%s前' % (period, plural)
 
     return default
-
