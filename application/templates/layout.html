@@ -6,6 +6,7 @@
     <title>Dashboard - Pure Admin</title>
     <link rel="stylesheet" type="text/css" href="/static/admin/css/pure-min.css">
     <link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+    <script type="text/javascript" src="/static/admin/js/jquery-1.10.2.min.js"></script>
 
     {% block head_js %}
     {% endblock %}
@@ -19,8 +20,8 @@
 
             <div class="nav-inner">
               <div class="user">
-                <p><img class="user-avatar" alt="Avatar" src="/static/admin/img/avatar.gif" height="64" width="64"></p>
-                <p><a href="profile.html"><span class="user-label-editor"></span>User Name</a></p>
+                <p><img id="avatar" class="user-avatar" alt="Avatar" src="" height="64" width="64"></p>
+                <p><a href="profile.html" id="username"><span class="user-label-editor"></span>User Name</a></p>
               </div>
 
                 <div class="pure-menu pure-menu-open">
@@ -54,6 +55,27 @@
         </div>
       {% endblock %}
     </div>
+
+    <script type="text/javascript">
+      $(function() {
+        $.ajax({
+          url: "{{url_for('users.user_info')}}",
+          type: "POST",
+          headers: {
+            "Authorization": "Bearer " + localStorage.twtf_jwt_token,
+          },
+          success: function(data){
+            if (data.code != 2000) {
+              console.log(data.data);
+            } else {
+              $("#avatar").attr('src', data.data.avatar);
+              $("#username").text(data.data.name);
+              console.log(data);
+            }
+          }
+        });
+      });
+    </script>
 
     {% block tailjs %}
     {% endblock %}

@@ -18,25 +18,23 @@ manager.add_command("profile", ProfileServer())
 # @manager.command
 @manager.option('-c', '--config', help='enviroment config')
 def create_db(config):
-    print config
     create_app(config)
-    role = Models.Role.objects.filter(
-        permission=Models.Permission.DELETE).first()
+    role = Models.Role.objects.filter(name="DELETER").first()
     if not role:
-        Models.Role(name="READER", permission=Models.Permission.READ).save()
-        Models.Role(name="CREATER",
-                    permission=Models.Permission.CREATE | Models.Permission.READ).save()
-        Models.Role(name="UPDATER",
-                    permission=Models.Permission.UPDATE | Models.Permission.CREATE |
-                    Models.Permission.READ).save()
-        Models.Role(name="DELETER",
-                    permission=Models.Permission.DELETE | Models.Permission.UPDATE |
-                    Models.Permission.CREATE | Models.Permission.READ).save()
+        Models.Role.objects.create(name="READER", permission=Models.Permission.READ)
+        Models.Role.objects.create(
+            name="CREATER", permission=Models.Permission.CREATE | Models.Permission.READ)
+        Models.Role.objects.create(
+            name="UPDATER", permission=(Models.Permission.UPDATE | Models.Permission.CREATE |
+                                        Models.Permission.READ))
+        Models.Role.objects.create(
+            name="DELETER", permission=(Models.Permission.DELETE | Models.Permission.UPDATE |
+                                        Models.Permission.CREATE | Models.Permission.READ))
         print "create roles finish..."
     else:
         print "no need to create role..."
 
-    users = Models.User.objects.all()
+    users = Models.User.objects.filter(name='admin')
     if not users:
         role = Models.Role.objects.filter(name='DELETER').first()
         Models.User(name="admin", password="admin", email="liqianglau@outlook.com",

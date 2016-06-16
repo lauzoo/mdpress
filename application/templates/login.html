@@ -92,10 +92,15 @@
           jwt_token = data.access_token;
           localStorage.twtf_jwt_token=jwt_token;
           console.log(localStorage.twtf_jwt_token);
+          window.location.href = "{{url_for('admin.index')}}";
       }
     });
     return false;
   }
+
+  $(function() {
+    console.log("i am comeing") 
+  });
 </script>
 </body>
 </html>
