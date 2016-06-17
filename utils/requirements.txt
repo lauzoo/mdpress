@@ -10,3 +10,4 @@ Flask-JWT==0.3.2
 requests==2.10.0
 redisco==0.1.4
 voluptuous==0.8.11
+python-dateutil==2.5.3
