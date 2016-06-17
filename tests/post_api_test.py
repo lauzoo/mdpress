@@ -55,7 +55,7 @@ class PostApiTest(TestCase):
         post = {
             'title': 'title',
             'slug': 'excerpt',
-            'content': 'content',
+            'markdown': 'content',
             'categories': [],
             'tags': [],
             'status': 'EDITING'

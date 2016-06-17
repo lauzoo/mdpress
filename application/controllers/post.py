@@ -5,7 +5,7 @@ from voluptuous import MultipleInvalid
 from flask import request, current_app, Blueprint
 from flask_jwt import jwt_required
 
-from application.models import Post, Permission
+from application.models import Post, Permission, Category
 from application.utils.validator import post_schema
 from application.utils.saver import save_model_from_json
 from application.utils.permission import permission_required
@@ -25,6 +25,13 @@ def all_post():
     ps = ps[page_size * (page - 1): page_size * page]
     return page_resp({'posts': [p.to_json() for p in ps]},
                      total, page, page_size)
+
+
+@post_bp.route('/all_categories', methods=['GET'])
+def all_categories():
+    """query all categories"""
+    cates = Category.objects.all()
+    return normal_resp({'categories': [cate.to_json() for cate in cates]})
 
 
 @post_bp.route('/post', methods=['GET'])

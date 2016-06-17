@@ -90,7 +90,7 @@ class ValidateTest(TestCase):
             post_schema({
                 'title': 'test',
                 'slug': 'test-post',
-                'content': 'content',
+                'markdown': 'content',
                 'categories': ["1", "2"],
                 'tags': ["hello", "world"],
                 'status': 'PUBLISHED'

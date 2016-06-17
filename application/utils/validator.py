@@ -21,7 +21,7 @@ user_schema = Schema({
 post_schema = Schema({
     'title': All(basestring, Length(max=100)),
     'slug': All(basestring, Length(max=100)),
-    'content': basestring,
+    'markdown': basestring,
     'categories': list,
     'tags': list,
     'status': basestring,

@@ -17,6 +17,12 @@ class Category(db.Model):
     name = db.Attribute(required=True)
     super = db.IntegerField()
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
 
 class Comment(db.Model):
     # 评论者的用户名
@@ -83,24 +89,11 @@ class Post(db.Model):
     tags = db.ListField(Tag)
 
     def to_json(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "slug": self.slug,
-            "markdown": self.markdown,
-            "image": self.image,
-            "featured": self.featured,
-            "page": self.page,
-            "status": self.status,
-            "language": self.language,
-            "meta_title": self.meta_title,
-            "meta_description": self.meta_description,
-            "updated_at": format_datetime(self.updated_at),
-            "updated_by": self.updated_by.id if self.updated_by else None,
-            "published_at": format_datetime(self.published_at),
-            "created_at": format_datetime(self.created_at),
-            "created_by": self.created_by.id if self.created_by else None,
-            "author": "1",
-            "publishedBy": self.publishedBy.id if self.publishedBy else None,
-            "tags": [tag.to_json() for tag in self.tags]
-        }
+        rtn = self.attributes_dict
+        rtn["updated_at"] = format_datetime(self.updated_at)
+        rtn["updated_by"] = self.updated_by.id if self.updated_by else None
+        rtn["published_at"] = format_datetime(self.published_at),
+        rtn["created_at"] = format_datetime(self.created_at),
+        rtn["created_by"] = self.created_by.id if self.created_by else None,
+        rtn["publishedBy"] = self.publishedBy.id if self.publishedBy else None,
+        return rtn
