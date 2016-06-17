@@ -17,6 +17,9 @@ function save_post() {
     status = $("#post-state").val();
     postdate= $("#post-date").val();
 
+    if (categories === null) {
+      categories = [];
+    }
     req_data = JSON.stringify({
       title: title, slug: slug, markdown: markdown,
       categories: categories, status: status,

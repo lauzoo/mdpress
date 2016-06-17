@@ -6,9 +6,9 @@ import subprocess
 from flask_script import Manager
 from flask_script.commands import ShowUrls
 
+from utils.init_db import init_db
 from utils.commands import GEventServer, ProfileServer
 from application import create_app
-import application.models as Models
 
 manager = Manager(create_app)
 manager.add_option('-c', '--config', dest='mode', required=False)
@@ -22,33 +22,7 @@ manager.add_command("profile", ProfileServer())
 @manager.option('-c', '--config', help='enviroment config')
 def create_db(config):
     create_app(config)
-    role = Models.Role.objects.filter(name="DELETER").first()
-    if not role:
-        Models.Role.objects.create(name="READER",
-                                   permission=Models.Permission.READ)
-        Models.Role.objects.create(
-            name="CREATER",
-            permission=Models.Permission.CREATE | Models.Permission.READ)
-        Models.Role.objects.create(
-            name="UPDATER",
-            permission=(Models.Permission.UPDATE | Models.Permission.CREATE |
-                        Models.Permission.READ))
-        Models.Role.objects.create(
-            name="DELETER",
-            permission=(Models.Permission.DELETE | Models.Permission.UPDATE |
-                        Models.Permission.CREATE | Models.Permission.READ))
-        print "create roles finish..."
-    else:
-        print "no need to create role..."
-
-    users = Models.User.objects.filter(name='admin')
-    if not users:
-        role = Models.Role.objects.filter(name='DELETER').first()
-        Models.User(name="admin", password="admin",
-                    email="liqianglau@outlook.com", role=[role]).save()
-        print "create admin finish..."
-    else:
-        print "user admin exists..."
+    init_db()
 
 
 @manager.option('-c', '--config', help='enviroment config')

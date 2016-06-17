@@ -9,7 +9,9 @@
         {% for post in page.slice %}
             <div class="list-item list-item-selected pure-g">
                 <div class="pure-u">
-                    <img class="list-avatar" alt="Author's avatar" src="assets/img/avatar.gif" height="64" width="64">
+                    <a href="{{url_for("admin.oper_post", pid=post.id)}}">
+                        <img id="author_avatar" class="list-avatar" alt="Author's avatar" height="64" width="64"/>
+                    </a>
                 </div>
 
                 <div class="pure-u-3-4">
@@ -62,8 +64,13 @@
   {% endblock %}
 
   {% block tailjs %}
-<script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="assets/js/mustache/mustache.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/static/admin/js/mustache/mustache.js"></script>
 <script type="text/javascript">
+    $(function(){
+        console.log("post-list");
+        console.log(localStorage.user_avatar);
+        $("#author_avatar").attr("src", localStorage.user_avatar);
+    });
 </script>
 {% endblock %}

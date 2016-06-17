@@ -68,6 +68,7 @@
             if (data.code != 2000) {
               console.log(data.data);
             } else {
+              localStorage.user_avatar = data.data.avatar;
               $("#avatar").attr('src', data.data.avatar);
               $("#username").text(data.data.name);
               console.log(data);
