@@ -5,7 +5,13 @@
 {% block content %}
     <div class="pure-u" id="list">
         <div class="content">
-
+            <div class="post-filter">
+        		<h2 class="title-subhead">
+                    All Posts
+                    <a href="#" data-class=".search" data-toggle="dropdown" title="Search">[+]</a>
+                    <a href="{{url_for('admin.oper_post')}}" title="Add New Post" class="advanced-options pure-button-success">Add New</a>
+                </h2>
+        	</div>
         {% for post in page.slice %}
             <div class="list-item list-item-selected pure-g">
                 <div class="pure-u">
