@@ -66,6 +66,7 @@ function load_post(pid) {
         });
         console.log('categoriest ids' + cate_ids);
         $("#category").val(cate_ids);
+        $("#post-status").val(post.status);
         console.log('load post success!');
       }
     }

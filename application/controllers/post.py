@@ -34,6 +34,12 @@ def all_categories():
     return normal_resp({'categories': [cate.to_json() for cate in cates]})
 
 
+@post_bp.route('/all_status', methods=['GET'])
+def all_categories():
+    """query all categories"""
+    cates = Category.objects.all()
+    return normal_resp({'categories': [cate.to_json() for cate in cates]})
+
 @post_bp.route('/post', methods=['GET'])
 def qry_post():
     """query post with post id"""
