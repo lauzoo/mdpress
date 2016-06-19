@@ -59,10 +59,14 @@ function load_post(pid) {
         console.log(post);
         editor.setMarkdown(post.markdown);
         categories = post.categories;
-        for (cate in categories){
-           $(".selector").find("option[text=cate]").attr("selected",true);
-        }
-        console.log('load success!');
+        cate_ids = []
+        $.each(categories, function(key, value) {
+           console.log(key + ":" + value.name);
+           cate_ids.push(value.id);
+        });
+        console.log('categoriest ids' + cate_ids);
+        $("#category").val(cate_ids);
+        console.log('load post success!');
       }
     }
   });
@@ -81,13 +85,16 @@ function load_categories() {
       } else {
         cates = data.data.categories;
         $.each(cates, function(key, value) {
-          console.log(key + ":" + value.name);
              $('#category')
                  .append($("<option></option>")
-                              .attr("value",key)
+                              .attr("value",value.id)
                               .text(value.name));
         });
-        console.log('load success!');
+        console.log('load categories success!');
+        if (post_id !== null) {
+          console.log('load post!');
+          load_post(post_id);
+        }
       }
     }
   });

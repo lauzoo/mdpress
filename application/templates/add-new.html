@@ -94,7 +94,6 @@
       <script type="text/javascript">
         var editor;
         var jwt_token = "";
-        console.log("here");
 
         $(function() {
             editor = editormd("my-editor", {
@@ -163,7 +162,7 @@
             });
           //editor.fullscreen();
             load_categories();
-            load_post({% if post %}{{post.id}}{%endif%});
+            {% if post %}post_id={{post.id}};{%endif%}
         });
 
         $("#open-html-entities-dialog").bind('click', function() {

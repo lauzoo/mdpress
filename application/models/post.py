@@ -96,4 +96,6 @@ class Post(db.Model):
         rtn["created_at"] = format_datetime(self.created_at),
         rtn["created_by"] = self.created_by.id if self.created_by else None,
         rtn["publishedBy"] = self.publishedBy.id if self.publishedBy else None,
+        rtn["categories"] = [cate.to_json() for cate in self.categories]
+        rtn["tags"] = [tag.to_json() for tag in self.tags]
         return rtn

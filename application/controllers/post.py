@@ -59,11 +59,13 @@ def add_post():
     except MultipleInvalid as e:
         return make_error_resp(2001, str(e))
     # user = User.objects.get_by_id(str(current_identity.id))
+    current_app.logger.debug("save post with categories: {}".format(post.get('categories')))
     status, obj = save_model_from_json(Post, post)
-    current_app.logger.debug("save post with status: {}".format(status))
-    current_app.logger.debug("post create at: {}".format(obj.created_at))
-
-    return normal_resp({'post': obj.to_json()})
+    current_app.logger.debug("post errors: {}".format(obj))
+    if status:
+        return normal_resp({'post': obj.to_json()})
+    else:
+        return make_error_resp(2001, {})
 
 
 @post_bp.route('/post', methods=['PUT'])
