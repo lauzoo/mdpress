@@ -6,8 +6,8 @@ from flask import request, current_app, Blueprint
 from flask_jwt import jwt_required
 
 from application.models import Post, Permission, Category
-from application.utils.validator import post_schema
-from application.utils.saver import save_model_from_json
+from application.utils.validator import post_schema, post_update_schema
+from application.utils.saver import save_model_from_json, update_model_from_json
 from application.utils.permission import permission_required
 from application.utils.response import make_error_resp, normal_resp, page_resp
 
@@ -33,12 +33,6 @@ def all_categories():
     cates = Category.objects.all()
     return normal_resp({'categories': [cate.to_json() for cate in cates]})
 
-
-@post_bp.route('/all_status', methods=['GET'])
-def all_categories():
-    """query all categories"""
-    cates = Category.objects.all()
-    return normal_resp({'categories': [cate.to_json() for cate in cates]})
 
 @post_bp.route('/post', methods=['GET'])
 def qry_post():
@@ -79,19 +73,18 @@ def add_post():
 @permission_required(Permission.UPDATE)
 def udt_post():
     post = request.get_json()
-    if not post or not post.get('id'):
-        return make_error_resp(2001, 'post or id not found')
+    try:
+        post = post_update_schema(post)
+    except MultipleInvalid as e:
+        return make_error_resp(2001, str(e))
     db_post = Post.objects.get_by_id(post.get('id'))
     if not db_post:
         return make_error_resp(2001, 'post not found in db')
-    db_post.title = post.get('title')
-    db_post.excerpt = post.get('excerpt')
-    db_post.content = post.get('content')
-    db_post.categories = post.get('categories')
-    db_post.tags = post.get('tags')
-    db_post.status = post.get('status')
-    db_post.save()
-    return normal_resp({'post': db_post.to_json()})
+    status, obj = update_model_from_json(db_post, post)
+    if status:
+        return normal_resp({'post': db_post.to_json()})
+    else:
+        return make_error_resp(2001, 'arg errors')
 
 
 @post_bp.route('/post', methods=['DELETE'])

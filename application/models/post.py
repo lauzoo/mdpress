@@ -90,6 +90,7 @@ class Post(db.Model):
 
     def to_json(self):
         rtn = self.attributes_dict
+        rtn["id"] = self.id
         rtn["updated_at"] = format_datetime(self.updated_at)
         rtn["updated_by"] = self.updated_by.id if self.updated_by else None
         rtn["published_at"] = format_datetime(self.published_at),

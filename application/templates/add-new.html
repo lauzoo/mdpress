@@ -162,7 +162,11 @@
             });
           //editor.fullscreen();
             load_categories();
-            {% if post %}post_id={{post.id}};{%endif%}
+            {% if post %}
+              sessionStorage.post_id = {{post.id}};
+            {% else %}
+              sessionStorage.post_id = null;
+            {% endif %}
         });
 
         $("#open-html-entities-dialog").bind('click', function() {

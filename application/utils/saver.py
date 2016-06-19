@@ -49,8 +49,6 @@ def save_model_from_json(model, jobj):
         if type(field) == db.ReferenceField:
             save_reference_field(obj, field, jobj.get(name))
         if type(field) == db.ListField:
-            # print "save_model_from_json: {}".format(name)
-            # print "save_model_from_json: {}".format(jobj.get(name))
             save_list_field(obj, field, jobj.get(name))
         if type(field) == db.Attribute:
             setattr(obj, name, jobj.get(name, None))
@@ -59,25 +57,25 @@ def save_model_from_json(model, jobj):
                 field_val = parse(jobj.get(name))
                 setattr(obj, name, field_val)
 
-    # attr_dict = obj.attributes
-    # for key, value in attr_dict.iteritems():
-        # print "{}_{}".format(key, value._target_type)
-        # setattr(obj, key, jobj.get(key, None))
     current_app.logger.info("save obj with errors: {}".format(obj.errors))
     obj.save()
     return not obj.errors, obj
 
 
 def update_model_from_json(obj, jobj):
-    attr_dict = obj.attributes
     current_app.logger.debug("update {} with {}".format(obj, jobj))
-    for key, value in attr_dict.iteritems():
-        print "{}_{}".format(key, value)
-        if isinstance(value, db.DateTimeField) and jobj.get(key):
-            d = datetime.strptime(jobj.get(key), "%Y-%m-%dT%H:%M:%S.%fZ")
-            jobj[key] = d
-        if jobj.get(key, None):
-            setattr(obj, key, jobj.get(key))
-    current_app.logger.debug("obj errors {}".format(obj.errors))
+    for field in obj.fields:
+        name = field.name
+        if type(field) == db.ReferenceField:
+            save_reference_field(obj, field, jobj.get(name))
+        if type(field) == db.ListField:
+            save_list_field(obj, field, jobj.get(name))
+        if type(field) == db.Attribute:
+            setattr(obj, name, jobj.get(name, None))
+        if type(field) == db.DateTimeField:
+            if jobj.get(name, None):
+                field_val = parse(jobj.get(name))
+                setattr(obj, name, field_val)
+    current_app.logger.info("update obj with errors: {}".format(obj.errors))
     obj.save()
     return not obj.errors, obj

@@ -26,3 +26,13 @@ post_schema = Schema({
     'tags': list,
     'status': basestring,
 })
+
+post_update_schema = Schema({
+    'id': basestring,
+    'title': All(basestring, Length(max=100)),
+    'slug': All(basestring, Length(max=100)),
+    'markdown': basestring,
+    'categories': list,
+    'tags': list,
+    'status': basestring,
+})

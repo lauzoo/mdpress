@@ -14,22 +14,31 @@ function save_post() {
     markdown = editor.getMarkdown();
     html = editor.getPreviewedHTML();
     categories = $("#category").val();
-    status = $("#post-state").val();
+    status = $("#post-status").val();
     postdate= $("#post-date").val();
 
     if (categories === null) {
       categories = [];
     }
-    req_data = JSON.stringify({
+    req_data = {
       title: title, slug: slug, markdown: markdown,
       categories: categories, status: status,
       tags: []
-    });
+    }
+    if (sessionStorage.post_id != null) {
+      req_method = 'PUT';
+      req_data.id = sessionStorage.post_id;
+    } else {
+      req_method = 'POST';
+    }
+
+    req_data = JSON.stringify(req_data);
 
     console.log(localStorage.twtf_jwt_token);
+
     $.ajax({
       url: "/posts/post",
-      type: "POST",
+      type: req_method,
       headers: {
         "Authorization": "Bearer " + localStorage.twtf_jwt_token,
       },
@@ -92,9 +101,9 @@ function load_categories() {
                               .text(value.name));
         });
         console.log('load categories success!');
-        if (post_id !== null) {
+        if (sessionStorage.post_id !== null) {
           console.log('load post!');
-          load_post(post_id);
+          load_post(sessionStorage.post_id);
         }
       }
     }
