@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import json
+
 from voluptuous import MultipleInvalid
 
-from flask import request, current_app, Blueprint
+from flask import request, current_app, Blueprint, jsonify
 from flask_jwt import jwt_required
 
 from application.models import Post, Permission, Category
@@ -109,3 +111,9 @@ def del_post():
             p.delete()
         return normal_resp({'success': len(posts), 'total': len(ids),
                             'posts': data})
+
+
+@post_bp.route('/all_tags', methods=['POST'])
+def all_tags():
+    rtn_str = """{"page":1,"total":239,"rows":[{"id":"ZW","cell":["ZW","Zimbabwe","Zimbabwe","ZWE","716"]},{"id":"ZM","cell":["ZM","Zambia","Zambia","ZMB","894"]},{"id":"YE","cell":["YE","Yemen","Yemen","YEM","887"]},{"id":"EH","cell":["EH","Western Sahara","Western Sahara","ESH","732"]},{"id":"WF","cell":["WF","Wallis and Futuna","Wallis and Futuna","WLF","876"]},{"id":"VI","cell":["VI","Virgin Islands, U.s.","Virgin Islands, U.s.","VIR","850"]},{"id":"VG","cell":["VG","Virgin Islands, British","Virgin Islands, British","VGB","92"]},{"id":"VN","cell":["VN","Viet Nam","Viet Nam","VNM","704"]},{"id":"VE","cell":["VE","Venezuela","Venezuela","VEN","862"]},{"id":"VU","cell":["VU","Vanuatu","Vanuatu","VUT","548"]}]}"""
+    return jsonify(json.loads(rtn_str))
