@@ -25,7 +25,8 @@ function save_post() {
       categories: categories, status: status,
       tags: []
     }
-    if (sessionStorage.post_id != null) {
+    if (sessionStorage.post_id != null &&
+       sessionStorage.post_id != 'null') {
       req_method = 'PUT';
       req_data.id = sessionStorage.post_id;
     } else {
@@ -46,7 +47,7 @@ function save_post() {
       data: req_data,
       success: function(data){
         if (data.code != 2000) {
-          console.log(data);
+          alert(data);
         } else {
           alert('save success!');
         }
