@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from flask import request, render_template, Blueprint
+from flask import request, jsonify, render_template, Blueprint
 
 import application.models as Models
 from application.utils import Pagination
@@ -39,6 +39,21 @@ def oper_post():
 @admin_bp.route('/tags', methods=['GET'])
 def all_tags():
     return render_template('tag-list.html')
+
+
+@admin_bp.route('/categories', methods=['GET', 'POST'])
+def all_categories():
+    if request.method == 'GET':
+        return render_template('category-list.html')
+    else:
+        cates = [cate.to_json() for cate in Models.Category.objects.all()]
+        rtn = {
+            'page': 1,
+            'total': len(Models.Category.objects.all()),
+            'rows': [{'id': cate.get('id'),
+                      'cell': [cate.get('id'), cate.get('uuid'), cate.get('name'), cate.get('slug'), 0]} for cate in cates]
+        }
+    return jsonify(rtn)
 
 
 @admin_bp.route('/uploads', methods=['GET'])
