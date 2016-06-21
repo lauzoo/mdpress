@@ -16,7 +16,7 @@
             <div class="list-item list-item-selected pure-g">
                 <div class="pure-u">
                     <a href="{{url_for("admin.oper_post", pid=post.id)}}">
-                        <img id="author_avatar" class="list-avatar" alt="Author's avatar" height="64" width="64"/>
+                        <img id="author_avatar" class="author_avatar list-avatar" alt="Author's avatar" height="64" width="64"/>
                     </a>
                 </div>
 
@@ -76,7 +76,7 @@
     $(function(){
         console.log("post-list");
         console.log(localStorage.user_avatar);
-        $("#author_avatar").attr("src", localStorage.user_avatar);
+        $("img.author_avatar").attr("src", localStorage.user_avatar);
     });
 </script>
 {% endblock %}

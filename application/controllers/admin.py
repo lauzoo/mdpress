@@ -21,8 +21,9 @@ def login():
 
 @admin_bp.route('/posts', methods=['GET'])
 def all_posts():
+    page = int(request.args.get('page', 1))
     posts = Models.Post.objects.all()
-    page = Pagination(posts)
+    page = Pagination(posts, page)
     return render_template('post-list.html', page=page)
 
 
