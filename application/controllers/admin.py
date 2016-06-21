@@ -36,9 +36,19 @@ def oper_post():
     return render_template('add-new.html')
 
 
-@admin_bp.route('/tags', methods=['GET'])
+@admin_bp.route('/tags', methods=['GET', 'POST'])
 def all_tags():
-    return render_template('tag-list.html')
+    if request.method == 'GET':
+        return render_template('tag-list.html')
+    else:
+        tags = [tag.to_json() for tag in Models.Tag.objects.all()]
+        rtn = {
+            'page': 1,
+            'total': len(Models.Tag.objects.all()),
+            'rows': [{'id': tag.get('id'),
+                      'cell': [tag.get('id'), tag.get('uuid'), tag.get('name'), tag.get('slug'), 0]} for tag in tags]
+        }
+        return jsonify(rtn)
 
 
 @admin_bp.route('/categories', methods=['GET', 'POST'])
