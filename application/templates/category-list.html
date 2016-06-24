@@ -10,6 +10,10 @@
 
 {% block content %}
     <table id="flex1" style="display:none"></table>
+    <div>
+        Category: <input id="category" name="category"/>
+        <button id="add-cate">Add </button>
+    </div>
 {% endblock %}
 
 {% block tailjs %}
@@ -51,6 +55,28 @@
     $('#sform').submit(function (){
         $('#flex1').flexOptions({newp: 1}).flexReload();
         return false;
+    });
+
+    $("#add-cate").click(function(){
+        content = $("#category").val();
+        req_data = JSON.stringify({category: content})
+        $.ajax({
+            url: "/admin/categories",
+            type: 'PUT',
+            headers: {
+                "Authorization": "Bearer " + localStorage.twtf_jwt_token,
+            },
+            contentType: 'application/json',
+            data: req_data,
+            success: function(data){
+                if (data.code != 2000) {
+                    console.log(data);
+                } else {
+                    console.log('save success!');
+                    $('#flex1').flexOptions({newp: 1}).flexReload();
+                }
+            }
+        });
     });
 </script>
 {% endblock %}

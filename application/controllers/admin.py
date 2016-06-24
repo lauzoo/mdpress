@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import json
 from flask import request, jsonify, render_template, Blueprint
 
 import application.models as Models
 from application.utils import Pagination
+from application.utils.response import make_error_resp, normal_resp, page_resp
 
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -64,6 +66,16 @@ def all_categories():
                       'cell': [cate.get('id'), cate.get('uuid'), cate.get('name'), cate.get('slug'), 0]} for cate in cates]
         }
     return jsonify(rtn)
+
+
+@admin_bp.route('/categories', methods=['PUT'])
+def add_category():
+    data = request.get_json()
+    cate = Models.Category.objects.filter(name=data.get('category')).first()
+    if not cate:
+        cate = Models.Category.objects.create(name=data.get('category'))
+        cate = Models.Category.objects.filter(name=data.get('category')).first()
+    return normal_resp({'cate': cate.to_json()})
 
 
 @admin_bp.route('/uploads', methods=['GET'])
