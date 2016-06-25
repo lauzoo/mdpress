@@ -9,7 +9,7 @@ import redisco
 from flask import Flask, current_app, jsonify
 
 from config import load_config
-from application.extensions import jwt
+from application.extensions import jwt, mail
 from application.controllers import all_bp
 
 # convert python's encoding to utf8
@@ -40,6 +40,7 @@ def create_app(mode):
 
 
 def register_extensions(app):
+    mail.init_app(app)
     """init redis connection"""
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
