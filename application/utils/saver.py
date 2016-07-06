@@ -3,8 +3,8 @@
 from datetime import datetime
 
 import redisco.models as db
-from flask import current_app
 from dateutil.parser import parse
+from flask import current_app
 
 NORMAL_FIELD = [basestring, str, unicode, int, float, bool]
 

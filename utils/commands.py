@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import sys
 
-import gevent.wsgi
 import gevent.monkey
-from werkzeug.contrib import profiler
+import gevent.wsgi
 from flask_script import Command
+from werkzeug.contrib import profiler
 
 
 class ProfileServer(Command):

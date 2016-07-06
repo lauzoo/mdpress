@@ -3,8 +3,8 @@
 import json
 from unittest import TestCase
 
-from application import create_app
 import application.models as Models
+from application import create_app
 
 
 class PostApiTest(TestCase):

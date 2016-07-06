@@ -2,11 +2,10 @@
 # encoding: utf-8
 import json
 
-from flask import Blueprint, current_app, request, jsonify
+from flask import Blueprint, current_app, jsonify, request
 from flask.ext.login import login_user, logout_user
 
 import application.models as Models
-
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 

@@ -2,9 +2,9 @@
 # encoding: utf-8
 from redisco import models as db
 
-from .user import User
 from application.utils import format_datetime
 
+from .user import User
 
 __all__ = ['Category', 'Tag', 'Post']
 

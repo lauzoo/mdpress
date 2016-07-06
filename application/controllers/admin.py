@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from flask import request, render_template, Blueprint
+from flask import Blueprint, render_template, request
 
 import application.models as Models
 from application.utils import Pagination
-
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 

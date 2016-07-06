@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import sys
 import subprocess
+import sys
 
 from flask_script import Manager
 from flask_script.commands import ShowUrls
 
-from utils.init_db import init_db
-from utils.commands import GEventServer, ProfileServer
 from application import create_app
+from utils.commands import GEventServer, ProfileServer
+from utils.init_db import init_db
 
 manager = Manager(create_app)
 manager.add_option('-c', '--config', dest='mode', required=False)

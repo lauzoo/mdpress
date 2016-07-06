@@ -2,17 +2,16 @@
 # encoding: utf-8
 import json
 
+from flask import Blueprint, current_app, jsonify, request
+from flask_jwt import jwt_required
 from voluptuous import MultipleInvalid
 
-from flask import request, current_app, Blueprint, jsonify
-from flask_jwt import jwt_required
-
-from application.models import Post, Permission, Category, Tag
-from application.utils.validator import post_schema, post_update_schema
-from application.utils.saver import save_model_from_json, update_model_from_json
+from application.models import Category, Permission, Post, Tag
 from application.utils.permission import permission_required
 from application.utils.response import make_error_resp, normal_resp, page_resp
-
+from application.utils.saver import (save_model_from_json,
+                                     update_model_from_json)
+from application.utils.validator import post_schema, post_update_schema
 
 post_bp = Blueprint('posts', __name__, url_prefix='/posts')
 

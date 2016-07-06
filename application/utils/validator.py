@@ -2,7 +2,7 @@
 # encoding: utf-8
 import re
 
-from voluptuous import All, Length, Schema, Invalid
+from voluptuous import All, Invalid, Length, Schema
 
 
 def validate_email(email):

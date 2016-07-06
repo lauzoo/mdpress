@@ -5,7 +5,7 @@ from unittest import TestCase
 
 from voluptuous import Invalid
 
-from application.utils.validator import user_schema, post_schema
+from application.utils.validator import post_schema, user_schema
 
 
 class ValidateTest(TestCase):

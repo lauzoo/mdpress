@@ -2,14 +2,13 @@
 # encoding: utf-8
 import json
 
-from flask import request, Blueprint, jsonify
-from flask_jwt import jwt_required, current_identity
+from flask import Blueprint, jsonify, request
+from flask_jwt import current_identity, jwt_required
 
 import application.models as Models
-from application.utils.validator import user_schema
 from application.utils.generator import generator_user_id
 from application.utils.response import normal_resp
-
+from application.utils.validator import user_schema
 
 user_bp = Blueprint('users', __name__, url_prefix='/users')
 

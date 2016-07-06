@@ -2,7 +2,6 @@
 # encoding: utf-8
 from redisco import models as db
 
-
 __all__ = ['Upload']
 
 
