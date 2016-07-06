@@ -6,17 +6,21 @@
     <script type="text/javascript" src="/static/js/table/flexigrid.js"></script>
 {% endblock %}
 
-{% block tags_selected%}selected{%endblock%}
+{% block categories_selected%}selected{%endblock%}
 
 {% block content %}
     <table id="flex1" style="display:none"></table>
+    <div>
+        Category: <input id="category" name="category"/>
+        <button id="add-cate">Add </button>
+    </div>
 {% endblock %}
 
 {% block tailjs %}
 <script type="text/javascript">
 
     $("#flex1").flexigrid({
-        url: '/admin/tags',
+        url: '/admin/categories',
         dataType: 'json',
         colModel : [
             {display: 'ID', name : 'id', width : 100, sortable : true, align: 'center'},
@@ -51,6 +55,28 @@
     $('#sform').submit(function (){
         $('#flex1').flexOptions({newp: 1}).flexReload();
         return false;
+    });
+
+    $("#add-cate").click(function(){
+        content = $("#category").val();
+        req_data = JSON.stringify({category: content})
+        $.ajax({
+            url: "/admin/categories",
+            type: 'PUT',
+            headers: {
+                "Authorization": "Bearer " + localStorage.twtf_jwt_token,
+            },
+            contentType: 'application/json',
+            data: req_data,
+            success: function(data){
+                if (data.code != 2000) {
+                    console.log(data);
+                } else {
+                    console.log('save success!');
+                    $('#flex1').flexOptions({newp: 1}).flexReload();
+                }
+            }
+        });
     });
 </script>
 {% endblock %}

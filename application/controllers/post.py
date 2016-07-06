@@ -110,15 +110,3 @@ def del_post():
             p.delete()
         return normal_resp({'success': len(posts), 'total': len(ids),
                             'posts': data})
-
-
-@post_bp.route('/all_tags', methods=['POST'])
-def all_tags():
-    tags = [tag.to_json() for tag in Tag.objects.all()]
-    rtn = {
-        'page': 1,
-        'total': len(Tag.objects.all()),
-        'rows': [{'id': tag.get('id'),
-                  'cell': [tag.get('id'), tag.get('uuid'), tag.get('name'), tag.get('slug'), 0]} for tag in tags]
-    }
-    return jsonify(rtn)
