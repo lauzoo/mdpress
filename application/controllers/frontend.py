@@ -1,17 +1,39 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from flask import Blueprint, render_template
+from flask import request, Blueprint, render_template
+
+from application.models import Post
 
 frontend_bp = Blueprint('frontend', __name__)
 
 
-@frontend_bp.route('/')
+@frontend_bp.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    page = request.args.get('page', 1)
+    page_size = int(request.args.get('page_size', 5))
+    page_size = max([5, min([20, page_size])])
+    posts = Post.objects.all()
+    show_posts = posts[(page - 1) * page_size:][:page_size]
+    env = {
+        'site': {
+            'title': 'Hello'
+        },
+        'has': lambda x: False,
+        'paginator': {
+            'has_pre': page > 1,
+            'has_next': page * page_size < len(posts),
+        },
+        'pager': {
+            'pre_url': '',
+            'next_url': ''
+        },
+        'posts': show_posts,
+    }
+    return render_template('index.jade', **env)
 
 
-@frontend_bp.route('/test')
-def test():
+@frontend_bp.route('/archive')
+def archive():
     env = {
         'site': {
             'title': 'Hello'
@@ -26,4 +48,9 @@ def test():
             'next_url': ''
         },
     }
-    return render_template('index.jade', **env)
+    return render_template('archive.jade', **env)
+
+
+@frontend_bp.route('/post/<post_id>')
+def post(post_id):
+    return render_template('post.jade', post=post)
