@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import os
 import sys
 import logging
 import logging.handlers
@@ -22,7 +23,6 @@ except (AttributeError, NameError):
 
 def create_app(mode):
     """Create Flask app."""
-    print "mode: {}".format(mode)
     config = load_config(mode)
 
     app = Flask(__name__)
@@ -45,6 +45,7 @@ def register_extensions(app):
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
                              db=app.config['REDIS_CONFIG']['DB'])
+    app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
     # jwt config
     def jwt_authenticate(email, password):

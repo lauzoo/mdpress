@@ -1,0 +1,24 @@
+html
+	head
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		block title
+			title= site.title
+		link(href="/static/themes/default/style.css" rel="stylesheet")
+	body
+		.header-wrap
+			.header.center-container
+				a.logo(href='/', title=site.title)= site.title
+				.links
+					a(href="/archive") archive
+					if has('about.md')
+						a(href="/about.md") about
+		.content-wrap
+			.content.center-container
+				block content
+
+		.footer-wrap
+			.main-center.footer
+				p Themed by &nbsp;
+					a(href="http://copri.me") Jaden Wang &nbsp;
+					| Powered by
+					a(href="https://www.farbox.com") farbox.com

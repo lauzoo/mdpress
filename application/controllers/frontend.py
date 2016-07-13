@@ -12,4 +12,18 @@ def index():
 
 @frontend_bp.route('/test')
 def test():
-    return render_template('test.html')
+    env = {
+        'site': {
+            'title': 'Hello'
+        },
+        'has': lambda x: False,
+        'paginator': {
+            'has_pre': True,
+            'has_next': True,
+        },
+        'pager': {
+            'pre_url': '',
+            'next_url': ''
+        },
+    }
+    return render_template('index.jade', **env)

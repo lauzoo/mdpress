@@ -12,3 +12,4 @@ redisco==0.1.4
 voluptuous==0.8.11
 python-dateutil==2.5.3
 Flask-Mail==0.9.1
+pyjade==4.0.0
