@@ -4,7 +4,7 @@ from datetime import datetime
 
 from flask import request, Blueprint, render_template
 
-from application.models import Post
+from application.models import Post, Site
 
 frontend_bp = Blueprint('frontend', __name__)
 
@@ -25,9 +25,7 @@ def index():
             'limit': lambda x: post.cnt[0:x]
         }
     env = {
-        'site': {
-            'title': 'Hello'
-        },
+        'site': Site.objects.all()[0],
         'has': lambda x: False,
         'paginator': {
             'has_pre': page > 1,
