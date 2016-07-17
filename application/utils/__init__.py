@@ -3,6 +3,7 @@
 import os
 import math
 import struct
+from datetime import datetime
 
 from redisco import get_client
 from redisco.models.key import Key
@@ -13,6 +14,13 @@ def format_datetime(d):
         return d.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
     else:
         return None
+
+
+def format_now_datetime(d):
+    if not d:
+        d = datetime.now()
+
+    return d.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
 
 
 def get_slug_id():

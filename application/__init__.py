@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import os
 import sys
 import logging
 import logging.handlers
@@ -45,7 +44,12 @@ def register_extensions(app):
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
                              db=app.config['REDIS_CONFIG']['DB'])
+
+    def filter_func(kv):
+        print kv
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+    from pyjade import Compiler
+    Compiler.register_autoclosecode('load')
 
     # jwt config
     def jwt_authenticate(email, password):
@@ -99,13 +103,10 @@ def configure_logging(app):
     else:
         app.logger.setLevel(logging.INFO)
 
-    # info_log = os.path.join("running-info.log")
-    info_log = "/tmp/logs/running.info"
-    info_file_handler = logging.handlers.RotatingFileHandler(
-        info_log, maxBytes=104857600, backupCount=10)
-    info_file_handler.setLevel(logging.DEBUG)
-    info_file_handler.setFormatter(logging.Formatter(
+    logging_handler = logging.StreamHandler()
+    logging_handler.setLevel(logging.DEBUG)
+    logging_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s '
         '[in %(pathname)s:%(lineno)d]')
     )
-    app.logger.addHandler(info_file_handler)
+    app.logger.addHandler(logging_handler)

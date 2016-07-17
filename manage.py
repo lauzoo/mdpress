@@ -9,6 +9,7 @@ from flask_script.commands import ShowUrls
 from application import create_app
 from utils.commands import GEventServer, ProfileServer
 from utils.init_db import init_db
+from utils.init_data import main as init_data
 
 manager = Manager(create_app)
 manager.add_option('-c', '--config', dest='mode', required=False)
@@ -18,11 +19,22 @@ manager.add_command("gevent", GEventServer())
 manager.add_command("profile", ProfileServer())
 
 
-# @manager.command
+@manager.shell
+def make_shell_context():
+    import application.models as ms
+    return dict(app=manager.app, Models=ms)
+
+
 @manager.option('-c', '--config', help='enviroment config')
 def create_db(config):
     create_app(config)
     init_db()
+
+
+@manager.option('-c', '--config', help='enviroment config')
+def create_data(config):
+    create_app(config)
+    init_data()
 
 
 @manager.option('-c', '--config', help='enviroment config')

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from datetime import datetime
+
 from flask import request, Blueprint, render_template
 
 from application.models import Post
@@ -14,6 +16,14 @@ def index():
     page_size = max([5, min([20, page_size])])
     posts = Post.objects.all()
     show_posts = posts[(page - 1) * page_size:][:page_size]
+    for post in show_posts:
+        post.date = {
+            'format': post.date.strftime
+        }
+        post.cnt = post.content
+        post.content = {
+            'limit': lambda x: post.cnt[0:x]
+        }
     env = {
         'site': {
             'title': 'Hello'
