@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from datetime import datetime
+import os
 
-from flask import request, Blueprint, render_template
+from flask import (request, Blueprint, render_template,
+                   send_from_directory, current_app as app)
+from scss import Compiler
 
 from application.models import Post, Site
 
@@ -62,3 +64,18 @@ def archive():
 @frontend_bp.route('/post/<post_id>')
 def post(post_id):
     return render_template('post.jade', post=post)
+
+
+@frontend_bp.route('/template/<filename>')
+def template_static(filename):
+    template_path = os.path.join(app.config['PROJECT_PATH'], 'application/templates')
+    print filename[-4:] == 'scss'
+    if filename[-4:] == 'scss':
+        file_path = os.path.join(template_path, filename)
+        filename = filename[-4:] + "css"
+        src = open(file_path).read()
+        print len(src)
+        with open(os.path.join(template_path, filename), 'w') as f:
+            f.write(Compiler().compile(file_path))
+
+    return send_from_directory(template_path, filename)
