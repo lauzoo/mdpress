@@ -2,7 +2,7 @@ extends base
 block title
 	title Archive
 block content
-	entries = get_data(type='post', sort='desc', limit=300).group('date:year', reverse=True)
+	entries = get_data(type='post', sort='desc', limit=300)
 	ul.archive-list
 		for year, posts in entries
 			li
