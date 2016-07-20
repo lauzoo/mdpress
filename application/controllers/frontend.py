@@ -1,23 +1,18 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
-import jinja2
+from datetime import datetime
 
 from flask import (request, Blueprint, send_from_directory,
                    current_app as app, url_for, render_template)
 from scss import Compiler
 
-from application.models import Post, Site
+from application.models import Post
+from application.models.system import site
 
 frontend_bp = Blueprint('frontend', __name__)
 base_env = {
-    'site': {
-        'title': 'Hello',
-        'configs': {
-            'disqus': False,
-            'duoshuo': True,
-        }
-    },
+    'site': site,
     'has': lambda x: False,
     'paginator': {
         'has_pre': False,
@@ -28,7 +23,6 @@ base_env = {
         'next_url': ''
     },
 }
-
 
 
 @frontend_bp.route('/', methods=['GET'])
@@ -48,7 +42,7 @@ def index():
             'refer': url_for('frontend.post', post_id=post.id)
         }
     env = {
-        'site': Site.objects.all()[0],
+        'site': site,
         'has': lambda x: False,
         'paginator': {
             'has_pre': page > 1,
@@ -68,23 +62,25 @@ def archive():
     def group(self, *args, **kwargs):
         return self
 
-    class Object(object):
-        date = {
-            'format': lambda x: x,
-        }
-        metadata = {
-            'refer': 'refer'
-        }
-
     def get_data(type, sort, limit):
-        print 'type: {}'.format(type)
-        print 'sort: {}'.format(sort)
-        p1 = Object()
-        p1.year='2015'
-        p2 = Object()
-        p2.year='2016'
-        return [{'2015', (p1,)},
-                {'2016', (p2,)}]
+        rst = {}
+        posts = Post.objects.all()
+        for post in posts:
+            post.date = {
+                'format': lambda x: post.updated_at.strftime(x),
+            }
+            post.metadata = {
+                'refer': url_for('frontend.post', post_id=post.id),
+            }
+            year = post.updated_at.strftime('%Y')
+            if year in rst:
+                rst[year].append(post)
+            else:
+                rst[year] = [post]
+        rtn = []
+        for item, value in rst.iteritems():
+            rtn.append((item, tuple(value)))
+        return rtn
 
     env = {
         'get_data': get_data

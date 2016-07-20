@@ -13,8 +13,7 @@ block content
 						.post-link
 							if post.metadata.refer
 								a.refer-link(href=post.metadata.refer, target="_blank")
-									span [reference]
-									post.title
+									span!= post.title
 							else
 								a(href=post.url)= post.title
 	if paginator.has_pre or paginator.has_next

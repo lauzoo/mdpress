@@ -3,7 +3,7 @@
 from user import *
 from upload import *
 from post import *
-from site import *
+from system import *
 
 
 def all():
