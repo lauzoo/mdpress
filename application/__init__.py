@@ -5,6 +5,7 @@ import logging
 import logging.handlers
 from datetime import datetime
 
+import jinja2
 import redisco
 from flask import Flask, current_app, jsonify
 
@@ -24,7 +25,8 @@ def create_app(mode):
     """Create Flask app."""
     config = load_config(mode)
 
-    app = Flask(__name__)
+    template_folder = 'templates/MinimalBox'
+    app = Flask(__name__, template_folder=template_folder)
     app.config.from_object(config)
 
     if not hasattr(app, 'production'):
@@ -47,7 +49,9 @@ def register_extensions(app):
 
     def filter_func(kv):
         print kv
+
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+
     from pyjade import Compiler
     Compiler.register_autoclosecode('load')
 

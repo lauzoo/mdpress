@@ -7,6 +7,7 @@ from datetime import datetime
 
 from redisco import get_client
 from redisco.models.key import Key
+from flask import render_template as render
 
 
 def format_datetime(d):

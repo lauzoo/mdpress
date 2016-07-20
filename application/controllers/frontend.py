@@ -1,15 +1,34 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
-from functools import partial
+import jinja2
 
-from flask import (request, Blueprint, render_template,
-                   send_from_directory, current_app as app)
+from flask import (request, Blueprint, send_from_directory,
+                   current_app as app, url_for, render_template)
 from scss import Compiler
 
 from application.models import Post, Site
 
 frontend_bp = Blueprint('frontend', __name__)
+base_env = {
+    'site': {
+        'title': 'Hello',
+        'configs': {
+            'disqus': False,
+            'duoshuo': True,
+        }
+    },
+    'has': lambda x: False,
+    'paginator': {
+        'has_pre': False,
+        'has_next': False,
+    },
+    'pager': {
+        'pre_url': '',
+        'next_url': ''
+    },
+}
+
 
 
 @frontend_bp.route('/', methods=['GET'])
@@ -24,8 +43,9 @@ def index():
             'format': post.date.strftime
         }
         post.cnt = post.content
-        post.content = {
-            'limit': lambda x: post.cnt[0:x]
+        post.content = post.cnt[0:100]
+        post.metadata = {
+            'refer': url_for('frontend.post', post_id=post.id)
         }
     env = {
         'site': Site.objects.all()[0],
@@ -45,21 +65,6 @@ def index():
 
 @frontend_bp.route('/archive')
 def archive():
-    base_env = {
-        'site': {
-            'title': 'Hello'
-        },
-        'has': lambda x: False,
-        'paginator': {
-            'has_pre': False,
-            'has_next': False,
-        },
-        'pager': {
-            'pre_url': '',
-            'next_url': ''
-        },
-    }
-
     def group(self, *args, **kwargs):
         return self
 
@@ -91,16 +96,27 @@ def archive():
 
 @frontend_bp.route('/post/<post_id>')
 def post(post_id):
-    return render_template('post.jade', post=post)
+    post = Post.objects.get_by_id(post_id)
+    if post:
+        d = post.date
+        post.date = {
+            'format': lambda x: d.strftime(x)
+        }
+    env = {
+        'post': post
+    }
+    env.update(base_env)
+    return render_template('post.jade', **env)
 
 
 @frontend_bp.route('/template/<filename>')
 def template_static(filename):
-    template_path = os.path.join(app.config['PROJECT_PATH'], 'application/templates')
+    template_path = os.path.join(app.config['PROJECT_PATH'], 'application/templates/MinimalBox')
     if filename[-4:] == 'scss':
         file_path = os.path.join(template_path, filename)
         filename = "{}{}".format(filename[:-4], "css")
         with open(os.path.join(template_path, filename), 'w') as f:
             f.write(Compiler().compile(file_path))
 
+    # todo: danguage function
     return send_from_directory(template_path, filename)
