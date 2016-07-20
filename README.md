@@ -2,7 +2,11 @@
 
 ###项目介绍
 
+博客系统那么多，新写一个的出发点是 wordpress 太卡了，我就想好好写文章，能够不时更换一个模板，加一下自己喜欢的小功能。
+
 这个项目是基于[Editor.md](https://pandao.github.io/editor.md/examples/index.html "Editor.md")创建的，主要在原有的基础上增加了保存功能，这样的话，你就可以直接在编辑完之后保存啦～～
+
+demo: [Angiris Council](http://mdpress-tyraeldemo.rhcloud.com/)
 
 ###依赖
 
