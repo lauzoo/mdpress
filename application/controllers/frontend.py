@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
-from datetime import datetime
 
 from flask import (request, Blueprint, send_from_directory,
                    current_app as app, url_for, render_template)
@@ -9,11 +8,12 @@ from scss import Compiler
 
 from application.models import Post
 from application.models.system import site
+from application.services.system import has
 
 frontend_bp = Blueprint('frontend', __name__)
 base_env = {
     'site': site,
-    'has': lambda x: False,
+    'has': has,
     'paginator': {
         'has_pre': False,
         'has_next': False,
@@ -43,7 +43,7 @@ def index():
         }
     env = {
         'site': site,
-        'has': lambda x: False,
+        'has': has,
         'paginator': {
             'has_pre': page > 1,
             'has_next': page * page_size < len(posts),
