@@ -31,7 +31,7 @@ def main():
         Post(title=post['title'], slug=post['slug'],
              content=post['content'],
              page=False, status=post['status'].upper(),
-             updated_at=post['pub_date']).save()
+             published_at=post['pub_date']).save()
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
+from functools import partial
 
 from flask import (request, Blueprint, send_from_directory,
                    current_app as app, url_for, render_template)
@@ -57,6 +58,10 @@ def index():
     return render_template('index.jade', **env)
 
 
+def format(d, f):
+    return d.strftime(f)
+
+
 @frontend_bp.route('/archive')
 def archive():
     def group(self, *args, **kwargs):
@@ -66,13 +71,14 @@ def archive():
         rst = {}
         posts = Post.objects.all()
         for post in posts:
+            d = post.published_at
             post.date = {
-                'format': lambda x: post.updated_at.strftime(x),
+                'format': partial(format, d)
             }
             post.metadata = {
                 'refer': url_for('frontend.post', post_id=post.id),
             }
-            year = post.updated_at.strftime('%Y')
+            year = d.strftime('%Y')
             if year in rst:
                 rst[year].append(post)
             else:
