@@ -83,9 +83,8 @@ def archive():
                 rst[year].append(post)
             else:
                 rst[year] = [post]
-        rtn = []
-        for item, value in rst.iteritems():
-            rtn.append((item, tuple(value)))
+        keys = sorted(rst.keys())
+        rtn = [(k, tuple(rst[k])) for k in keys]
         return rtn
 
     env = {
