@@ -11,6 +11,9 @@ from application.models import Post
 from application.models.system import site
 from application.services.system import has
 
+DEFAULT_PAGE = 1
+DEFAULT_PAGE_SIZE = 10
+MAX_PAGE_SIZE = 20
 frontend_bp = Blueprint('frontend', __name__)
 base_env = {
     'site': site,
@@ -28,14 +31,15 @@ base_env = {
 
 @frontend_bp.route('/', methods=['GET'])
 def index():
-    page = request.args.get('page', 1)
-    page_size = int(request.args.get('page_size', 5))
-    page_size = max([5, min([20, page_size])])
+    page = request.args.get('page', DEFAULT_PAGE)
+    page_size = int(request.args.get('page_size',
+                                     DEFAULT_PAGE_SIZE))
+    page_size = max([DEFAULT_PAGE_SIZE, min([MAX_PAGE_SIZE, page_size])])
     posts = Post.objects.all()
     show_posts = posts[(page - 1) * page_size:][:page_size]
     for post in show_posts:
-        post.date = {
-            'format': post.date.strftime
+        post.published_at = {
+            'format': post.published_at.strftime
         }
         post.cnt = post.content
         post.content = post.cnt[0:100]
@@ -69,7 +73,7 @@ def archive():
 
     def get_data(type, sort, limit):
         rst = {}
-        posts = Post.objects.all()
+        posts = Post.objects.all().order('-published_at')
         for post in posts:
             d = post.published_at
             post.date = {
@@ -83,7 +87,7 @@ def archive():
                 rst[year].append(post)
             else:
                 rst[year] = [post]
-        keys = sorted(rst.keys())
+        keys = sorted(rst.keys(), reverse=True)
         rtn = [(k, tuple(rst[k])) for k in keys]
         return rtn
 
@@ -108,6 +112,14 @@ def post(post_id):
     }
     env.update(base_env)
     return render_template('post.jade', **env)
+
+
+@frontend_bp.route('/about')
+def about():
+    env = {
+    }
+    env.update(base_env)
+    return render_template('about.jade', **env)
 
 
 @frontend_bp.route('/template/<filename>')
