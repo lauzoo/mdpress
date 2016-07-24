@@ -43,6 +43,14 @@ def simple_run(config):
     app.run(debug=True)
 
 
+@manager.option('-c', '--config', help='enviroment config')
+def run_fcgi(config):
+    from flup.server.fcgi import WSGIServer
+    app = create_app(config)
+    server = WSGIServer(app, bindAddress='/tmp/mdpress.sock')
+    server.run()
+
+
 @manager.command
 def lint():
     """Runs code linter."""
