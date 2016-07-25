@@ -7,8 +7,7 @@ from application.utils import format_datetime
 __all__ = ['Permission', 'Role', 'User']
 
 
-DEFAULT_AVATAR_URL = "https://www.gravatar.com/avatar/\
-    3ca58cb0069eca6979b4a63cd6a5e478?s=64"
+DEFAULT_AVATAR_URL = "https://www.gravatar.com/avatar/3ca58cb0069eca6979b4a63cd6a5e478?s=64"
 
 
 class Permission:

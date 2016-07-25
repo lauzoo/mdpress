@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+
+{% block posts_selected%}selected{%endblock%}
+
+{% block content %}
+    <div class="pure-u" id="list">
+        <div class="content">
+            <div class="post-filter">
+        		<h2 class="title-subhead">
+                    All Posts
+                    <a href="#" data-class=".search" data-toggle="dropdown" title="Search">[+]</a>
+                    <a href="{{url_for('admin.oper_post')}}" title="Add New Post" class="advanced-options pure-button-success">Add New</a>
+                </h2>
+        	</div>
+        {% for post in page.slice %}
+            <div class="list-item list-item-selected pure-g">
+                <div class="pure-u">
+                    <a href="{{url_for("admin.oper_post", pid=post.id)}}">
+                        <img id="author_avatar" class="author_avatar list-avatar" alt="Author's avatar" height="64" width="64"/>
+                    </a>
+                </div>
+
+                <div class="pure-u-3-4">
+                    <h5 class="list-name">{{post.title}}</h5>
+                    <h4 class="list-subject">{{post.slug}}</h4>
+                    <p class="list-desc">
+                        {{post.tags}}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+
+            <div class="navigation">
+                <ul class="pure-paginator">
+
+                {% if page.has_prev%}
+                    <li>
+                        <a class="pure-button prev" href="{{ url_for('admin.all_posts', page=page.page - 1)}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+        {% for page in page.iter_pages() %}
+            {% if page %}
+                {% if page != page.page %}
+                    <li><a href="{{ url_for('admin.all_posts', page=page)}}">{{page}}</a></li>
+                {% else %}
+                    <li class="pure-button-active"> <a href="#">{{page}}</a></li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+                {% if page.has_next %}
+                    <li>
+                        <a class="pure-button next" href="{{ url_for('admin.all_posts', page=page.page+1)}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+    <div class="pure-u" id="main">
+		<div id="content" class="content">
+        </div>
+    </div>
+  {% endblock %}
+
+  {% block tailjs %}
+<script type="text/javascript" src="/static/admin/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/static/admin/js/mustache/mustache.js"></script>
+<script type="text/javascript">
+    $(function(){
+        console.log("post-list");
+        console.log(localStorage.user_avatar);
+        $("img.author_avatar").attr("src", localStorage.user_avatar);
+    });
+</script>
+{% endblock %}

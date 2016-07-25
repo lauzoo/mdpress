@@ -1,0 +1,24 @@
+html
+    head
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    block title
+        title= site.title
+    load("/template/style.scss")
+    body
+    .header-wrap
+        .header.center-container
+            a.logo(href='/', title=site.title)= site.title
+            .links
+                each file in ['archive', 'about', 'wiki']
+                    if has(file)
+                        a(href="/"+file)= file
+    .content-wrap
+        .content.center-container
+            block content
+
+    .footer-wrap
+        .main-center.footer
+            p Themed by &nbsp;
+                a(href="http://copri.me") Tyrael Lau&nbsp;
+                | Powered by
+                a(href="https://www.farbox.com") liuliqiang.info

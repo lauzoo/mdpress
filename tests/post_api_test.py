@@ -3,8 +3,8 @@
 import json
 from unittest import TestCase
 
-from application import create_app
 import application.models as Models
+from application import create_app
 
 
 class PostApiTest(TestCase):
@@ -55,7 +55,7 @@ class PostApiTest(TestCase):
         post = {
             'title': 'title',
             'slug': 'excerpt',
-            'content': 'content',
+            'markdown': 'content',
             'categories': [],
             'tags': [],
             'status': 'EDITING'

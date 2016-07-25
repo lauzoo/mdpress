@@ -3,12 +3,10 @@
 import os
 
 import requests
-from flask import (current_app, Blueprint, request,
-                   url_for, send_from_directory)
+from flask import Blueprint, current_app, request, send_from_directory, url_for
 from werkzeug.utils import secure_filename
 
 import application.models as Models
-
 
 upload_bp = Blueprint('upload', __name__, url_prefix='/uploads')
 

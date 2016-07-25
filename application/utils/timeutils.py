@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import pytz
-from datetime import datetime, timedelta
-from datetime import tzinfo
+from datetime import datetime, timedelta, tzinfo
+
 from dateutil import tz
 
+import pytz
 
 LOCAL_TZ = pytz.timezone("Asia/Shanghai")
 

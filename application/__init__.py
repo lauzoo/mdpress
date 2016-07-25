@@ -5,11 +5,12 @@ import logging
 import logging.handlers
 from datetime import datetime
 
+import jinja2
 import redisco
 from flask import Flask, current_app, jsonify
 
 from config import load_config
-from application.extensions import jwt
+from application.extensions import jwt, mail
 from application.controllers import all_bp
 
 # convert python's encoding to utf8
@@ -22,10 +23,10 @@ except (AttributeError, NameError):
 
 def create_app(mode):
     """Create Flask app."""
-    print "mode: {}".format(mode)
     config = load_config(mode)
 
-    app = Flask(__name__)
+    template_folder = 'templates/MinimalBox'
+    app = Flask(__name__, template_folder=template_folder)
     app.config.from_object(config)
 
     if not hasattr(app, 'production'):
@@ -40,10 +41,19 @@ def create_app(mode):
 
 
 def register_extensions(app):
+    mail.init_app(app)
     """init redis connection"""
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
                              db=app.config['REDIS_CONFIG']['DB'])
+
+    def filter_func(kv):
+        print kv
+
+    app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+
+    from pyjade import Compiler
+    Compiler.register_autoclosecode('load')
 
     # jwt config
     def jwt_authenticate(email, password):
@@ -97,13 +107,10 @@ def configure_logging(app):
     else:
         app.logger.setLevel(logging.INFO)
 
-    # info_log = os.path.join("running-info.log")
-    info_log = "/tmp/logs/running.info"
-    info_file_handler = logging.handlers.RotatingFileHandler(
-        info_log, maxBytes=104857600, backupCount=10)
-    info_file_handler.setLevel(logging.DEBUG)
-    info_file_handler.setFormatter(logging.Formatter(
+    logging_handler = logging.StreamHandler()
+    logging_handler.setLevel(logging.DEBUG)
+    logging_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s '
         '[in %(pathname)s:%(lineno)d]')
     )
-    app.logger.addHandler(info_file_handler)
+    app.logger.addHandler(logging_handler)

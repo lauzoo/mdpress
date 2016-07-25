@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login - Pure Admin</title>
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/pure-min.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css">
+  <script type="text/javascript" src="/static/admin/js/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<div class="pure-g-r" id="login">
+	<div class="sidebar pure-u">
+        <header class="header pure-u-1">
+            <hgroup>
+                <h1 class="brand-title">Login Screen</h1>
+                <h2 class="brand-tagline">Simple login and register layouts</h2>
+            </hgroup>
+
+ 	        <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="pure-button pure-button-success pure-button-disabled" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="pure-button pure-button-error" href="register.html">Register</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+    <div class="content pure-u-1">
+        <div class="posts pure-g">
+            <h1 class="content-subhead pure-u-1">Login</h1>
+
+            <section class="post pure-u-1">
+            	<aside class="pure-alert-success">
+			        <p>
+			            <strong>SUCCESS</strong>: There is something wrong. 
+			        </p>
+			    </aside>
+			    <aside class="pure-alert-error">
+			        <p>
+			            <strong>ERROR</strong>: There is something wrong. 
+			        </p>
+			    </aside>
+			    <aside class="pure-alert-warning">
+			        <p>
+			            <strong>WARNING</strong>: There is something wrong. 
+			        </p>
+			    </aside>
+				<form class="pure-form pure-form-stacked">
+				    <fieldset>
+
+				        <label for="email">Email</label>
+				        <input id="email" type="email" placeholder="Email">
+
+				        <label for="password">Password</label>
+				        <input id="password" type="password" placeholder="Password">
+
+				        <label for="remember" class="pure-checkbox">
+				            <input id="remember" type="checkbox"> Remember me
+				        </label>
+
+				        <button type="submit" class="pure-button pure-button-success"
+                  onclick="return sign_in();">Sign in</button>
+				    </fieldset>
+				</form>
+            </section>
+        </div>
+    </div>
+</div>	
+<script type="text/javascript">
+  function sign_in() {
+    email = $("#email").val();
+    password = $("#password").val();
+    req_data = JSON.stringify({
+        'username': email,
+        'password': password,
+    })
+    $.ajax({
+      url: "/authentication/token",
+      type: "POST",
+      'processData': false,
+      headers: {
+        "Authorization": "Bearer",
+      },
+      contentType: 'application/json',
+      data: req_data,
+      success: function(data){
+          console.log(data);
+          jwt_token = data.access_token;
+          localStorage.twtf_jwt_token=jwt_token;
+          console.log(localStorage.twtf_jwt_token);
+          window.location.href = "{{url_for('admin.index')}}";
+      }
+    });
+    return false;
+  }
+
+  $(function() {
+    console.log("i am comeing") 
+  });
+</script>
+</body>
+</html>
