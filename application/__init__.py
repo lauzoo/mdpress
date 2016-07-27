@@ -5,12 +5,11 @@ import logging
 import logging.handlers
 from datetime import datetime
 
-import jinja2
 import redisco
 from flask import Flask, current_app, jsonify
 
 from config import load_config
-from application.extensions import jwt, mail
+from application.extensions import jwt, mail, RedisLoader
 from application.controllers import all_bp
 
 # convert python's encoding to utf8
@@ -37,6 +36,10 @@ def create_app(mode):
     register_extensions(app)
     register_blueprint(app)
 
+    @app.before_first_request
+    def setup_templates():
+        pass
+
     return app
 
 
@@ -51,6 +54,7 @@ def register_extensions(app):
         print kv
 
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+    app.jinja_env.loader = RedisLoader()
 
     from pyjade import Compiler
     Compiler.register_autoclosecode('load')
@@ -99,6 +103,8 @@ def register_blueprint(app):
 
 def configure_logging(app):
     logging.basicConfig()
+    print app.config.get('TESTING')
+    print app.config.get('DEBUG')
     if app.config.get('TESTING'):
         app.logger.setLevel(logging.INFO)
         return
@@ -107,7 +113,7 @@ def configure_logging(app):
     else:
         app.logger.setLevel(logging.INFO)
 
-    logging_handler = logging.StreamHandler()
+    logging_handler = logging.StreamHandler(sys.stdout)
     logging_handler.setLevel(logging.DEBUG)
     logging_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s '
