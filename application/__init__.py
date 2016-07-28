@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import os
 import sys
 import logging
 import logging.handlers
@@ -9,7 +10,7 @@ import redisco
 from flask import Flask, current_app, jsonify
 
 from config import load_config
-from application.extensions import jwt, mail, RedisLoader
+from application.extensions import jwt, mail, redis, RedisLoader
 from application.controllers import all_bp
 
 # convert python's encoding to utf8
@@ -36,15 +37,12 @@ def create_app(mode):
     register_extensions(app)
     register_blueprint(app)
 
-    @app.before_first_request
-    def setup_templates():
-        pass
-
     return app
 
 
 def register_extensions(app):
     mail.init_app(app)
+    redis.init_app(app)
     """init redis connection"""
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
@@ -100,11 +98,29 @@ def register_blueprint(app):
     for bp in all_bp:
         app.register_blueprint(bp)
 
+    @app.before_first_request
+    def setup_templates():
+        theme = current_app.config.get('THEME', 'default')
+        theme_key = current_app.config.get('THEME_KEY')
+        template_prefix = current_app.config.get('TEMPLATE_PREFIX').format(theme)
+        redis.set(theme_key, template_prefix)
+        template_path = os.path.join(current_app.config['PROJECT_PATH'],
+                                     'application/templates/{}'.format(theme))
+        for rt, _, fs in os.walk(template_path):
+            for f in fs:
+                path = os.path.join(rt, f)
+                postfix = path[len(template_path) + 1:]
+                if os.path.isfile(path):
+                    with open(path, 'r') as fp:
+                        data = fp.read()
+                        key = "{}:{}".format(template_prefix, postfix)
+                        redis.set(key, data)
+                else:
+                    current_app.logger.info("{} is not a file".format(f))
+
 
 def configure_logging(app):
     logging.basicConfig()
-    print app.config.get('TESTING')
-    print app.config.get('DEBUG')
     if app.config.get('TESTING'):
         app.logger.setLevel(logging.INFO)
         return
