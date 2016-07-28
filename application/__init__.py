@@ -106,6 +106,8 @@ def register_blueprint(app):
         redis.set(theme_key, template_prefix)
         template_path = os.path.join(current_app.config['PROJECT_PATH'],
                                      'application/templates/{}'.format(theme))
+
+        # add theme file
         for rt, _, fs in os.walk(template_path):
             for f in fs:
                 path = os.path.join(rt, f)
@@ -114,6 +116,22 @@ def register_blueprint(app):
                     with open(path, 'r') as fp:
                         data = fp.read()
                         key = "{}:{}".format(template_prefix, postfix)
+                        redis.set(key, data)
+                else:
+                    current_app.logger.info("{} is not a file".format(f))
+
+        # add admin file
+        admin_path = os.path.join(current_app.config['PROJECT_PATH'],
+                                  'application/templates/admin')
+        for rt, _, fs in os.walk(admin_path):
+            for f in fs:
+                path = os.path.join(rt, f)
+                postfix = path[len(admin_path) + 1:]
+                if os.path.isfile(path):
+                    with open(path, 'r') as fp:
+                        data = fp.read()
+                        key = "{}:admin/{}".format(template_prefix, postfix)
+                        print key
                         redis.set(key, data)
                 else:
                     current_app.logger.info("{} is not a file".format(f))
