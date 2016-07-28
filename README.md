@@ -1,39 +1,46 @@
 ##mdpress
 
-###项目介绍
+### [中文介绍](README-zhCN.md)
+### Introduction
 
-博客系统那么多，新写一个的出发点是 wordpress 太卡了，我就想好好写文章，能够不时更换一个模板，加一下自己喜欢的小功能。
+Another blog system writen by Flask and Redis. Not Mysql or Mongodb. I develop it for wordpress lower speed and i want to focus on writting blog and sometime i can try difference template, and add some widgets.
 
-这个项目是基于[Editor.md](https://pandao.github.io/editor.md/examples/index.html "Editor.md")创建的，主要在原有的基础上增加了保存功能，这样的话，你就可以直接在编辑完之后保存啦～～
+Mdpress can fullfill my requirements, and it's blog editor base on [Editor.md](https://pandao.github.io/editor.md/examples/index.html "Editor.md").
 
-demo: [Angiris Council](http://mdpress-tyraeldemo.rhcloud.com/)
+### demo: 
 
-###依赖
+[Angiris Council](http://mdpress-tyraeldemo.rhcloud.com/)
 
-保存查看功能需要：tidy扩展<br/>
-不需要保存查看功能无特殊依赖
+### Solved Problem
 
-因为我们的保存功能解析标题是解析标签&lt;h2&gt;的标签为标题，所以使用到了HTML解析功能，这里使用的是[bupt1987](https://github.com/bupt1987/HtmlParser "bupt1987")同学提供的html-parser库。而这个库依赖于tidy扩展，所以你的PHP运行环境需要支持tidy.
+- [x] Fast Load Speed
+- [x] Beauty Display And Theme Support
+- Post Search 
+- Images Links Manager
 
-###作者介绍
-想知道更多关于我的东西，请访问我的网站：   [liuliqiang.info](http://liuliqiang.info)
+### Feature
 
-###联系我
+- [x] Strong Diretory(Category Levels) Support
+- Super good search support
+- Code highlight
+- Convenience images upload
+- Unicon images admin
 
-欢迎戳邮件：liqianglau@outlook.com
+###Dependence
 
-### 痛点
+	Python == 2.7
+	Reids >= 3.0.0
 
-- 文章找不到
-- 图裂了
+and some python lib dependences can be installed by pip.
 
-### 特性
 
-- 目录结构强大
-- 支持搜索
-- 代码高亮[可根据语言/可高量指定行]
-- 图片上传方便
-- 统一的图片管理功能，保证图片不丢失
+###About Me
+Want to know more about author, please visit： [liuliqiang.info](http://liuliqiang.info)
+
+###Conract
+
+Please Mailto：liqianglau@outlook.com
+
 
 ###Screen Shoot
 **Index**
@@ -57,14 +64,21 @@ demo: [Angiris Council](http://mdpress-tyraeldemo.rhcloud.com/)
 - v0.1 
 	- 2015-02-18 14:38:03 
 	
-	创建项目，并且实现基本功能
+	create project, and implement base feature
 	
 - v0.2 
 	- 2015-02-21 11:57:03 
 
-	增加保存，查看功能
+	add save and view post feature
 
 - v0.3 
 	- 2016-06-04 13:03:31 
 
-	重构代码结构
+	refactor whole project structure
+
+- v0.4
+	- 2016-7-28 22:34:36
+	
+	add redis models support 
+	add theme and jade template support 
+
