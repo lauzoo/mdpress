@@ -8,6 +8,7 @@ from flask_redis import FlaskRedis
 from redis import Redis
 from jinja2 import BaseLoader, TemplateNotFound
 
+
 login_manager = LoginManager()
 admin = Admin()
 jwt = JWT()

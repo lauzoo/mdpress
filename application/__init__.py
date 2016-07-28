@@ -6,6 +6,7 @@ import logging
 import logging.handlers
 from datetime import datetime
 
+import jinja2
 import redisco
 from flask import Flask, current_app, jsonify
 
