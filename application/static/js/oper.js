@@ -16,14 +16,16 @@ function save_post() {
     categories = $("#category").val();
     status = $("#post-status").val();
     postdate= $("#post-date").val();
+    summary = $("#post-summary").val();
 
     if (categories === null) {
       categories = [];
     }
+    console.log("summary: " + summary);
     req_data = {
       title: title, slug: slug, markdown: markdown,
       categories: categories, status: status,
-      tags: []
+      tags: [], meta_description: summary
     }
     if (sessionStorage.post_id != null &&
        sessionStorage.post_id != 'null') {
@@ -49,6 +51,7 @@ function save_post() {
         if (data.code != 2000) {
           alert(data);
         } else {
+          sessionStorage.post_id = data.data.post.id;
           alert('save success!');
         }
       }
@@ -77,6 +80,7 @@ function load_post(pid) {
         console.log('categoriest ids' + cate_ids);
         $("#category").val(cate_ids);
         $("#post-status").val(post.status);
+        $("#post-summary").val(post.meta_description);
         console.log('load post success!');
       }
     }

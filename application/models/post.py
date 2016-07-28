@@ -83,7 +83,7 @@ class Post(db.Model):
     meta_description = db.Attribute(indexed=False)
     updated_at = db.DateTimeField(auto_now=True)
     updated_by = db.ReferenceField(User)
-    published_at = db.DateTimeField()
+    published_at = db.DateTimeField(auto_now_add=True)
     created_at = db.DateTimeField()
     created_by = db.ReferenceField(User)
     author = db.ReferenceField(User)

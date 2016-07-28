@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import json
-
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, request
 from flask_jwt import jwt_required
 from voluptuous import MultipleInvalid
 
-from application.models import Category, Permission, Post, Tag
+from application.models import Category, Permission, Post
 from application.utils.permission import permission_required
 from application.utils.response import make_error_resp, normal_resp, page_resp
 from application.utils.saver import (save_model_from_json,

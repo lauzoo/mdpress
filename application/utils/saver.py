@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from datetime import datetime
-
 import redisco.models as db
 from dateutil.parser import parse
 from flask import current_app

@@ -553,3 +553,7 @@ ul.markdown_editor{
         height: 40px;
     }
 }
+
+#post-summary {
+    height: 136px;
+}

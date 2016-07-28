@@ -22,7 +22,8 @@ manager.add_command("profile", ProfileServer())
 @manager.shell
 def make_shell_context():
     import application.models as ms
-    return dict(app=manager.app, Models=ms)
+    from application.extensions import redis
+    return dict(app=manager.app, Models=ms, rds=redis)
 
 
 @manager.option('-c', '--config', help='enviroment config')
