@@ -36,7 +36,21 @@ demo: [Angiris Council](http://mdpress-tyraeldemo.rhcloud.com/)
 - 统一的图片管理功能，保证图片不丢失
 
 ###Screen Shoot
-![](https://github.com/luke0922/MarkdownEditor/blob/master/Screenshoot.jpg)
+**Index**
+![](http://ooo.0o0.ooo/2016/07/27/579978371acf9.jpg)
+**Archive**
+![](http://ooo.0o0.ooo/2016/07/27/5799783689c9f.jpg)
+
+**Admin Login**
+![1.pi](http://ooo.0o0.ooo/2016/07/27/5799783457de9.jpg)
+**Admin Main**
+![2.pi](http://ooo.0o0.ooo/2016/07/27/5799783ceb8a4.jpg)
+**Post List**
+![3.pi](http://ooo.0o0.ooo/2016/07/27/5799783a4fa9d.jpg)
+**Post Editing**
+![4.pic_hd](http://ooo.0o0.ooo/2016/07/27/5799783c46069.jpg)
+**Tags List**
+![5.pi](http://ooo.0o0.ooo/2016/07/27/579978398a840.jpg)
 
 ###Updated History
 
@@ -54,6 +68,3 @@ demo: [Angiris Council](http://mdpress-tyraeldemo.rhcloud.com/)
 	- 2016-06-04 13:03:31 
 
 	重构代码结构
-	
-
-
