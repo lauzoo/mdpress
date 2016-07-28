@@ -20,8 +20,13 @@ class RedisLoader(BaseLoader):
         self.redis = Redis('127.0.0.1', 6379)
 
     def get_source(self, environment, template):
-        template_prefix = self.redis.get('mdpress:template:theme')
-        path = "{}:{}".format(template_prefix, template)
+        print "template : {}".format(template)
+        template_prefix = 'mdpress:template:theme'
+        if template[:6] == "admin/":
+            path = "{}:{}".format(template_prefix, template)
+        else:
+            theme = self.redis.get('mdpress:theme')
+            path = "{}:{}/{}".format(template_prefix, theme, template)
         temp = self.redis.get(path)
         if not temp:
             raise TemplateNotFound(path)

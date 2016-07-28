@@ -4,12 +4,14 @@ import os
 from functools import partial
 
 from flask import (request, Blueprint, send_from_directory,
-                   current_app as app, url_for, render_template)
+                   current_app as app, url_for)
 from scss import Compiler
 
 from application.models import Post
 from application.models.system import site
 from application.services.system import has
+from application.utils.template import render_theme_template as render_template
+
 
 DEFAULT_PAGE = 1
 DEFAULT_PAGE_SIZE = 10
