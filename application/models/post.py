@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from datetime import datetime
-
 from redisco import models as db
 
 from application.utils import format_now_datetime
 
 from .user import User
 
-__all__ = ['Category', 'Tag', 'Post']
+__all__ = ['Category', 'Tag', 'Post', 'POST_STATUS']
 
 
 POST_STATUS = ('PUBLISHED', 'DELETED', 'EDITING', 'SCHEDULING')

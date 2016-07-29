@@ -49,11 +49,15 @@ function save_post() {
       data: req_data,
       success: function(data){
         if (data.code != 2000) {
-          alert(data);
+          alert(data.description);
         } else {
           sessionStorage.post_id = data.data.post.id;
           alert('save success!');
         }
+      },
+      error: function(data) {
+        alert("error: " + data);
+        console.log(data);
       }
     });
     return false;

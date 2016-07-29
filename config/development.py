@@ -16,4 +16,4 @@ class DevelopmentConfig(Config):
         'DB': 10
     }
 
-    UPLOAD_FOLDER = "/tmp/upload
+    UPLOAD_FOLDER = "/tmp/upload"

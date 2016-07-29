@@ -106,9 +106,12 @@
       contentType: 'application/json',
       data: req_data,
       success: function(data){
-          console.log(data)
-          jwt_token = data.access_token
+          console.log(data);
+          jwt_token = data.access_token;
           formModal.toggleClass('is-visible');
+      },
+      error: function(data){
+          console.log(data);
       }
     });
 	});

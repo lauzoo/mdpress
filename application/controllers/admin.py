@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import json
-
 from flask import Blueprint, jsonify, render_template, request
 
 import application.models as Models
+from application.models.post import POST_STATUS
 from application.utils import Pagination
 from application.utils.response import normal_resp
 
@@ -13,7 +12,15 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 @admin_bp.route('/', methods=['GET'])
 def index():
-    return render_template('admin/index.html')
+    all_posts = len(Models.Post.objects.all())
+    published_posts = len(Models.Post.objects.filter(status=POST_STATUS[0]))
+    draft_posts = len(Models.Post.objects.filter(status=POST_STATUS[1]))
+    moderate_posts = len(Models.Post.objects.filter(status=POST_STATUS[2]))
+    scheduling_posts = len(Models.Post.objects.filter(status=POST_STATUS[3]))
+    return render_template('admin/index.html',
+                           postnum={'total': all_posts, 'published': published_posts,
+                                    'draft': draft_posts, 'moderate': moderate_posts,
+                                    'scheduling': scheduling_posts})
 
 
 @admin_bp.route('/login', methods=['GET'])

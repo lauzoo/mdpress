@@ -21,23 +21,23 @@
 						    <tbody>
 						        <tr class="pure-table-odd">
 						            <td>Total Posts</td>
-						            <td>125</td>
+                                    <td>{{ postnum.total }}</td>
 						        </tr>
 						        <tr>
 						            <td>Active Posts</td>
-						            <td>123</td>
+                                    <td>{{ postnum.published}}</td>
 						        </tr>
 						        <tr>
 						            <td>Draft Posts</td>
-						            <td>1</td>
+                                    <td>{{ postnum.draft}}</td>
 						        </tr>
 						        <tr>
 						            <td>Moderate Posts</td>
-						            <td>1</td>
+                                    <td>{{ postnum.moderate }}</td>
 						        </tr>
 						        <tr>
 						            <td>Schedule Posts</td>
-						            <td>1</td>
+                                    <td>{{ postnum.scheduling }}</td>
 						        </tr>
 						    </tbody>
 						</table>
@@ -48,29 +48,25 @@
     					<table class="pure-table pure-table-striped">
 						    <thead>
 						        <tr>
-						            <th colspan="2">Users Report</th>
+						            <th colspan="2">Visit Report</th>
 						        </tr>
 						    </thead>
 
 						    <tbody>
 						        <tr class="pure-table-odd">
-						            <td>Total Users</td>
+						            <td>User Views</td>
 						            <td>125</td>
 						        </tr>
 						        <tr>
-						            <td>Active Users</td>
+						            <td>Ip Views</td>
 						            <td>123</td>
 						        </tr>
 						        <tr>
-						            <td>Moderate Users</td>
+						            <td>Page Views</td>
 						            <td>1</td>
 						        </tr>
 						        <tr>
-						            <td>Draft Users</td>
-						            <td>1</td>
-						        </tr>
-						        <tr>
-						            <td>Schedule Users</td>
+						            <td>Yesterday PV</td>
 						            <td>1</td>
 						        </tr>
 						    </tbody>
@@ -96,15 +92,15 @@
 						            <td>123</td>
 						        </tr>
 						        <tr>
-						            <td>Draft Galleries</td>
+						            <td>Local Galleries</td>
 						            <td>1</td>
 						        </tr>
 						        <tr>
-						            <td>Moderate Galleries</td>
+						            <td>Remote Galleries</td>
 						            <td>1</td>
 						        </tr>
 						        <tr>
-						            <td>Schedule Galleries</td>
+						            <td>Diable Galleries</td>
 						            <td>1</td>
 						        </tr>
 						    </tbody>
@@ -130,15 +126,37 @@
 						            <td>123</td>
 						        </tr>
 						        <tr>
-						            <td>Moderate Comments</td>
-						            <td>1</td>
-						        </tr>
-						        <tr>
 						            <td>Draft Comments</td>
 						            <td>1</td>
 						        </tr>
+						    </tbody>
+						</table>
+    				</div>
+    			</div>
+    			<div class="pure-u-1-4">
+    				<div class="l-box">
+    					<table class="pure-table pure-table-striped">
+						    <thead>
 						        <tr>
-						            <td>Schedule Comments</td>
+						            <th colspan="2">Daily Login Report</th>
+						        </tr>
+						    </thead>
+
+						    <tbody>
+						        <tr class="pure-table-odd">
+						            <td>Login Time</td>
+						            <td>125</td>
+						        </tr>
+						        <tr>
+						            <td>Login IPs</td>
+						            <td>123</td>
+						        </tr>
+						        <tr>
+						            <td>Last Login</td>
+						            <td>08:41:28</td>
+						        </tr>
+						        <tr>
+						            <td>Yest. Time</td>
 						            <td>1</td>
 						        </tr>
 						    </tbody>
