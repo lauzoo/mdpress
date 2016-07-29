@@ -15,16 +15,16 @@ Mdpress can fullfill my requirements, and it's blog editor base on [Editor.md](h
 
 - [x] Fast Load Speed
 - [x] Beauty Display And Theme Support
-- Post Search 
-- Images Links Manager
+- [ ] Post Search 
+- [ ] Images Links Manager
 
 ### Feature
 
 - [x] Strong Diretory(Category Levels) Support
-- Super good search support
-- Code highlight
-- Convenience images upload
-- Unicon images admin
+- [ ] Super good search support
+- [ ] Code highlight
+- [ ] Convenience images upload
+- [ ] Unicon images admin
 
 ###Dependence
 
@@ -58,6 +58,20 @@ Please Mailto：liqianglau@outlook.com
 ![4.pic_hd](http://ooo.0o0.ooo/2016/07/27/5799783c46069.jpg)
 **Tags List**
 ![5.pi](http://ooo.0o0.ooo/2016/07/27/579978398a840.jpg)
+
+
+### TODOs
+
+- [ ] dashboard data correct
+- [ ] convert markdown to html
+- [ ] import wordpress html to markdown
+- [ ] duosuho configs
+- [ ] image admins
+- [ ] category level manager
+- [ ] post search
+- [ ] code highlight
+- [ ] template manager
+
 
 ###Updated History
 
