@@ -63,7 +63,7 @@ Please Mailto：liqianglau@outlook.com
 ### TODOs
 
 - [ ] dashboard data correct
-- [ ] convert markdown to html
+- [x] convert markdown to html          -- 2016-7-30 00:42:08
 - [ ] import wordpress html to markdown
 - [ ] duosuho configs
 - [ ] image admins

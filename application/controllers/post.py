@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import markdown2
 from flask import Blueprint, current_app, request
 from flask_jwt import jwt_required
 from voluptuous import MultipleInvalid
@@ -60,8 +61,12 @@ def add_post():
     # user = User.objects.get_by_id(str(current_identity.id))
     current_app.logger.debug("save post with categories: {}".format(post.get('categories')))
     status, obj = save_model_from_json(Post, post)
-    current_app.logger.debug("post errors: {}".format(obj))
+    # current_app.logger.debug("post errors: {}".format(obj))
+    current_app.logger.debug("post status: {}".format(status))
     if status:
+        obj.content = markdown2.markdown(obj.markdown, extras=['tables', 'fenced-code-blocks'])
+        current_app.logger.info("save post with len: {}".format(len(obj.content)))
+        obj.save()
         return normal_resp({'post': obj.to_json()})
     else:
         return make_error_resp(2001, {})
@@ -81,6 +86,9 @@ def udt_post():
         return make_error_resp(2001, 'post not found in db')
     status, obj = update_model_from_json(db_post, post)
     if status:
+        obj.content = markdown2.markdown(obj.markdown, extras=['tables', 'fenced-code-blocks'])
+        current_app.logger.info("save post with len: {}".format(len(obj.content)))
+        obj.save()
         return normal_resp({'post': db_post.to_json()})
     else:
         return make_error_resp(2001, 'arg errors')
