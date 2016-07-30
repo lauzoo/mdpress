@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
+from HTMLParser import HTMLParser
 
 import html2text
 import wxr_parser
@@ -19,8 +20,8 @@ def clear_all():
 
 def main():
     clear_all()
-    # init markdown convert
     h = html2text.HTML2Text()
+    html_parser = HTMLParser()
 
     # parse a file
     path = os.path.dirname(os.path.realpath(__file__))
@@ -33,8 +34,8 @@ def main():
         Category(name=kv['title']).save()
     posts = wp['posts']
     for post in posts:
-        Post(title=post['title'], slug=post['slug'],
-             content=post['content'],
+        Post(title=html_parser.unescape(post['title']),
+             slug=post['slug'], content=post['content'],
              markdown=h.handle(post['content']),
              page=False, status=post['status'].upper(),
              published_at=post['pub_date']).save()
