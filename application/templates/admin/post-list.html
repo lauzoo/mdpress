@@ -21,8 +21,10 @@
                 </div>
 
                 <div class="pure-u-3-4">
-                    <h5 class="list-name">{{post.title}}</h5>
-                    <h4 class="list-subject">{{post.slug}}</h4>
+                    <a href="{{url_for("admin.oper_post", pid=post.id)}}">
+                        <h5 class="list-name">{{post.title}}</h5>
+                        <h4 class="list-subject">{{post.slug}}</h4>
+                    </a>
                     <p class="list-desc">
                         {{post.tags}}
                     </p>

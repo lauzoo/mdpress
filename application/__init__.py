@@ -2,11 +2,11 @@
 # encoding: utf-8
 import os
 import sys
+import time
 import logging
 import logging.handlers
 from datetime import datetime
 
-import jinja2
 import redisco
 from flask import Flask, current_app, jsonify
 
@@ -118,14 +118,18 @@ def register_blueprint(app):
                     with open(path, 'r') as fp:
                         data = fp.read()
                         key = "{}:{}".format(template_prefix, postfix)
-                        print key
+                        lm_key = "{}:lm".format(key)
+                        path_key = "{}:path".format(key)
+                        last_modified = time.ctime(os.path.getmtime(path))
                         redis.set(key, data)
+                        redis.set(lm_key, last_modified)
+                        redis.set(path_key, path)
                 else:
                     current_app.logger.info("{} is not a file".format(f))
 
 
 def configure_logging(app):
-    logging.basicConfig()
+    # logging.basicConfig()
     if app.config.get('TESTING'):
         app.logger.setLevel(logging.INFO)
         return
