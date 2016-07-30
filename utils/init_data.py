@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
+
+import html2text
 import wxr_parser
 
 from application.models import Tag, Category, Post
@@ -17,6 +19,9 @@ def clear_all():
 
 def main():
     clear_all()
+    # init markdown convert
+    h = html2text.HTML2Text()
+
     # parse a file
     path = os.path.dirname(os.path.realpath(__file__))
     wp = wxr_parser.parse(os.path.join(path, 'wp.xml'))
@@ -30,6 +35,7 @@ def main():
     for post in posts:
         Post(title=post['title'], slug=post['slug'],
              content=post['content'],
+             markdown=h.handle(post['content']),
              page=False, status=post['status'].upper(),
              published_at=post['pub_date']).save()
 

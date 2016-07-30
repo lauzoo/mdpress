@@ -64,7 +64,8 @@ Please Mailto：liqianglau@outlook.com
 
 - [ ] dashboard data correct
 - [x] convert markdown to html          -- 2016-7-30 00:42:08
-- [ ] import wordpress html to markdown
+- [x] import wordpress html to markdown -- 2016-7-30 23:43:16
+- [ ] import wordpress post title html decode
 - [ ] duosuho configs
 - [ ] image admins
 - [ ] category level manager
