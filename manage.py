@@ -33,6 +33,13 @@ def create_db(config):
 
 
 @manager.option('-c', '--config', help='enviroment config')
+def drop_db(config):
+    from application.extensions import redis
+    create_app(config)
+    redis.flushall()
+
+
+@manager.option('-c', '--config', help='enviroment config')
 def wpimport(config):
     create_app(config)
     init_data()

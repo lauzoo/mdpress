@@ -18,6 +18,13 @@ def clear_all():
         post.delete()
 
 
+def convert_status(status):
+    status_dict = {
+        "PUBLISH": "PUBLISHED"
+    }
+    return status_dict.get(status, 'PUBLISHED')
+
+
 def main():
     clear_all()
     h = html2text.HTML2Text()
@@ -36,8 +43,8 @@ def main():
     for post in posts:
         Post(title=html_parser.unescape(post['title']),
              slug=post['slug'], content=post['content'],
-             markdown=h.handle(post['content']),
-             page=False, status=post['status'].upper(),
+             markdown=h.handle(post['content']), page=False,
+             status=convert_status(post['status'].upper()),
              published_at=post['pub_date']).save()
 
 if __name__ == '__main__':

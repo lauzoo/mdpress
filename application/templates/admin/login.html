@@ -34,39 +34,39 @@
             <h1 class="content-subhead pure-u-1">Login</h1>
 
               <section class="post pure-u-1">
-                  <aside class="pure-alert-success">
-                  <p>
-                      <strong>SUCCESS</strong>: There is something wrong. 
-                  </p>
-              </aside>
-              <!--aside class="pure-alert-error">
-                  <p>
-                      <strong>ERROR</strong>: There is something wrong. 
-                  </p>
-              </aside>
-              <aside class="pure-alert-warning">
-                  <p>
-                      <strong>WARNING</strong>: There is something wrong. 
-                  </p>
-              </aside-->
+                  <aside id="login-success-section" class="pure-alert-success">
+                      <p>
+                          <strong>SUCCESS</strong>: There is something wrong. 
+                      </p>
+                  </aside>
+                  <aside id="login-fail-section" class="pure-alert-error">
+                      <p>
+                          <strong id="login-fail-content">ERROR: There is something wrong. </strong>
+                      </p>
+                  </aside>
+                  <aside id="login-warn-section" class="pure-alert-warning">
+                      <p>
+                          <strong>WARNING</strong>: There is something wrong. 
+                      </p>
+                  </aside>
 
-				<form class="pure-form pure-form-stacked">
-				    <fieldset>
+                  <form class="pure-form pure-form-stacked">
+                      <fieldset>
 
-				        <label for="email">Email</label>
-				        <input id="email" type="email" placeholder="Email">
+                          <label for="email">Email</label>
+                          <input id="email" type="email" placeholder="Email">
 
-				        <label for="password">Password</label>
-				        <input id="password" type="password" placeholder="Password">
+                          <label for="password">Password</label>
+                          <input id="password" type="password" placeholder="Password">
 
-				        <label for="remember" class="pure-checkbox">
-				            <input id="remember" type="checkbox"> Remember me
-				        </label>
+                          <label for="remember" class="pure-checkbox">
+                              <input id="remember" type="checkbox"> Remember me
+                          </label>
 
-				        <button type="submit" class="pure-button pure-button-success"
-                  onclick="return sign_in();">Sign in</button>
-				    </fieldset>
-				</form>
+                          <button type="submit" class="pure-button pure-button-success"
+                            onclick="return sign_in();">Sign in</button>
+                      </fieldset>
+                  </form>
             </section>
         </div>
     </div>
@@ -94,13 +94,20 @@
           localStorage.twtf_jwt_token=jwt_token;
           console.log(localStorage.twtf_jwt_token);
           window.location.href = "{{url_for('admin.index')}}";
+      },
+      error: function(data) {
+        info = ($.parseJSON(data.responseText).description);
+        $("#login-fail-section").show();
+        $("#login-fail-content").html(info);
       }
     });
     return false;
   }
 
   $(function() {
-    console.log("i am comeing") 
+    $("#login-success-section").hide();
+    $("#login-fail-section").hide();
+    $("#login-warn-section").hide();
   });
 </script>
 </body>

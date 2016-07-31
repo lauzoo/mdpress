@@ -7,7 +7,7 @@ from flask import (request, Blueprint, send_from_directory,
                    current_app as app, url_for)
 from scss import Compiler
 
-from application.models import Post
+from application.models import Post, POST_STATUS
 from application.models.system import site
 from application.services.system import has
 from application.utils.template import render_theme_template as render_template
@@ -37,7 +37,7 @@ def index():
     page_size = int(request.args.get('page_size',
                                      DEFAULT_PAGE_SIZE))
     page_size = max([DEFAULT_PAGE_SIZE, min([MAX_PAGE_SIZE, page_size])])
-    posts = Post.objects.all()
+    posts = Post.objects.filter(status=POST_STATUS[0]).all()
     show_posts = posts[(page - 1) * page_size:][:page_size]
     for post in show_posts:
         post.published_at = {
