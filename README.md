@@ -26,6 +26,41 @@ Mdpress can fullfill my requirements, and it's blog editor base on [Editor.md](h
 - [ ] Convenience images upload
 - [ ] Unicon images admin
 
+### Usage
+
+1. Create Virtual Enviroment
+
+		virtualenv mdpenv
+		source mdpenv/bin/activator
+
+2. Install Dependences
+
+		pip install -r utils/requirements.txt
+	
+3. Config Development Configuration
+
+		vim config/development.py
+	
+make sure your redis config is right and redis-server is running:
+
+	REDIS_CONFIG = { 
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 10
+    }
+
+4. Running Server
+
+Now, it is time to run server:
+
+	python manager runserver
+
+and access it by browser with url:
+
+	http://localhost:5000 
+
+you will see the index page as show below...
+
 ###Dependence
 
 	Python == 2.7
