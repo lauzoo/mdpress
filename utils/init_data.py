@@ -25,14 +25,18 @@ def convert_status(status):
     return status_dict.get(status, 'PUBLISHED')
 
 
-def main():
+def main(location):
     clear_all()
     h = html2text.HTML2Text()
     html_parser = HTMLParser()
 
     # parse a file
-    path = os.path.dirname(os.path.realpath(__file__))
-    wp = wxr_parser.parse(os.path.join(path, 'wp.xml'))
+    if not location:
+        path = os.path.dirname(os.path.realpath(__file__))
+        wp = wxr_parser.parse(os.path.join(path, 'wp.xml'))
+    else:
+        wp = wxr_parser.parse(location)
+
     tags = wp['tags']
     for _, kv in tags.iteritems():
         Tag(name=kv['title'], slug=kv['slug']).save()

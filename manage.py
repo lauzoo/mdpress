@@ -40,9 +40,29 @@ def drop_db(config):
 
 
 @manager.option('-c', '--config', help='enviroment config')
-def wpimport(config):
+@manager.option('-l', '--location', help='wordpress backpack file path')
+def wpimport(config=None, location=None):
     create_app(config)
-    init_data()
+    init_data(location)
+
+
+@manager.option('-c', '--config', help='enviroment config')
+def esindex(config=None):
+    from datetime import datetime
+    from elasticsearch import Elasticsearch
+
+    import application.models as Models
+
+    create_app(config)
+
+    es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+
+    # 插入
+    for post in Models.Post.objects.all():
+        d = post.to_json()
+        d.update({"timestamp": datetime.utcnow()})
+        es.index(index="mdpress", doc_type="post", id=post.id,
+                 body=d)
 
 
 @manager.option('-c', '--config', help='enviroment config')
