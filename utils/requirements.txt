@@ -19,3 +19,4 @@ markdown2==2.3.1
 html2text==2016.5.29
 elasticsearch==2.3.0
 Flask-Elasticsearch==0.2.5
+mistune==0.7.2

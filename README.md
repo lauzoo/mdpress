@@ -101,7 +101,7 @@ Please Mailto：liqianglau@outlook.com
 - [x] convert markdown to html          -- 2016-7-30 00:42:08
 - [x] import wordpress html to markdown -- 2016-7-30 23:43:16
 - [x] import wordpress post title html decode -- 2016-7-31 00:10:31
-- [ ] code highlight
+- [x] code highlight
 - [ ] image admins
 - [ ] category level manager
 - [ ] post search

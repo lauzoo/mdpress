@@ -10,6 +10,7 @@ from application.utils.permission import permission_required
 from application.utils.response import make_error_resp, normal_resp, page_resp
 from application.utils.saver import (save_model_from_json,
                                      update_model_from_json)
+from application.utils.template import format_markdown
 from application.utils.validator import post_schema, post_update_schema
 
 post_bp = Blueprint('posts', __name__, url_prefix='/posts')
@@ -64,7 +65,7 @@ def add_post():
     # current_app.logger.debug("post errors: {}".format(obj))
     current_app.logger.debug("post status: {}".format(status))
     if status:
-        obj.content = markdown2.markdown(obj.markdown, extras=['tables', 'fenced-code-blocks'])
+        obj.content = format_markdown(obj.markdown)
         current_app.logger.info("save post with len: {}".format(len(obj.content)))
         obj.save()
         return normal_resp({'post': obj.to_json()})
@@ -86,7 +87,7 @@ def udt_post():
         return make_error_resp(2001, 'post not found in db')
     status, obj = update_model_from_json(db_post, post)
     if status:
-        obj.content = markdown2.markdown(obj.markdown, extras=['tables', 'fenced-code-blocks'])
+        obj.content = format_markdown(obj.markdown)
         current_app.logger.info("save post with len: {}".format(len(obj.content)))
         obj.save()
         return normal_resp({'post': db_post.to_json()})

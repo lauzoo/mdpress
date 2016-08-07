@@ -37,7 +37,7 @@ def index():
     page_size = int(request.args.get('page_size',
                                      DEFAULT_PAGE_SIZE))
     page_size = max([DEFAULT_PAGE_SIZE, min([MAX_PAGE_SIZE, page_size])])
-    posts = Post.objects.filter(status=POST_STATUS[0]).all()
+    posts = Post.objects.filter(status=POST_STATUS[0]).all().order('-published_at')
     show_posts = posts[(page - 1) * page_size:][:page_size]
     for post in show_posts:
         post.published_at = {

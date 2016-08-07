@@ -41,3 +41,6 @@ class Config(object):
     # elastic search support
     ELASTICSEARCH_SUPPORT = False
     ELASTICSEARCH_HOST = "127.0.0.1:9200"
+
+    # code highlight style
+    HIGHLIGHT_STYLE = "vim"
