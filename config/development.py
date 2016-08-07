@@ -17,3 +17,7 @@ class DevelopmentConfig(Config):
     }
 
     UPLOAD_FOLDER = "/tmp/upload"
+
+    # elastic search support
+    ELASTICSEARCH_SUPPORT = True
+    ELASTICSEARCH_HOST = "127.0.0.1:9200"

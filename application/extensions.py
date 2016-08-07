@@ -10,15 +10,17 @@ from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 from flask_jwt import JWT
 from flask_redis import FlaskRedis
+from flask.ext.elasticsearch import FlaskElasticsearch
 from redis import Redis
 from jinja2 import BaseLoader, TemplateNotFound
 
 
-login_manager = LoginManager()
-admin = Admin()
 jwt = JWT()
-redis = FlaskRedis()
 mail = Mail()
+admin = Admin()
+redis = FlaskRedis()
+login_manager = LoginManager()
+es = FlaskElasticsearch()
 
 
 class RedisLoader(BaseLoader):

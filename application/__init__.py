@@ -2,16 +2,17 @@
 # encoding: utf-8
 import os
 import sys
+import json
 import time
 import logging
 import logging.handlers
 from datetime import datetime
 
 import redisco
-from flask import Flask, current_app, jsonify
+from flask import Flask, current_app, request, jsonify
 
 from config import load_config
-from application.extensions import jwt, mail, redis, RedisLoader
+from application.extensions import es, jwt, mail, redis, RedisLoader
 from application.controllers import all_bp
 
 # convert python's encoding to utf8
@@ -42,6 +43,7 @@ def create_app(mode):
 
 
 def register_extensions(app):
+    es.init_app(app)
     mail.init_app(app)
     redis.init_app(app)
     """init redis connection"""
@@ -126,6 +128,20 @@ def register_blueprint(app):
                         redis.set(path_key, path)
                 else:
                     current_app.logger.info("{} is not a file".format(f))
+
+    @app.before_request
+    def log_request():
+        if current_app.config.get('ELASTICSEARCH_SUPPORT'):
+            req_ip = request.headers.get('X-Real-Ip')
+            req_data = {"timestamp": datetime.utcnow(),
+                        "ip": req_ip if req_ip else request.remote_addr,
+                        "request_method": request.method,
+                        "request_url": request.url,
+                        "request_data": json.dumps(request.data)}
+            for k, v in request.headers.iteritems():
+                req_data["request_header_{}".format(k)] = v
+            rst = es.index(index="mdpress", doc_type="request_log", body=req_data)
+            current_app.logger.info("before reqeust result: {}".format(rst))
 
 
 def configure_logging(app):
