@@ -7,6 +7,7 @@ import html2text
 import wxr_parser
 
 from application.models import Tag, Category, Post
+from application.utils.template import format_markdown
 
 
 def clear_all():
@@ -25,9 +26,15 @@ def convert_status(status):
     return status_dict.get(status, 'PUBLISHED')
 
 
+def convert_content(content):
+    h = html2text.HTML2Text()
+    markdown = h.handle(content)
+    html = format_markdown(markdown)
+    return markdown, html
+
+
 def main(location):
     clear_all()
-    h = html2text.HTML2Text()
     html_parser = HTMLParser()
 
     # parse a file
@@ -45,9 +52,10 @@ def main(location):
         Category(name=kv['title']).save()
     posts = wp['posts']
     for post in posts:
+        markdown, content = convert_content(post['content'])
         Post(title=html_parser.unescape(post['title']),
-             slug=post['slug'], content=post['content'],
-             markdown=h.handle(post['content']), page=False,
+             slug=post['slug'], content=content,
+             markdown=markdown, page=False,
              status=convert_status(post['status'].upper()),
              published_at=post['pub_date']).save()
 
