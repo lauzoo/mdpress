@@ -66,6 +66,13 @@ def esindex(config=None):
 
 
 @manager.option('-c', '--config', help='enviroment config')
+def image_backup(config=None):
+    from utils.backup_images import backup
+    create_app(config)
+    backup()
+
+
+@manager.option('-c', '--config', help='enviroment config')
 def simple_run(config):
     app = create_app(config)
     app.run(debug=True)
