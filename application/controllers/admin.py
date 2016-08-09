@@ -85,9 +85,19 @@ def add_category():
     return normal_resp({'cate': cate.to_json()})
 
 
-@admin_bp.route('/uploads', methods=['GET'])
-def all_uploads():
-    return render_template('admin/upload-list.html')
+@admin_bp.route('/gallery', methods=['GET', 'POST'])
+def all_gallery():
+    if request.method == 'GET':
+        return render_template('admin/upload-list.html')
+    else:
+        imgs = [img for img in Models.Images.objects.all()]
+        rtn = {
+            'page': 1,
+            'total': len(Models.Images.objects.all()),
+            'rows': [{'id': img.id,
+                      'cell': img.to_json()} for img in imgs]
+        }
+    return jsonify(rtn)
 
 
 @admin_bp.route('/comments', methods=['GET'])

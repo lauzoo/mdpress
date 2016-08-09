@@ -27,3 +27,10 @@ class Images(db.Model):
     image_name = db.Attribute(indexed=False)
     url = db.Attribute(indexed=False)
     local_path = db.Attribute(indexed=False)
+
+    def to_json(self):
+        return {
+            "id": self.id, "post_id": self.post_id,
+            "image_name": self.image_name,
+            "url": self.url, "local_path": self.local_path
+        }
