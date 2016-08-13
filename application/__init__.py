@@ -43,7 +43,8 @@ def create_app(mode):
 
 
 def register_extensions(app):
-    es.init_app(app)
+    if app.config.get('ELASTICSEARCH_SUPPORT', False):
+        es.init_app(app)
     mail.init_app(app)
     redis.init_app(app)
     """init redis connection"""
