@@ -9,43 +9,50 @@ Mdpress can fullfill my requirements, and it's blog editor base on [Editor.md](h
 
 ### demo: 
 
-[Angiris Council](http://mdpress-tyraeldemo.rhcloud.com/)
+[MDPress Demo](http://www.mdpress.me)
 
 ### Solved Problem
 
 - [x] Fast Load Speed
 - [x] Beauty Display And Theme Support
-- [ ] Post Search 
-- [ ] Images Links Manager
+- [x] Post Search 
+- [x] Images Links Manager
 
 ### Feature
 
 - [x] Strong Diretory(Category Levels) Support
-- [ ] Super good search support
-- [ ] Code highlight
-- [ ] Convenience images upload
-- [ ] Unicon images admin
+- [x] Super good search support
+- [x] Code highlight
+- [x] Convenience images upload
+- [x] Unicon images admin
 
 ###Dependence
 
-	Python == 2.7
-	Reids >= 3.0.0
+```python
+Python == 2.7
+Reids >= 3.0.0
+```
 
 and some python lib dependences can be installed by pip.
 
 
 ###About Me
+
 Want to know more about author, please visit： [liuliqiang.info](http://liuliqiang.info)
 
-###Conract
+###Contact
 
 Please Mailto：liqianglau@outlook.com
 
 
 ###Screen Shoot
+
 **Index**
+
 ![](http://ooo.0o0.ooo/2016/07/27/579978371acf9.jpg)
+
 **Archive**
+
 ![](http://ooo.0o0.ooo/2016/07/27/5799783689c9f.jpg)
 
 **Admin Login**
@@ -62,15 +69,15 @@ Please Mailto：liqianglau@outlook.com
 
 ### TODOs
 
-- [ ] dashboard data correct
-- [ ] convert markdown to html
-- [ ] import wordpress html to markdown
-- [ ] duosuho configs
-- [ ] image admins
-- [ ] category level manager
-- [ ] post search
-- [ ] code highlight
-- [ ] template manager
+- [x] dashboard data correct
+- [x] convert markdown to html
+- [x] import wordpress html to markdown
+- [x] duosuho configs
+- [x] image admins
+- [x] category level manager
+- [x] post search
+- [x] code highlight
+- [x] template manager
 
 
 ###Updated History
@@ -96,3 +103,7 @@ Please Mailto：liqianglau@outlook.com
 	add redis models support 
 	add theme and jade template support 
 
+- v1.0.0
+    - 2016-10-31 23:01:17
+
+    publish version 1
