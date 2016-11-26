@@ -21,9 +21,9 @@ MDPress 是基于 Flask 和 Redis 的博客系统，使用 Python 编程语言�
 MDPress 源码地址： `Github <https://github.com/yetship/mdpress>`_
 
 
-====
+========
 博客示例
-====
+========
 
 你可以访问 `http://www.mdpress.me <http://www.mdpress.me>`_
 进行效果尝试
@@ -42,10 +42,21 @@ MDPress 特性
 安装指南
 ========
 
+1. 配置系统
+
+    pip install virtualenv
+    apt-get install python-dev libxml2-dev libxslt1-dev zlib1g-dev
+    apt-get install supervisor
+    apt-get install git
+    apt-get install mariadb-server-5.5
+    apt-get install redis-server
+    apt-get install nginx
+
 1. 创建虚拟环境
 
 执行以下命令::
 
+    mkdir venv
     virtualenv mdpenv 
     source mdpenv/bin/activator
 
@@ -149,25 +160,25 @@ MDPress 依赖于以下环境::
 
 
 - v0.1
-	- 2015-02-18 14:38:03
+    - 2015-02-18 14:38:03
 
-	1. create project, and implement base feature
+    1. create project, and implement base feature
 
 - v0.2
-	- 2015-02-21 11:57:03
+    - 2015-02-21 11:57:03
 
-	1. add save and view post feature
+    1. add save and view post feature
 
 - v0.3
-	- 2016-06-04 13:03:31
+    - 2016-06-04 13:03:31
 
-	1. refactor whole project structure
+    1. refactor whole project structure
 
 - v0.4
-	- 2016-7-28 22:34:36
+    - 2016-7-28 22:34:36
 
-	1. add redis models support
-	2. add theme and jade template support
+    1. add redis models support
+    2. add theme and jade template support
 
 - v0.5
     - 2016-10-29 14:45:22
@@ -179,3 +190,4 @@ MDPress 依赖于以下环境::
     - 2016-10-31 22:47:33
 
         1. 发布 v1.0 版本
+
