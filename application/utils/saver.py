@@ -55,7 +55,7 @@ def save_model_from_json(model, jobj):
                 field_val = parse(jobj.get(name))
                 setattr(obj, name, field_val)
 
-    current_app.logger.info("save obj with errors: {}".format(obj.errors))
+    current_app.logger.error("save obj with errors: {}".format(obj.errors))
     obj.save()
     return not obj.errors, obj
 

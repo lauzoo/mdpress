@@ -2,7 +2,7 @@
 # encoding: utf-8
 import re
 
-from voluptuous import All, Invalid, Length, Schema
+from voluptuous import All, Invalid, Length, Schema, Required
 
 
 def validate_email(email):
@@ -24,6 +24,7 @@ post_schema = Schema({
     'markdown': basestring,
     'meta_description': basestring,
     'categories': list,
+    'published_at': basestring,
     'tags': list,
     'status': basestring,
 })
@@ -35,6 +36,22 @@ post_update_schema = Schema({
     'markdown': basestring,
     'meta_description': basestring,
     'categories': list,
+    'published_at': basestring,
     'tags': list,
     'status': basestring,
+})
+
+system_setting_schema = Schema({
+    Required("blog_name"): basestring,
+    Required("blog_url"): basestring,
+    "duoshuo": basestring,
+    Required("owner"): basestring,
+    "password": basestring,
+    "password_again": basestring,
+    Required("theme"): basestring,
+    "post_per_page": int,
+    "file_path": basestring,
+    "need_toc": bool,
+    "post_content_type": basestring,
+    "post_url_format": basestring
 })

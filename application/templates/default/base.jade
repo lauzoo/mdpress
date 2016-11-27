@@ -1,0 +1,53 @@
+html
+	head
+		+mobile_meta()
+		meta(name="keywords", content=site.configs.keywords.escaped)
+		meta(name="description", content=site.raw_content.escaped)
+		block title
+			title= request.args.s or post.title or tags.join('+') or category.title or site.title
+		load('/template/style.scss')
+		+get_resource("blog_basic.css")
+	body
+		#body_wrapper
+			if site.configs.cover and has(site.configs.cover)
+				site_cover = site.configs.cover
+			else
+				site_cover = '/farbox_free_image.jpg'
+			site_cover = site_cover + '?height=428&width=1280&fixed=true'
+			#header.header(style="background-image: url({{site_cover}})")
+				.header_wrapper
+					h1.title
+						a(href='/')= site.title
+					ul.nav
+						li
+							a(href="/")= _('Home')
+						if has('images')
+							li
+								a(href='/album')= _('Albums')
+							if not has('posts')
+								+redirect('/album')
+						if has('categories')
+							li
+								a(href='/categories')= _('Categories')
+						if has('posts')
+							li
+								a(href='/archive')= _('Archive')
+						if site.tags
+							li
+								a(href='/tags')= _('Tags')
+						pages = get_data(status='pages', type='post', limit=5, with_page=False, sort='position')
+						for page_p in pages
+							li
+								a(href="/{{page_p.path}}")= _(page_p.filename.split('.')[0].title())
+						li
+							a(href="/rss") RSS
+			#main
+				block content
+			#footer
+				.powered_by
+					a(href="https://www.farbox.com", target="_blank") Powered By FarBox.com
+					a(href="http://colachan.com", target="_blank") Designer ColaChan
+					a.admin(href="/admin") Admin
+					span ©2012-2015 Z.R.E.Y Inc.
+
+

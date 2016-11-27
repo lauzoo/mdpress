@@ -7,7 +7,6 @@ from datetime import datetime
 
 from redisco import get_client
 from redisco.models.key import Key
-from flask import render_template as render
 
 
 def format_datetime(d):
@@ -21,7 +20,7 @@ def format_now_datetime(d):
     if not d:
         d = datetime.now()
 
-    return d.strftime("%Y-%m-%dT%H:%M:%S.445Z"),
+    return d.strftime("%Y-%m-%dT%H:%M:%S.445Z")
 
 
 def get_slug_id():
@@ -36,7 +35,7 @@ def ceil(v):
 
 class Pagination(object):
 
-    def __init__(self, objects, page=1, per_page=16):
+    def __init__(self, objects, page=1, per_page=8):
         self.page = page
         self.per_page = per_page
         self.objects = objects
@@ -67,17 +66,10 @@ class Pagination(object):
     def has_next(self):
         return self.page < self.pages
 
-    def iter_pages(self, left_edge=2, left_current=2,
-                   right_current=5, right_edge=2):
-        last = 0
-        for num in xrange(1, self.pages + 1):
-            if num <= left_edge or num > self.pages - right_edge or\
-                    (num > self.page - left_current - 1 and
-                     num < self.page + right_current):
-                if last + 1 != num:
-                    raise StopIteration
-                yield num
-                last = num
+    def iter_pages(self, left_count=2, right_count=2):
+        for num in xrange(-left_count, right_count + 1):
+            if self.page + num > 0 and self.page + num <= self.pages:
+                yield self.page + num
 
 
 def security_random(min, max):

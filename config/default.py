@@ -12,8 +12,10 @@ class Config(object):
 
     # Template Theme
     THEME = "MinimalBox"
+    # THEME = "default"
     THEME_KEY = "mdpress:theme"
     TEMPLATE_PREFIX = "mdpress:template:theme"
+    AUTO_RELOAD_TEMPLATE = True
 
     # JWT SETTING
     JWT_AUTH_URL_RULE = "/authentication/token"
@@ -30,6 +32,11 @@ class Config(object):
 
     # redis config
     REDIS_URL = "redis://:@localhost:6379/0"
+    REDIS_CONFIG = {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 10
+    }
 
     # mail
     MAIL_SERVER = "you smtp server"
@@ -37,3 +44,20 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = "your email"
     MAIL_PASSWORD = "your email password"
+
+    # elastic search support
+    ELASTICSEARCH_SUPPORT = False
+    ELASTICSEARCH_HOST = "127.0.0.1:9200"
+
+    # code highlight style
+    HIGHLIGHT_STYLE = "vim"
+
+    # slack
+    SLACK_BOT_TOKEN = "abcd"
+
+    # upload
+    UPLOAD_FOLDER = "/usr/local/upload"
+    CLOUD_UPLOAD_SITE = "smms"
+    CLOUD_UPLOAD_CONFIG = {
+        "url": "https://sm.ms/api/upload"
+    }

@@ -9,17 +9,21 @@ import application.models as Models
 from application.utils.generator import generator_user_id
 from application.utils.response import normal_resp
 from application.utils.validator import user_schema
+from application.utils.permission import permission_required
 
 user_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
 @user_bp.route('/user_info', methods=['POST'])
 @jwt_required()
+@permission_required(Models.Permission.UPDATE)
 def user_info():
     return normal_resp(current_identity.to_json())
 
 
 @user_bp.route('/register', methods=['POST'])
+@jwt_required()
+@permission_required(Models.Permission.UPDATE)
 def register_user():
     data = json.loads(request.data)
     username = data.get('username')

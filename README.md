@@ -7,15 +7,15 @@ Another blog system writen by Flask and Redis. Not Mysql or Mongodb. I develop i
 
 Mdpress can fullfill my requirements, and it's blog editor base on [Editor.md](https://pandao.github.io/editor.md/examples/index.html "Editor.md").
 
-### demo: 
+### Demo:
 
-[MDPress Demo](http://www.mdpress.me)
+[Angiris Council](http://liuliqiang.info)
 
 ### Solved Problem
 
 - [x] Fast Load Speed
 - [x] Beauty Display And Theme Support
-- [x] Post Search 
+- [x] Post Search
 - [x] Images Links Manager
 
 ### Feature
@@ -26,9 +26,56 @@ Mdpress can fullfill my requirements, and it's blog editor base on [Editor.md](h
 - [x] Convenience images upload
 - [x] Unicon images admin
 
-###Dependence
+### Usage
+
+1. Create Virtual Enviroment
+
+```bash
+virtualenv mdpenv
+source mdpenv/bin/activator
+```
+
+2. Install Dependences
+
+```bash
+pip install -r utils/requirements.txt
+```
+
+3. Config Development Configuration
+
+```bash
+vim config/development.py
+```
+
+make sure your redis config is right and redis-server is running:
 
 ```python
+REDIS_CONFIG = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 10
+}
+```
+
+4. Running Server
+
+Now, it is time to run server:
+
+```bash
+python manager runserver
+```
+
+and access it by browser with url:
+
+```bash
+http://localhost:5000
+```
+
+you will see the index page as show below...
+
+###Dependence
+
+```bash
 Python == 2.7
 Reids >= 3.0.0
 ```
@@ -40,19 +87,11 @@ and some python lib dependences can be installed by pip.
 
 Want to know more about author, please visit： [liuliqiang.info](http://liuliqiang.info)
 
-###Contact
-
-Please Mailto：liqianglau@outlook.com
-
 
 ###Screen Shoot
-
 **Index**
-
 ![](http://ooo.0o0.ooo/2016/07/27/579978371acf9.jpg)
-
 **Archive**
-
 ![](http://ooo.0o0.ooo/2016/07/27/5799783689c9f.jpg)
 
 **Admin Login**
@@ -70,40 +109,36 @@ Please Mailto：liqianglau@outlook.com
 ### TODOs
 
 - [x] dashboard data correct
-- [x] convert markdown to html
-- [x] import wordpress html to markdown
-- [x] duosuho configs
+- [x] convert markdown to html          -- 2016-7-30 00:42:08
+- [x] import wordpress html to markdown -- 2016-7-30 23:43:16
+- [x] import wordpress post title html decode -- 2016-7-31 00:10:31
+- [x] code highlight
+- [x] template manager
 - [x] image admins
 - [x] category level manager
 - [x] post search
-- [x] code highlight
-- [x] template manager
+- [x] duosuho configs
 
 
 ###Updated History
 
-- v0.1 
-	- 2015-02-18 14:38:03 
-	
+- v0.1
+	- 2015-02-18 14:38:03
+
 	create project, and implement base feature
-	
-- v0.2 
-	- 2015-02-21 11:57:03 
+
+- v0.2
+	- 2015-02-21 11:57:03
 
 	add save and view post feature
 
-- v0.3 
-	- 2016-06-04 13:03:31 
+- v0.3
+	- 2016-06-04 13:03:31
 
 	refactor whole project structure
 
 - v0.4
 	- 2016-7-28 22:34:36
-	
-	add redis models support 
-	add theme and jade template support 
 
-- v1.0.0
-    - 2016-10-31 23:01:17
-
-    publish version 1
+	add redis models support
+	add theme and jade template support

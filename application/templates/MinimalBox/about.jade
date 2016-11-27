@@ -68,19 +68,22 @@ block content
             <li>douban: <a href="https://www.douban.com/people/133191359/" data-slimstat-clicked="false" data-slimstat-type="0" data-slimstat-tracking="true" data-slimstat-async="false" data-slimstat-callback="true">https://www.douban.com/people/133191359/</a></li>
             </ul>
             <p>Tks for endure my poor english~</p>
-            <p><!-- 多说评论框 start --></p>
-            <div class="ds-thread" data-thread-key="99527" data-title="AboutMe" data-url="https://liuliqiang.info/about-me/" id="ds-thread"><div id="ds-reset"><div class="ds-comments-info"><div class="ds-sort"><a class="ds-order-desc">最新</a><a class="ds-order-asc ds-current">最早</a><a class="ds-order-hot">最热</a></div><ul class="ds-comments-tabs"><li class="ds-tab"><a class="ds-comments-tab-duoshuo ds-current" href="javascript:void(0);">0条评论</a></li>  </ul></div><ul class="ds-comments"><li class="ds-post ds-post-placeholder">还没有评论，沙发等你来抢</li></ul><div class="ds-paginator" style="display: none;"><div class="ds-border"></div><a data-page="1" href="javascript:void(0);" class="ds-current">1</a></div><a name="respond"></a><div class="ds-toolbar"><div class="ds-account-control"><span class="ds-icon ds-icon-settings"></span> <span>帐号管理</span><ul><li><a class="ds-bind-more" href="javascript:void(0);" style="border-top: none">绑定更多</a></li><li><a target="_blank" href="https://duoshuo.com/settings/?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaG9ydF9uYW1lIjoibGlxaWFuZ2xhdSIsInVzZXJfa2V5IjoxLCJuYW1lIjoibGlxaWFuZyJ9.bL3PBl0KVbmTCExOBwUzEofJg2-nvDN0aIYjHooXqYQ">设置</a></li><li><a rel="nofollow" href="https://liqianglau.duoshuo.com/logout/?sso=1&amp;redirect_uri=https%3A%2F%2Fliuliqiang.info%2Fwp-login.php%3Faction%3Dlogout%26_wpnonce%3D40817e935a%26redirect_to%3Dhttps%253A%252F%252Fliuliqiang.info%252Fabout-me%252F" style="border-bottom: none">登出</a></li></ul></div><div class="ds-visitor"><a class="ds-visitor-name" href="https://liuliqiang.info/" target="_blank">liqiang</a><a class="ds-unread-comments-count" href="javascript:void(0);" title="你没有新回复" style="display: none;">0</a></div></div><div class="ds-replybox"><a class="ds-avatar" href="https://duoshuo.com/settings/avatar/?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaG9ydF9uYW1lIjoibGlxaWFuZ2xhdSIsInVzZXJfa2V5IjoxLCJuYW1lIjoibGlxaWFuZyJ9.bL3PBl0KVbmTCExOBwUzEofJg2-nvDN0aIYjHooXqYQ" target="_blank" title="设置头像"><img src="http://tp3.sinaimg.cn/5586263002/50/40110686402/1" alt="liqiang"></a><form method="post" lpformnum="1"><input type="hidden" name="thread_id" value="6291878896296018689">
-            <input type="hidden" name="parent_id" value="">
-            <input type="hidden" name="nonce" value="5794e5add8492"><div class="ds-textarea-wrapper ds-rounded-top"><textarea name="message" title="Ctrl+Enter快捷提交" placeholder="说点什么吧…"></textarea><pre class="ds-hidden-text"></pre></div><div class="ds-post-toolbar"><div class="ds-post-options ds-gradient-bg"><span class="ds-sync"><input id="ds-sync-checkbox" type="checkbox" name="repost" value=""> <label for="ds-sync-checkbox">分享到:</label><a href="javascript:void(0)" class="ds-service-icon-grey ds-qqt" data-service="qqt" title="腾讯微博"></a><a href="javascript:void(0)" class="ds-service-icon-grey ds-qzone" data-service="qzone" title="QQ空间"></a></span></div><button class="ds-post-button" type="submit">发布</button><div class="ds-toolbar-buttons"><a class="ds-toolbar-button ds-add-emote" title="插入表情"></a></div></div></form></div><p class="ds-powered-by"><a href="http://duoshuo.com" target="_blank" rel="nofollow">Angiris Council正在使用多说</a></p></div></div>
-            <p><!-- 多说评论框 end --><br>
-            <!-- 多说公共JS代码 start (一个网页只需插入一次) --><br>
-            <script type="text/javascript">// <![CDATA[
-            var duoshuoQuery = {short_name:"luke0922"}; (function() { var ds = document.createElement('script'); ds.type = 'text/javascript';ds.async = true; ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js'; ds.charset = 'UTF-8'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds); })();
-            // ]]&gt;</script><br>
-            <!-- 多说公共JS代码 end --></p>
-                </div><!-- .entry-content -->
-                <footer class="entry-footer"><span class="edit-link"><a class="post-edit-link" href="https://liuliqiang.info/wp-admin/post.php?post=9&amp;action=edit" data-slimstat-clicked="false" data-slimstat-type="2" data-slimstat-tracking="false" data-slimstat-async="false" data-slimstat-callback="false">编辑</a></span></footer>	
-                </article><!-- #post-9 -->
-                </main><!-- #main -->
-            </div><!-- #primary -->
+
+            <!-- 多说评论框 start -->
+                <div class="ds-thread" data-thread-key="about-me" data-title="About Me" data-url={{url_for('frontend.about')}}></div>
+            <!-- 多说评论框 end -->
+            <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+            <script type="text/javascript">
+            var duoshuoQuery = {short_name:"liqianglau"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0] 
+                    || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+                </script>
+            <!-- 多说公共JS代码 end -->
+
         </div>

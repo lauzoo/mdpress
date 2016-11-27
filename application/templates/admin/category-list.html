@@ -1,82 +1,130 @@
 {% extends 'admin/layout.html' %}
 
 {% block head_js %}
-    <link rel="stylesheet" type="text/css" href="/static/css/table/flexigrid.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/third-party/jquery-treetable/treetable.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/third-party/jquery-treetable/theme.css">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/table/flexigrid.js"></script>
+    <script type="text/javascript" src="/static/admin/third-party/jquery-treetable/treetable.js"></script>
 {% endblock %}
 
 {% block categories_selected%}selected{%endblock%}
 
 {% block content %}
-    <table id="flex1" style="display:none"></table>
+	<div id="loadingImage" style="display:none">
+        <img src="//i.stack.imgur.com/FhHRx.gif" />
+    </div>
+    <table id="category-table">
+        <caption>
+            <a href="#" onclick="jQuery('#category-table').treetable('expandAll');  return false;">Expand all</a>
+            <a href="#" onclick="jQuery('#category-table').treetable('collapseAll'); return false;">Collapse all</a>
+        </caption>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Post Count</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cate in categories %}
+            {% if cate.super %}
+                <tr data-tt-id="{{cate.id}}" data-tt-parent-id='{{cate.super}}'>
+            {% else %}
+                <tr data-tt-id="{{cate.id}}" data-tt-branch='true'>
+            {% endif %}
+                    <td>{{cate.id}}</td>
+                    <td>{{cate.name}}</td>
+                    <td>{{666}}</td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <div>
         Category: <input id="category" name="category"/>
         <button id="add-cate">Add </button>
     </div>
+
 {% endblock %}
 
 {% block tailjs %}
-<script type="text/javascript">
-
-    $("#flex1").flexigrid({
-        url: '/admin/categories',
-        dataType: 'json',
-        colModel : [
-            {display: 'ID', name : 'id', width : 100, sortable : true, align: 'center'},
-            {display: 'UUID', name : 'uuid', width : 100, sortable : true, align: 'center'},
-            {display: 'Name', name : 'name', width : 500, sortable : true, align: 'left'},
-            {display: 'Slug', name : 'slug', width : 100, sortable : true, align: 'left'},
-            {display: 'Post Count', name : 'posts', width : 200, sortable : true, align: 'left'},
-            ],
-        searchitems : [
-            {display: 'ID', name : 'id'},
-            {display: 'Name', name : 'name', isdefault: true}
-            ],
-        sortname: "name",
-        sortorder: "asc",
-        usepager: true,
-        title: 'Tags',
-        useRp: true,
-        rp: 15,
-        showTableToggleBtn: true,
-        width: 1000,
-        onSubmit: addFormData,
-        height: 300
-    });
-
-    function addFormData(){
-        //passing a form object to serializeArray will get the valid data from all the objects, but, if the you pass a non-form object, you have to specify the input elements that the data will come from
-        var dt = $('#sform').serializeArray();
-        $("#flex1").flexOptions({params: dt});
-        return true;
-    }
-
-    $('#sform').submit(function (){
-        $('#flex1').flexOptions({newp: 1}).flexReload();
-        return false;
-    });
-
-    $("#add-cate").click(function(){
-        content = $("#category").val();
-        req_data = JSON.stringify({category: content})
-        $.ajax({
-            url: "/admin/categories",
-            type: 'PUT',
-            headers: {
-                "Authorization": "Bearer " + localStorage.twtf_jwt_token,
-            },
-            contentType: 'application/json',
-            data: req_data,
-            success: function(data){
-                if (data.code != 2000) {
-                    console.log(data);
-                } else {
-                    console.log('save success!');
-                    $('#flex1').flexOptions({newp: 1}).flexReload();
-                }
-            }
+    <script type="text/javascript">
+        // 初始化treeTable
+        $("#category-table").treetable({
+            expandable:     true,
+            //onNodeExpand:   nodeExpand,
+            //onNodeCollapse: nodeCollapse
         });
-    });
-</script>
+
+        // expand node with ID "1" by default
+        // Demo: $("#category-table").treetable("reveal", '1');
+
+        // Highlight a row when selected
+        $("#category-table tbody").on("mousedown", "tr", function() {
+            $(".selected").not(this).removeClass("selected");
+            $(this).toggleClass("selected");
+        });
+
+        function nodeExpand () {
+            console.log("Expanded: " + this.id);
+            getNodeViaAjax(this.id);  
+        }
+
+
+        function nodeCollapse () {
+            console.log("Collapsed: " + this.id);
+        }
+
+        function getNodeViaAjax(parentNodeID) {
+            $("#loadingImage").show();
+            
+            $.ajax({
+                type: 'POST',
+                url: '/admin/categories',
+                data: {
+                    json: JSON.stringify( jsonData )
+                },
+                success: function(data) {
+                    $("#loadingImage").hide();
+            
+                    var childNodes = data.nodeID[parentNodeID];
+                    
+                    if(childNodes) {
+                        var parentNode = $("#category-table").treetable("node", parentNodeID);
+
+                        for (var i = 0; i < childNodes.length; i++) {
+                            var node = childNodes[i];
+
+                            var nodeToAdd = $("#category-table").treetable("node",node['ID']);
+
+                            if(!nodeToAdd) {
+                                var row ='<tr data-tt-id="' + node['ID'] + '" data-tt-parent-id="' + parentNodeID + '" ';
+                                if(node['childNodeType'] == 'branch') {
+                                    row += ' data-tt-branch="true" ';
+                                }
+
+                                row += ' >';
+
+                                // Add columns to row
+                                for (var index in node['childData']) {
+                                    var data = node['childData'][index];
+                                    row += "<td>" + data + "</td>";
+                                }
+
+                                // End row
+                                row +="</tr>";
+                                
+                                $("#category-table").treetable("loadBranch", parentNode, row);
+                            }
+                        }
+                    }
+                },
+                error:function(error){
+                    $("#loadingImage").hide();
+                    alert('there was an error');  
+                },
+            dataType: 'json'
+            });
+        }
+    </script>
+
 {% endblock %}

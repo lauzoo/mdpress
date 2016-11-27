@@ -21,57 +21,23 @@
 						    <tbody>
 						        <tr class="pure-table-odd">
 						            <td>Total Posts</td>
-						            <td>125</td>
+                                    <td>{{ postnum.total }}</td>
 						        </tr>
 						        <tr>
 						            <td>Active Posts</td>
-						            <td>123</td>
+                                    <td>{{ postnum.published}}</td>
 						        </tr>
 						        <tr>
 						            <td>Draft Posts</td>
-						            <td>1</td>
+                                    <td>{{ postnum.draft}}</td>
 						        </tr>
 						        <tr>
 						            <td>Moderate Posts</td>
-						            <td>1</td>
+                                    <td>{{ postnum.moderate }}</td>
 						        </tr>
 						        <tr>
 						            <td>Schedule Posts</td>
-						            <td>1</td>
-						        </tr>
-						    </tbody>
-						</table>
-    				</div>
-    			</div>
-    			<div class="pure-u-1-4">
-    				<div class="l-box">
-    					<table class="pure-table pure-table-striped">
-						    <thead>
-						        <tr>
-						            <th colspan="2">Users Report</th>
-						        </tr>
-						    </thead>
-
-						    <tbody>
-						        <tr class="pure-table-odd">
-						            <td>Total Users</td>
-						            <td>125</td>
-						        </tr>
-						        <tr>
-						            <td>Active Users</td>
-						            <td>123</td>
-						        </tr>
-						        <tr>
-						            <td>Moderate Users</td>
-						            <td>1</td>
-						        </tr>
-						        <tr>
-						            <td>Draft Users</td>
-						            <td>1</td>
-						        </tr>
-						        <tr>
-						            <td>Schedule Users</td>
-						            <td>1</td>
+                                    <td>{{ postnum.scheduling }}</td>
 						        </tr>
 						    </tbody>
 						</table>
@@ -89,23 +55,23 @@
 						    <tbody>
 						        <tr class="pure-table-odd">
 						            <td>Total Galleries</td>
-						            <td>125</td>
+                                    <td>{{imagenum.total}}</td>
 						        </tr>
 						        <tr>
 						            <td>Active Galleries</td>
-						            <td>123</td>
+                                    <td>{{imagenum.active}}</td>
 						        </tr>
 						        <tr>
-						            <td>Draft Galleries</td>
-						            <td>1</td>
+						            <td>Local Galleries</td>
+                                    <td>{{imagenum.local}}</td>
 						        </tr>
 						        <tr>
-						            <td>Moderate Galleries</td>
-						            <td>1</td>
+						            <td>Remote Galleries</td>
+                                    <td>{{imagenum.remote}}</td>
 						        </tr>
 						        <tr>
-						            <td>Schedule Galleries</td>
-						            <td>1</td>
+						            <td>Disable Galleries</td>
+                                    <td>{{imagenum.disable}}</td>
 						        </tr>
 						    </tbody>
 						</table>
@@ -130,22 +96,102 @@
 						            <td>123</td>
 						        </tr>
 						        <tr>
-						            <td>Moderate Comments</td>
-						            <td>1</td>
-						        </tr>
-						        <tr>
 						            <td>Draft Comments</td>
-						            <td>1</td>
-						        </tr>
-						        <tr>
-						            <td>Schedule Comments</td>
 						            <td>1</td>
 						        </tr>
 						    </tbody>
 						</table>
     				</div>
     			</div>
+    			<div class="pure-u-1-4">
+    				<div class="l-box">
+    					<table class="pure-table pure-table-striped">
+						    <thead>
+						        <tr>
+						            <th colspan="2">Daily Login Report</th>
+						        </tr>
+						    </thead>
+
+						    <tbody>
+						        <tr class="pure-table-odd">
+						            <td>Login Time</td>
+						            <td>125</td>
+						        </tr>
+						        <tr>
+						            <td>Login IPs</td>
+						            <td>123</td>
+						        </tr>
+						        <tr>
+						            <td>Last Login</td>
+						            <td>08:41:28</td>
+						        </tr>
+						        <tr>
+						            <td>Yest. Time</td>
+						            <td>1</td>
+						        </tr>
+						    </tbody>
+						</table>
+    				</div>
+    			</div>
+    			<div class="pure-u-1-4">
+                    <div id="visit-chart" style="width:400px; height:300px;"></div>
+                </div>
     		</div>
 		</div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('visit-chart'));
+
+        // 指定图表的配置项和数据
+        option = {
+            title: {
+                text: '每日访问'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['今日访问','昨天访问','上月平均']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['00:00','01:00','02:00','03:00','04:00','05:00','06:00', '07:00',
+                    '08:00','09:00','10:00','11:00','12:00','13:00','14:00', '15:00',
+                    '16:00','17:00','18:00','19:00','20:00','21:00','22:00', '23:00']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+            ]
+        };
+
+        $.ajax({
+            url: "/admin/visit_log",
+            type: 'GET',
+            success: function(data){
+                console.log(data.data);
+                option.series = data.data;
+                myChart.setOption(option);
+            },
+            error: function(data) {
+                alert("error: " + data);
+                console.log(data);
+            }
+        });
+        // 使用刚指定的配置项和数据显示图表。
+    </script>
 
 {% endblock %}

@@ -4,6 +4,7 @@ from .default import Config
 
 class DevelopmentConfig(Config):
     """Base config class."""
+    DEBUG = True
     TESTING = False
     SECRET_KEY = "DevelopmentConfig"
 
@@ -16,4 +17,4 @@ class DevelopmentConfig(Config):
         'DB': 10
     }
 
-    UPLOAD_FOLDER = "/tmp/upload
+    UPLOAD_FOLDER = "/user/local/upload"

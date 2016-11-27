@@ -1,0 +1,24 @@
+extends base
+block content
+
+	ul.categories#categories
+		for category in  get_data(type='folder', level=[1,2], min_posts_count=1)
+			li
+				a(href="/category/{{ category.path }}")
+					h3= category.title
+					if category.posts_count == 1
+						span {{ category.posts_count }} post
+					else
+						span {{ category.posts_count }} posts
+
+	script
+		function auto_margin(){
+			var e = document.getElementById('categories');
+			e.style.marginLeft = 0;
+			var width = e.offsetWidth;
+			if (e && width > 300){
+					e.style.marginLeft = ( width% 302) /2 + 'px';
+				}
+			}
+		auto_margin();
+		window.onresize = auto_margin;

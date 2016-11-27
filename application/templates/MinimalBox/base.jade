@@ -1,9 +1,12 @@
 html
     head
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="google-site-verification", content="tLLEh0t-bEvd6FxSnGZyNFvYnnUKkqODt6XsVApL92s")
+        link(rel="stylesheet", href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css")
     block title
         title= site.title
     load("/template/style.scss")
+    load("/css/highlight/{{config.HIGHLIGHT_STYLE}}.css")
     body
     .header-wrap
         .header.center-container
@@ -12,13 +15,24 @@ html
                 each file in ['archive', 'about', 'wiki']
                     if has(file)
                         a(href="/"+file)= file
+                a(href="/rss")= 'rss'
     .content-wrap
         .content.center-container
             block content
 
     .footer-wrap
         .main-center.footer
-            p Themed by &nbsp;
-                a(href="http://copri.me") Tyrael Lau&nbsp;
-                | Powered by
-                a(href="https://www.farbox.com") liuliqiang.info
+            p Powered by &nbsp; 
+                a(href="https://liuliqiang.info") Tyrael Lau 
+                | Copyright &copy; 2012-2016
+
+    script.
+        var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255950953'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1255950953%26show%3Dpic2' type='text/javascript'%3E%3C/script%3E"));
+    script.
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-82897693-1', 'auto');
+        ga('send', 'pageview');

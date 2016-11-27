@@ -1,0 +1,11 @@
+extends base
+block title
+    title Archive
+block content
+    ul.archive-list
+        for post in posts
+            li
+                .post-set
+                    span.date= post.published_at.strftime('%Y-%m-%d')
+                    .post-link
+                        a(href=url_for('frontend.post', post_id=post.id))= post.title

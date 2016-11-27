@@ -1,0 +1,34 @@
+extends base
+block title
+	title= post.title + " - " + site.title
+block content
+
+	.detail
+		.post
+			.content
+				h1.title= post.title
+				.post_body!= post.content
+				.info.clearfix
+					span.date
+						i.fa.fa-calendar
+						span= post.date.format('%Y-%m-%d %H:%M')
+					span.visitors
+						i.fa.fa-bookmark-o
+						span= post.visits or 0
+					a.show_raw(href="{{post.url}}?action=show_raw", target=="_blank")
+						i.fa.fa-code
+					a.go_editor(href="{{post.url}}?action=edit", target=="_blank")
+						i.fa.fa-edit
+					if post.tags
+						span.tags
+							i.fa.fa-tags
+							for tag in post.tags
+								a(href="/tag/{{tag}}")= tag
+		.other_posts
+			if pre_one
+				a.pre(href='{{pre_one.url}}#main')
+					span &lt; {{ pre_one.title }}
+			if next_one
+				a.next(href='{{next_one.url}}#main')
+					span {{ next_one.title }} &gt;
+

@@ -1,34 +1,31 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from flask.ext.admin import Admin
-from flask.ext.login import LoginManager
-from flask.ext.mail import Mail
+import os
+import time
+
+from flask import current_app
+
+from flask_admin import Admin
+from flask_login import LoginManager
+from flask_mail import Mail
 from flask_jwt import JWT
 from flask_redis import FlaskRedis
-from redis import Redis
-from jinja2 import BaseLoader, TemplateNotFound
+from flask_elasticsearch import FlaskElasticsearch
+from celery import Celery
+from raven.contrib.flask import Sentry
+from slackclient import SlackClient
+
+from config.worker import WorkerConfig
+from application.services.theme import _reload_template, _get_template_name
 
 
-login_manager = LoginManager()
-admin = Admin()
+sc = SlackClient("xoxb-68385490752-9gPeX5F6krKS84C1LO6moByC")
 jwt = JWT()
-redis = FlaskRedis()
 mail = Mail()
-
-
-class RedisLoader(BaseLoader):
-    def __init__(self):
-        self.redis = Redis('127.0.0.1', 6379)
-
-    def get_source(self, environment, template):
-        print "template : {}".format(template)
-        template_prefix = 'mdpress:template:theme'
-        if template[:6] == "admin/":
-            path = "{}:{}".format(template_prefix, template)
-        else:
-            theme = self.redis.get('mdpress:theme')
-            path = "{}:{}/{}".format(template_prefix, theme, template)
-        temp = self.redis.get(path)
-        if not temp:
-            raise TemplateNotFound(path)
-        return temp, path, lambda: False
+admin = Admin()
+redis = FlaskRedis()
+login_manager = LoginManager()
+es = FlaskElasticsearch()
+celery = Celery(WorkerConfig.CELERY_TASK_MAIN,
+                broker=WorkerConfig.CELERY_BROKER_URL)
+sentry = Sentry()

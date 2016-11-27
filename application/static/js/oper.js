@@ -17,15 +17,15 @@ function save_post() {
     status = $("#post-status").val();
     postdate= $("#post-date").val();
     summary = $("#post-summary").val();
+    published_at = $("#post-date").val();
 
     if (categories === null) {
       categories = [];
     }
-    console.log("summary: " + summary);
     req_data = {
-      title: title, slug: slug, markdown: markdown,
-      categories: categories, status: status,
-      tags: [], meta_description: summary
+      title: title, slug: slug, markdown: markdown, categories: categories,
+      status: status, tags: [], meta_description: summary,
+      published_at: published_at
     }
     if (sessionStorage.post_id != null &&
        sessionStorage.post_id != 'null') {
@@ -49,11 +49,15 @@ function save_post() {
       data: req_data,
       success: function(data){
         if (data.code != 2000) {
-          alert(data);
+          alert(data.description);
         } else {
           sessionStorage.post_id = data.data.post.id;
           alert('save success!');
         }
+      },
+      error: function(data) {
+        alert("error: " + data);
+        console.log(data);
       }
     });
     return false;
@@ -81,6 +85,7 @@ function load_post(pid) {
         $("#category").val(cate_ids);
         $("#post-status").val(post.status);
         $("#post-summary").val(post.meta_description);
+        $("#post-date").val(post.published_at);
         console.log('load post success!');
       }
     }

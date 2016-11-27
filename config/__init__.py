@@ -5,11 +5,10 @@ import os
 def load_config(mode=os.environ.get('MODE')):
     """Load config."""
     mode = mode.upper() if mode else mode
-    print mode
     try:
-        if mode == 'PRODUCTION':
-            from .production import ProductionConfig
-            return ProductionConfig
+        if mode == 'DEVELOPMENT':
+            from .development import DevelopmentConfig
+            return DevelopmentConfig
         elif mode == 'TESTING':
             from .testing import TestingConfig
             return TestingConfig
@@ -17,9 +16,8 @@ def load_config(mode=os.environ.get('MODE')):
             from .docker import DockerConfig
             return DockerConfig
         else:
-            from .development import DevelopmentConfig
-            print "development"
-            return DevelopmentConfig
+            from .production import ProductionConfig
+            return ProductionConfig
     except ImportError:
         from .default import Config
         return Config

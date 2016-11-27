@@ -2,17 +2,21 @@
 # encoding: utf-8
 import os
 import sys
+import json
+import time
 import logging
 import logging.handlers
 from datetime import datetime
 
-import jinja2
 import redisco
-from flask import Flask, current_app, jsonify
+from flask import Flask, current_app, request
 
 from config import load_config
-from application.extensions import jwt, mail, redis, RedisLoader
+from application.extensions import (
+    es, mail, redis, celery, sentry, login_manager)
 from application.controllers import all_bp
+from application.models import User
+from application.services.theme import setup_theme
 
 # convert python's encoding to utf8
 try:
@@ -35,15 +39,25 @@ def create_app(mode):
 
     # Register components
     configure_logging(app)
-    register_extensions(app)
     register_blueprint(app)
+    register_extensions(app)
+    register_tasks(app)
+    register_theme(app)
 
     return app
 
 
 def register_extensions(app):
+    if app.config.get('ELASTICSEARCH_SUPPORT', False):
+        es.init_app(app)
     mail.init_app(app)
     redis.init_app(app)
+
+    login_manager.session_protection = 'strong'
+    login_manager.login_view = '/admin/login'
+    login_manager.init_app(app)
+
+    celery.config_from_object(app.config)
     """init redis connection"""
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
@@ -53,79 +67,63 @@ def register_extensions(app):
         print kv
 
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+    from application.services.theme import RedisLoader
     app.jinja_env.loader = RedisLoader()
 
     from pyjade import Compiler
     Compiler.register_autoclosecode('load')
 
-    # jwt config
-    def jwt_authenticate(email, password):
-        logging.info("email:{}\npassword:{}\n".format(email, password))
-        from application.models import User
-        user = User.objects.filter(email=email).first()
-        if user and user.password == password:
-            return user
-        else:
-            return None
-
-    def jwt_identity(payload):
-        logging.info("payload:{}".format(payload))
-        from application.models import User
-        user_id = payload['identity']
+    @login_manager.user_loader
+    def load_user(user_id):
         return User.objects.get_by_id(user_id)
 
-    def make_payload(identity):
-        iat = datetime.utcnow()
-        exp = iat + current_app.config.get('JWT_EXPIRATION_DELTA')
-        nbf = iat + current_app.config.get('JWT_NOT_BEFORE_DELTA')
-        identity = str(identity.id)
-        return {'exp': exp, 'iat': iat, 'nbf': nbf, 'identity': identity}
-
-    def response_handler(access_token, identity):
-        return jsonify({'access_token': access_token.decode('utf-8'),
-                        'refresh_token': access_token.decode('utf-8'),
-                        'expires_in': 24 * 60 * 60,
-                        'token_type': 'Bearer'})
-
-    jwt.authentication_handler(jwt_authenticate)
-    jwt.identity_handler(jwt_identity)
-    jwt.jwt_payload_handler(make_payload)
-    jwt.auth_response_handler(response_handler)
-
-    jwt.init_app(app)
+    if not app.config['DEBUG'] and not app.config['TESTING']:
+        sentry.init_app(app, dsn='https://629e0f9d9a0b474585f3355a640ffa99:d0fe041082384cdfab8f0f6d0846e54c@app.getsentry.com/93431')
 
 
 def register_blueprint(app):
     for bp in all_bp:
         app.register_blueprint(bp)
 
-    @app.before_first_request
-    def setup_templates():
-        theme = current_app.config.get('THEME', 'default')
-        theme_key = current_app.config.get('THEME_KEY')
-        redis.set(theme_key, theme)
+    @app.before_request
+    def log_request():
+        req_ip = request.headers.get('X-Real-Ip')
+        req_data = {"timestamp": datetime.utcnow(),
+                    "ip": req_ip if req_ip else request.remote_addr,
+                    "request_method": request.method,
+                    "request_url": request.url,
+                    "request_path": request.path,
+                    "request_data": json.dumps(request.data)}
+        for k, v in request.headers.iteritems():
+            req_data["request_header_{}".format(k)] = v
+        if current_app.config.get('ELASTICSEARCH_SUPPORT'):
+            rst = es.index(index="mdpress", doc_type="request_log", body=req_data)
+            current_app.logger.info("before reqeust result: {}".format(rst))
+        else:
+            dt = datetime.now()
+            key = "request_log:{}:{}:{}:{}:{}:{}".format(
+                dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
+            redis.hmset(key, req_data)
 
-        template_prefix = current_app.config.get('TEMPLATE_PREFIX')
-        template_path = os.path.join(current_app.config['PROJECT_PATH'],
-                                     'application/templates')
+        if not app.config.get('DEBUG') and not app.config.get('TESTING'):
+            from application.tasks.slack import log_request
+            log_request.delay(request.path, req_data)
 
-        # add theme file
-        for rt, _, fs in os.walk(template_path):
-            for f in fs:
-                path = os.path.join(rt, f)
-                postfix = path[len(template_path) + 1:]
-                if os.path.isfile(path):
-                    with open(path, 'r') as fp:
-                        data = fp.read()
-                        key = "{}:{}".format(template_prefix, postfix)
-                        print key
-                        redis.set(key, data)
-                else:
-                    current_app.logger.info("{} is not a file".format(f))
+    @app.errorhandler(404)
+    def page_not_found(error):
+        # req_ip = request.headers.get('X-Real-Ip') or request.remote_addr
+        redis.zincrby("mdpress:visit-404", request.path)
+        return 'Page Not Found!!!', 404
+
+
+def register_theme(app):
+    theme = app.config.get('THEME', 'default')
+    setup_theme(app, theme, True)
+    setup_theme(app, 'admin', False)
 
 
 def configure_logging(app):
-    logging.basicConfig()
+    # logging.basicConfig()
     if app.config.get('TESTING'):
         app.logger.setLevel(logging.INFO)
         return
@@ -141,3 +139,7 @@ def configure_logging(app):
         '[in %(pathname)s:%(lineno)d]')
     )
     app.logger.addHandler(logging_handler)
+
+
+def register_tasks(app):
+    from application.tasks.slack import *

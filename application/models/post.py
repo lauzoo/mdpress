@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from datetime import datetime
-
 from redisco import models as db
 
 from application.utils import format_now_datetime
 
 from .user import User
 
-__all__ = ['Category', 'Tag', 'Post']
+__all__ = ['Category', 'Tag', 'Post', 'POST_STATUS']
 
 
 POST_STATUS = ('PUBLISHED', 'DELETED', 'EDITING', 'SCHEDULING')
@@ -20,10 +18,13 @@ class Category(db.Model):
     super = db.IntegerField()
 
     def to_json(self):
-        return {
+        jsn = {
             "id": self.id,
             "name": self.name
         }
+        if self.super:
+            jsn['super'] = self.super
+        return jsn
 
 
 class Comment(db.Model):
@@ -83,7 +84,7 @@ class Post(db.Model):
     meta_description = db.Attribute(indexed=False)
     updated_at = db.DateTimeField(auto_now=True)
     updated_by = db.ReferenceField(User)
-    published_at = db.DateTimeField(auto_now_add=True)
+    published_at = db.DateTimeField()
     created_at = db.DateTimeField()
     created_by = db.ReferenceField(User)
     author = db.ReferenceField(User)
@@ -141,15 +142,20 @@ class Post(db.Model):
     # 恒等于1
     posts_count = db.Attribute(required=False, indexed=False)
 
+    def __repr__(self):
+        return "<Post: {post.id} Title: {post.title}>".format(post=self)
+
     def to_json(self):
         rtn = self.attributes_dict
         rtn["id"] = self.id
-        rtn["date"] = format_now_datetime(self.updated_at)
+        rtn["date"] = format_now_datetime(self.published_at)
+        rtn["updated_at"] = format_now_datetime(self.updated_at)
         rtn["updated_by"] = self.updated_by.id if self.updated_by else None
-        rtn["published_at"] = format_now_datetime(self.published_at),
-        rtn["created_at"] = format_now_datetime(self.created_at),
-        rtn["created_by"] = self.created_by.id if self.created_by else None,
-        rtn["publishedBy"] = self.publishedBy.id if self.publishedBy else None,
+        rtn["published_at"] = format_now_datetime(self.published_at)
+        rtn["created_at"] = format_now_datetime(self.created_at)
+        rtn["created_by"] = self.created_by.id if self.created_by else None
+        rtn["publishedBy"] = self.publishedBy.id if self.publishedBy else None
         rtn["categories"] = [cate.to_json() for cate in self.categories]
         rtn["tags"] = [tag.to_json() for tag in self.tags]
+        rtn["author"] = self.author.to_json()
         return rtn

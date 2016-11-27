@@ -33,15 +33,56 @@ def create_db(config):
 
 
 @manager.option('-c', '--config', help='enviroment config')
-def wpimport(config):
+def drop_db(config):
+    from application.extensions import redis
     create_app(config)
-    init_data()
+    redis.flushall()
+
+
+@manager.option('-c', '--config', help='enviroment config')
+@manager.option('-l', '--location', help='wordpress backpack file path')
+def wpimport(config=None, location=None):
+    create_app(config)
+    init_data(location)
+
+
+@manager.option('-c', '--config', help='enviroment config')
+def esindex(config=None):
+    from datetime import datetime
+    from elasticsearch import Elasticsearch
+
+    import application.models as Models
+
+    create_app(config)
+
+    es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+
+    # 插入
+    for post in Models.Post.objects.all():
+        d = post.to_json()
+        d.update({"timestamp": datetime.utcnow()})
+        es.index(index="mdpress", doc_type="post", id=post.id,
+                 body=d)
+
+
+@manager.option('-c', '--config', help='enviroment config')
+def image_backup(config=None):
+    from utils.backup_images import backup
+    create_app(config)
+    backup()
 
 
 @manager.option('-c', '--config', help='enviroment config')
 def simple_run(config):
     app = create_app(config)
     app.run(debug=True)
+
+
+@manager.option('-c', '--config', help='enviroment config')
+def worker(config):
+    from application.extensions import celery
+    app = create_app(config)
+    app.app_context().push()
 
 
 @manager.option('-c', '--config', help='enviroment config')

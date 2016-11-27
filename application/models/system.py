@@ -2,11 +2,17 @@
 # encoding: utf-8
 site = {
     'title': 'Angiris Council',
+    'raw_content': {
+        'escaped': lambda : '',
+    },
     'configs': {
         'disqus': False,
         'duoshuo': 'liqianglau',
         'domain': 'liuliqiang.info',
         'domains': ['liuliqiang.info'],
+        'keywords': {
+            'escaped': lambda : '',
+        },
 
         'posts_per_page': 10,
         'toc': False,               # True/False

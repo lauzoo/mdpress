@@ -14,4 +14,7 @@ def has(temp_name):
     if os.path.exists(file_path):
         return True
 
+    if temp_name in ['categories', 'posts']:
+        return True
+
     return False

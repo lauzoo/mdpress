@@ -25,10 +25,10 @@ def create_roles():
 
 
 def create_admin():
-    users = Models.User.objects.filter(name='admin').first()
+    users = Models.User.objects.filter(name='guest').first()
     if not users:
         role = Models.Role.objects.filter(name='DELETER').first()
-        Models.User(name="admin", password="admin",
+        Models.User(name="guest", password="123456",
                     email="liqianglau@outlook.com", role=[role]).save()
         print "create admin finish..."
     else:
