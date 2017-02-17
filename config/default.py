@@ -12,7 +12,6 @@ class Config(object):
 
     # Template Theme
     THEME = "MinimalBox"
-    # THEME = "default"
     THEME_KEY = "mdpress:theme"
     TEMPLATE_PREFIX = "mdpress:template:theme"
     AUTO_RELOAD_TEMPLATE = True
@@ -44,10 +43,6 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = "your email"
     MAIL_PASSWORD = "your email password"
-
-    # elastic search support
-    ELASTICSEARCH_SUPPORT = False
-    ELASTICSEARCH_HOST = "127.0.0.1:9200"
 
     # code highlight style
     HIGHLIGHT_STYLE = "vim"
