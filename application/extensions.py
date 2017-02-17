@@ -10,7 +10,6 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_jwt import JWT
 from flask_redis import FlaskRedis
-from flask_elasticsearch import FlaskElasticsearch
 from celery import Celery
 from raven.contrib.flask import Sentry
 from slackclient import SlackClient
@@ -25,7 +24,6 @@ mail = Mail()
 admin = Admin()
 redis = FlaskRedis()
 login_manager = LoginManager()
-es = FlaskElasticsearch()
 celery = Celery(WorkerConfig.CELERY_TASK_MAIN,
                 broker=WorkerConfig.CELERY_BROKER_URL)
 sentry = Sentry()

@@ -12,8 +12,7 @@ import redisco
 from flask import Flask, current_app, request
 
 from config import load_config
-from application.extensions import (
-    es, mail, redis, celery, sentry, login_manager)
+from application.extensions import mail, redis, celery, sentry, login_manager
 from application.controllers import all_bp
 from application.models import User
 from application.services.theme import setup_theme
@@ -64,7 +63,7 @@ def register_extensions(app):
                              db=app.config['REDIS_CONFIG']['DB'])
 
     def filter_func(kv):
-        print kv
+        print(kv)
 
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
     from application.services.theme import RedisLoader
@@ -94,7 +93,7 @@ def register_blueprint(app):
                     "request_url": request.url,
                     "request_path": request.path,
                     "request_data": json.dumps(request.data)}
-        for k, v in request.headers.iteritems():
+        for k, v in request.headers.items():
             req_data["request_header_{}".format(k)] = v
         if current_app.config.get('ELASTICSEARCH_SUPPORT'):
             rst = es.index(index="mdpress", doc_type="request_log", body=req_data)
@@ -142,4 +141,4 @@ def configure_logging(app):
 
 
 def register_tasks(app):
-    from application.tasks.slack import *
+    from application.tasks.slack import log_request

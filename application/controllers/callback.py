@@ -7,6 +7,6 @@ from flask import (request, Blueprint, send_from_directory,
 callback_bp = Blueprint('callback', __name__, '/callback')
 
 
-@callback_bp.route('duoshuo', methods=['POST'])
+@callback_bp.route('/duoshuo', methods=['POST'])
 def duoshuo_callback():
     pass
