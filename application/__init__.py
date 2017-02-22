@@ -12,7 +12,7 @@ import redisco
 from flask import Flask, current_app, request
 
 from config import load_config
-from application.extensions import mail, redis, celery, sentry, login_manager
+from application.extensions import mail, redis, sentry, login_manager
 from application.controllers import all_bp
 from application.models import User
 from application.services.theme import setup_theme
@@ -56,7 +56,6 @@ def register_extensions(app):
     login_manager.login_view = '/admin/login'
     login_manager.init_app(app)
 
-    celery.config_from_object(app.config)
     """init redis connection"""
     redisco.connection_setup(host=app.config['REDIS_CONFIG']['HOST'],
                              port=app.config['REDIS_CONFIG']['PORT'],
